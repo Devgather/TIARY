@@ -1,0 +1,10 @@
+# OS Caches
+**/.DS_Store
+
+# JetBrains Caches
+.idea/
+out/
+
+# Gradle Caches
+.gradle/
+build/
