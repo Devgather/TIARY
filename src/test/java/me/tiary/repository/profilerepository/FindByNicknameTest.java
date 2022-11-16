@@ -1,6 +1,7 @@
-package me.tiary.repository;
+package me.tiary.repository.profilerepository;
 
 import me.tiary.domain.Profile;
+import me.tiary.repository.ProfileRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
