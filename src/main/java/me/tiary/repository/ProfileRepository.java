@@ -1,5 +1,6 @@
 package me.tiary.repository;
 
+import me.tiary.domain.Profile;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
