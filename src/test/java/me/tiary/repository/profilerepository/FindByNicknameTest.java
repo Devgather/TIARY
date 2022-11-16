@@ -16,14 +16,14 @@ import static org.assertj.core.api.Assertions.assertThat;
 @DataJpaTest
 @ActiveProfiles("test")
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-@DisplayName("[Profile] find by nickname")
+@DisplayName("[ProfileRepository] findByNickname")
 class FindByNicknameTest {
     @Autowired
     private ProfileRepository profileRepository;
 
     @Test
-    @DisplayName("[Success] nickname is not existing")
-    void successIfNicknameIsNotExisting() {
+    @DisplayName("[Success] nickname does not exist")
+    void successIfNicknameDoesNotExist() {
         // When
         final Optional<Profile> result = profileRepository.findByNickname("Test");
 
@@ -32,8 +32,8 @@ class FindByNicknameTest {
     }
 
     @Test
-    @DisplayName("[Success] nickname is existing")
-    void successIfNicknameIsExisting() {
+    @DisplayName("[Success] nickname does exist")
+    void successIfNicknameDoesExist() {
         // Given
         final Profile profile = Profile.builder()
                 .nickname("Test")
