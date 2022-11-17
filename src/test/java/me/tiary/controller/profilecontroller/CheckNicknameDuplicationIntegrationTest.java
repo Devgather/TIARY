@@ -3,7 +3,7 @@ package me.tiary.controller.profilecontroller;
 import me.tiary.controller.ProfileController;
 import me.tiary.domain.Profile;
 import me.tiary.service.ProfileService;
-import me.tiary.utility.StringUtility;
+import utility.StringUtility;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
