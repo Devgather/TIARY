@@ -38,8 +38,8 @@ class CheckNicknameDuplicationTest {
     }
 
     @Test
-    @DisplayName("[Fail] nickname does not exist")
-    void failIfNicknameDoesNotExist() throws Exception {
+    @DisplayName("[Success] nickname does not exist")
+    void successIfNicknameDoesNotExist() throws Exception {
         // Given
         final String url = "/api/profile/nickname/Test";
 
