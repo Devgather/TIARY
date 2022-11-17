@@ -3,7 +3,7 @@ package me.tiary.utility;
 import java.util.Random;
 
 public final class StringUtility {
-    public static String generateRandomString(int length) {
+    public static String generateRandomString(final int length) {
         final Random random = new Random();
 
         return random.ints('0', 'z' + 1)
