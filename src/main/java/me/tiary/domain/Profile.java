@@ -1,9 +1,6 @@
 package me.tiary.domain;
 
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import me.tiary.domain.common.Timestamp;
 
 import javax.persistence.*;
@@ -11,6 +8,7 @@ import javax.persistence.*;
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
+@Getter
 @Builder
 public class Profile extends Timestamp {
     public static final int NICKNAME_MAX_LENGTH = 20;
