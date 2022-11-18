@@ -70,7 +70,7 @@ class SaveTest {
                 .nickname("Test")
                 .build();
 
-        //when
+        // When
         final Profile result = profileRepository.save(profile);
 
         // Then
