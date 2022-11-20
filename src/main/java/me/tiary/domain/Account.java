@@ -2,6 +2,7 @@ package me.tiary.domain;
 
 import lombok.AccessLevel;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import me.tiary.domain.common.Timestamp;
 
@@ -9,6 +10,7 @@ import javax.persistence.*;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Getter
 public class Account extends Timestamp {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
