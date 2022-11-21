@@ -148,8 +148,8 @@ class CreateProfileTest {
     }
 
     @Test
-    @DisplayName("[Success] nickname is acceptable")
-    void successIfNicknameIsAcceptable() throws Exception {
+    @DisplayName("[Success] profile is acceptable")
+    void successIfProfileIsAcceptable() throws Exception {
         // Given
         final String url = "/api/profile";
 
