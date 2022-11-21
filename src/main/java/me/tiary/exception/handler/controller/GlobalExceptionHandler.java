@@ -48,7 +48,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler({ProfileException.class})
-    public ResponseEntity<Object> handleProfileException(ProfileException ex) {
+    public ResponseEntity<Object> handleProfileException(final ProfileException ex) {
         final ProfileStatus status = ex.getStatus();
 
         log.warn("Profile exception occurrence: {}", status.getMessage());
