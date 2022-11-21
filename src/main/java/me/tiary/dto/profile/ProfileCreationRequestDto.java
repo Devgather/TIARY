@@ -9,6 +9,7 @@ import javax.validation.constraints.Size;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED, force = true)
 @RequiredArgsConstructor
+@EqualsAndHashCode
 @Builder
 public class ProfileCreationRequestDto {
     @NotBlank

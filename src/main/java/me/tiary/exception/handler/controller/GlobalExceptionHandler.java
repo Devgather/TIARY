@@ -1,7 +1,9 @@
 package me.tiary.exception.handler.controller;
 
 import lombok.extern.slf4j.Slf4j;
+import me.tiary.exception.ProfileException;
 import me.tiary.exception.handler.ExceptionResponse;
+import me.tiary.exception.status.ProfileStatus;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -43,5 +45,14 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         log.warn("Constraint violation exception occurrence: {}", messages);
 
         return ResponseEntity.badRequest().body(new ExceptionResponse(messages));
+    }
+
+    @ExceptionHandler({ProfileException.class})
+    public ResponseEntity<Object> handleProfileException(ProfileException ex) {
+        final ProfileStatus status = ex.getStatus();
+
+        log.warn("Profile exception occurrence: {}", status.getMessage());
+
+        return ResponseEntity.status(status.getHttpStatus()).body(new ExceptionResponse(List.of(status.getMessage())));
     }
 }
