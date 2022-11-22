@@ -23,3 +23,15 @@ CREATE TABLE account
         ON DELETE CASCADE,
     UNIQUE INDEX (email)
 ) ENGINE=InnoDB;
+
+CREATE TABLE verification
+(
+    id                 BIGINT       NOT NULL AUTO_INCREMENT,
+    email              VARCHAR(255) NOT NULL,
+    code               VARCHAR(6)   NOT NULL,
+    state              BIT(1)       NOT NULL,
+    created_date       DATETIME     NOT NULL,
+    last_modified_date DATETIME     NOT NULL,
+    PRIMARY KEY (id),
+    UNIQUE INDEX (email)
+) ENGINE=InnoDB;
