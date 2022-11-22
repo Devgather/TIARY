@@ -20,6 +20,9 @@ public class Profile extends Timestamp {
     @Column(length = NICKNAME_MAX_LENGTH, nullable = false, unique = true)
     private String nickname;
 
+    @Column(nullable = false)
+    private String picture;
+
     @OneToOne(mappedBy = "profile", fetch = FetchType.LAZY)
     private Account account;
 
