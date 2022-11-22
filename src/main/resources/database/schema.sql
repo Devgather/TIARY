@@ -1,9 +1,10 @@
 CREATE TABLE profile
 (
-    id                 BIGINT      NOT NULL AUTO_INCREMENT,
-    nickname           VARCHAR(20) NOT NULL,
-    created_date       DATETIME    NOT NULL,
-    last_modified_date DATETIME    NOT NULL,
+    id                 BIGINT       NOT NULL AUTO_INCREMENT,
+    nickname           VARCHAR(20)  NOT NULL,
+    picture            VARCHAR(255) NOT NULL,
+    created_date       DATETIME     NOT NULL,
+    last_modified_date DATETIME     NOT NULL,
     PRIMARY KEY (id),
     UNIQUE INDEX (nickname)
 ) ENGINE=InnoDB;
