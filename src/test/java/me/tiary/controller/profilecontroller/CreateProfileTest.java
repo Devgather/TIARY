@@ -2,6 +2,7 @@ package me.tiary.controller.profilecontroller;
 
 import com.google.gson.Gson;
 import me.tiary.controller.ProfileController;
+import me.tiary.domain.Profile;
 import me.tiary.dto.profile.ProfileCreationRequestDto;
 import me.tiary.dto.profile.ProfileCreationResponseDto;
 import me.tiary.exception.ProfileException;
@@ -21,6 +22,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import utility.StringUtility;
 
 import java.nio.charset.StandardCharsets;
 
@@ -103,6 +105,29 @@ class CreateProfileTest {
 
         final ProfileCreationRequestDto requestDto = ProfileCreationRequestDto.builder()
                 .nickname(" ")
+                .build();
+
+        // When
+        final ResultActions resultActions = mockMvc.perform(
+                MockMvcRequestBuilders.post(url)
+                        .content(gson.toJson(requestDto))
+                        .contentType(MediaType.APPLICATION_JSON)
+        );
+
+        // Then
+        resultActions.andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @DisplayName("[Fail] nickname exceeds max length")
+    void failIfNicknameExceedsMaxLength() throws Exception {
+        // Given
+        final String url = "/api/profile";
+
+        final String nickname = StringUtility.generateRandomString(Profile.NICKNAME_MAX_LENGTH + 1);
+
+        final ProfileCreationRequestDto requestDto = ProfileCreationRequestDto.builder()
+                .nickname(nickname)
                 .build();
 
         // When
