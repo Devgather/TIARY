@@ -13,6 +13,8 @@ import javax.persistence.*;
 public class Profile extends Timestamp {
     public static final int NICKNAME_MAX_LENGTH = 20;
 
+    public static final String BASIC_PICTURE = "";
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

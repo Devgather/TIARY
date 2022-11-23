@@ -24,14 +24,17 @@ public class ProfileService {
     }
 
     @Transactional
-    public ProfileCreationResponseDto createProfile(final ProfileCreationRequestDto dto) {
-        final String nickname = dto.getNickname();
+    public ProfileCreationResponseDto createProfile(final ProfileCreationRequestDto requestDto) {
+        final String nickname = requestDto.getNickname();
 
         if (checkNicknameDuplication(nickname)) {
             throw new ProfileException(ProfileStatus.EXISTING_NICKNAME);
         }
 
-        final Profile profile = modelMapper.map(dto, Profile.class);
+        final Profile profile = Profile.builder()
+                .nickname(nickname)
+                .picture(Profile.BASIC_PICTURE)
+                .build();
 
         final Profile result = profileRepository.save(profile);
 

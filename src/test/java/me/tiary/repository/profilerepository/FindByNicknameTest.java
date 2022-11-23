@@ -37,6 +37,7 @@ class FindByNicknameTest {
         // Given
         final Profile profile = Profile.builder()
                 .nickname("Test")
+                .picture("https://example.com/")
                 .build();
 
         profileRepository.save(profile);
