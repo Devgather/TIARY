@@ -78,6 +78,7 @@ class CreateProfileTest {
         final Profile savedProfile = Profile.builder()
                 .id(1L)
                 .nickname("Test")
+                .picture("https://example.com/")
                 .build();
 
         doReturn(savedProfile)
