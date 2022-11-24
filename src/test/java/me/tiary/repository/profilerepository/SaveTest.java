@@ -28,6 +28,7 @@ class SaveTest {
         // Given
         final Profile profile = Profile.builder()
                 .nickname(null)
+                .picture("https://example.com/")
                 .build();
 
         // Then
@@ -40,6 +41,7 @@ class SaveTest {
         // Given
         final Profile profile = Profile.builder()
                 .nickname(StringUtility.generateRandomString(Profile.NICKNAME_MAX_LENGTH + 1))
+                .picture("https://example.com/")
                 .build();
 
         // Then
@@ -52,14 +54,31 @@ class SaveTest {
         // Given
         final Profile profile1 = Profile.builder()
                 .nickname("Test")
+                .picture("https://example.com/")
                 .build();
+
         final Profile profile2 = Profile.builder()
                 .nickname("Test")
+                .picture("https://example.com/")
                 .build();
+
         profileRepository.save(profile1);
 
         // Then
         assertThrows(DataIntegrityViolationException.class, () -> profileRepository.save(profile2));
+    }
+
+    @Test
+    @DisplayName("[Fail] picture is null")
+    void failIfPictureIsNull() {
+        // Given
+        final Profile profile = Profile.builder()
+                .nickname("Test")
+                .picture(null)
+                .build();
+
+        // Then
+        assertThrows(DataIntegrityViolationException.class, () -> profileRepository.save(profile));
     }
 
     @Test
@@ -68,6 +87,7 @@ class SaveTest {
         // Given
         final Profile profile = Profile.builder()
                 .nickname("Test")
+                .picture("https://example.com/")
                 .build();
 
         // When
@@ -76,5 +96,6 @@ class SaveTest {
         // Then
         assertThat(result.getId()).isNotNull();
         assertThat(result.getNickname()).isEqualTo("Test");
+        assertThat(result.getPicture()).isEqualTo("https://example.com/");
     }
 }
