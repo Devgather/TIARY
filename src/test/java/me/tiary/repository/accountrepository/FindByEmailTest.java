@@ -33,6 +33,7 @@ class FindByEmailTest {
     void beforeEach() {
         final Profile profile = Profile.builder()
                 .nickname("Test")
+                .picture("https://example.com/")
                 .build();
 
         this.profile = profileRepository.save(profile);
