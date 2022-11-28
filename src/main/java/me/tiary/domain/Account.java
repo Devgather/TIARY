@@ -5,10 +5,13 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import me.tiary.domain.common.Timestamp;
+import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.DynamicInsert;
 
 import javax.persistence.*;
 
 @Entity
+@DynamicInsert
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 public class Account extends Timestamp {
@@ -19,6 +22,10 @@ public class Account extends Timestamp {
     @JoinColumn(name = "profile_id", nullable = false)
     @OneToOne(fetch = FetchType.LAZY)
     private Profile profile;
+
+    @Column(columnDefinition = "char(36)", nullable = false, unique = true)
+    @ColumnDefault("(uuid())")
+    private String uuid;
 
     @Column(nullable = false, unique = true)
     private String email;
