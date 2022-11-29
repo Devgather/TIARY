@@ -1,6 +1,7 @@
 spring:
   config:
     import:
+      - classpath:config/properties/jwt.yml
       - classpath:config/properties/security.yml
 
   datasource:
