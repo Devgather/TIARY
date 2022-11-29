@@ -5,13 +5,11 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import me.tiary.domain.common.Timestamp;
-import org.hibernate.annotations.ColumnDefault;
-import org.hibernate.annotations.DynamicInsert;
 
 import javax.persistence.*;
+import java.util.UUID;
 
 @Entity
-@DynamicInsert
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 public class Account extends Timestamp {
@@ -24,7 +22,6 @@ public class Account extends Timestamp {
     private Profile profile;
 
     @Column(columnDefinition = "char(36)", nullable = false, unique = true)
-    @ColumnDefault("(uuid())")
     private String uuid;
 
     @Column(nullable = false, unique = true)
@@ -34,12 +31,18 @@ public class Account extends Timestamp {
     private String password;
 
     @Builder
-    public Account(final Long id, final Profile profile, final String email, final String password) {
+    public Account(final Long id, final Profile profile, final String uuid, final String email, final String password) {
         setProfile(profile);
 
         this.id = id;
+        this.uuid = uuid;
         this.email = email;
         this.password = password;
+    }
+
+    @PrePersist
+    public void createUuid() {
+        this.uuid = UUID.randomUUID().toString();
     }
 
     void setProfile(final Profile profile) {

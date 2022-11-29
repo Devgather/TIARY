@@ -5,13 +5,11 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
 import me.tiary.domain.common.Timestamp;
-import org.hibernate.annotations.ColumnDefault;
-import org.hibernate.annotations.DynamicInsert;
 
 import javax.persistence.*;
+import java.util.UUID;
 
 @Entity
-@DynamicInsert
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Builder
@@ -23,7 +21,6 @@ public class Verification extends Timestamp {
     private Long id;
 
     @Column(columnDefinition = "char(36)", nullable = false, unique = true)
-    @ColumnDefault("(uuid())")
     private String uuid;
 
     @Column(nullable = false, unique = true)
@@ -34,4 +31,9 @@ public class Verification extends Timestamp {
 
     @Column(nullable = false)
     private Boolean state;
+
+    @PrePersist
+    public void createUuid() {
+        this.uuid = UUID.randomUUID().toString();
+    }
 }

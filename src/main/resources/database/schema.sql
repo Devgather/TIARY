@@ -1,7 +1,7 @@
 CREATE TABLE profile
 (
     id                 BIGINT       NOT NULL AUTO_INCREMENT,
-    uuid               CHAR(36)     NOT NULL DEFAULT (UUID()),
+    uuid               CHAR(36)     NOT NULL,
     nickname           VARCHAR(20)  NOT NULL,
     picture            VARCHAR(255) NOT NULL,
     created_date       DATETIME     NOT NULL,
@@ -15,7 +15,7 @@ CREATE TABLE account
 (
     id                 BIGINT       NOT NULL AUTO_INCREMENT,
     profile_id         BIGINT       NOT NULL,
-    uuid               CHAR(36)     NOT NULL DEFAULT (UUID()),
+    uuid               CHAR(36)     NOT NULL,
     email              VARCHAR(255) NOT NULL,
     password           VARCHAR(255) NOT NULL,
     created_date       DATETIME     NOT NULL,
@@ -32,7 +32,7 @@ CREATE TABLE account
 CREATE TABLE verification
 (
     id                 BIGINT       NOT NULL AUTO_INCREMENT,
-    uuid               CHAR(36)     NOT NULL DEFAULT (UUID()),
+    uuid               CHAR(36)     NOT NULL,
     email              VARCHAR(255) NOT NULL,
     code               VARCHAR(6)   NOT NULL,
     state              BIT(1)       NOT NULL,
