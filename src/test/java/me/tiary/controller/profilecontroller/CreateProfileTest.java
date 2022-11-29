@@ -25,6 +25,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import utility.StringUtility;
 
 import java.nio.charset.StandardCharsets;
+import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.eq;
@@ -178,12 +179,14 @@ class CreateProfileTest {
         // Given
         final String url = "/api/profile";
 
+        final String uuid = UUID.randomUUID().toString();
+
         final ProfileCreationRequestDto requestDto = ProfileCreationRequestDto.builder()
                 .nickname("Test")
                 .build();
 
         final ProfileCreationResponseDto responseDto = ProfileCreationResponseDto.builder()
-                .id(1L)
+                .uuid(uuid)
                 .nickname(requestDto.getNickname())
                 .build();
 
@@ -203,7 +206,7 @@ class CreateProfileTest {
 
         // Then
         resultActions.andExpect(status().isCreated());
-        assertThat(response.getId()).isNotNull();
+        assertThat(response.getUuid().length()).isEqualTo(36);
         assertThat(response.getNickname()).isEqualTo(responseDto.getNickname());
     }
 }

@@ -7,7 +7,7 @@ import lombok.*;
 @RequiredArgsConstructor
 @Builder
 public class ProfileCreationResponseDto {
-    private final Long id;
+    private final String uuid;
 
     private final String nickname;
 }
