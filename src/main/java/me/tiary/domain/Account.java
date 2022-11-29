@@ -2,13 +2,16 @@ package me.tiary.domain;
 
 import lombok.AccessLevel;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import me.tiary.domain.common.Timestamp;
 
 import javax.persistence.*;
+import java.util.UUID;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Getter
 public class Account extends Timestamp {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -18,6 +21,9 @@ public class Account extends Timestamp {
     @OneToOne(fetch = FetchType.LAZY)
     private Profile profile;
 
+    @Column(columnDefinition = "char(36)", nullable = false, unique = true)
+    private String uuid;
+
     @Column(nullable = false, unique = true)
     private String email;
 
@@ -25,12 +31,18 @@ public class Account extends Timestamp {
     private String password;
 
     @Builder
-    public Account(final Long id, final Profile profile, final String email, final String password) {
+    public Account(final Long id, final Profile profile, final String uuid, final String email, final String password) {
         setProfile(profile);
 
         this.id = id;
+        this.uuid = uuid;
         this.email = email;
         this.password = password;
+    }
+
+    @PrePersist
+    public void createUuid() {
+        this.uuid = UUID.randomUUID().toString();
     }
 
     void setProfile(final Profile profile) {

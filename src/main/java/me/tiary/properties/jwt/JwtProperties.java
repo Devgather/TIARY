@@ -7,4 +7,6 @@ import lombok.RequiredArgsConstructor;
 @Getter
 public abstract class JwtProperties {
     private final String secretKey;
+
+    private final int validSeconds;
 }

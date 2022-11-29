@@ -9,12 +9,10 @@ import java.util.UUID;
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-@Getter
 @Builder
-public class Profile extends Timestamp {
-    public static final int NICKNAME_MAX_LENGTH = 20;
-
-    public static final String BASIC_PICTURE = "";
+@Getter
+public class Verification extends Timestamp {
+    public static final int CODE_MAX_LENGTH = 6;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,21 +21,17 @@ public class Profile extends Timestamp {
     @Column(columnDefinition = "char(36)", nullable = false, unique = true)
     private String uuid;
 
-    @Column(length = NICKNAME_MAX_LENGTH, nullable = false, unique = true)
-    private String nickname;
+    @Column(nullable = false, unique = true)
+    private String email;
+
+    @Column(length = CODE_MAX_LENGTH, nullable = false)
+    private String code;
 
     @Column(nullable = false)
-    private String picture;
-
-    @OneToOne(mappedBy = "profile", fetch = FetchType.LAZY)
-    private Account account;
+    private Boolean state;
 
     @PrePersist
     public void createUuid() {
         this.uuid = UUID.randomUUID().toString();
-    }
-
-    void setAccount(final Account account) {
-        this.account = account;
     }
 }
