@@ -1,9 +1,6 @@
 package me.tiary.domain;
 
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import me.tiary.domain.common.Timestamp;
 
 import javax.persistence.*;
@@ -13,6 +10,7 @@ import java.util.UUID;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Builder
+@Getter
 public class Verification extends Timestamp {
     public static final int CODE_MAX_LENGTH = 6;
 
