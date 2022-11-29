@@ -67,6 +67,7 @@ class FindByEmailTest {
         // Then
         assertThat(result.isPresent()).isTrue();
         assertThat(result.get().getProfile()).isEqualTo(profile);
+        assertThat(result.get().getUuid().length()).isEqualTo(36);
         assertThat(result.get().getEmail()).isEqualTo("test@example.com");
         assertThat(result.get().getPassword()).isEqualTo("test");
     }
