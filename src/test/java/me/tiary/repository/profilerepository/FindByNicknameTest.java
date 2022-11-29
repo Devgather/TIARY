@@ -47,6 +47,7 @@ class FindByNicknameTest {
 
         // Then
         assertThat(result.isPresent()).isTrue();
+        assertThat(result.get().getUuid().length()).isEqualTo(36);
         assertThat(result.get().getNickname()).isEqualTo("Test");
     }
 }

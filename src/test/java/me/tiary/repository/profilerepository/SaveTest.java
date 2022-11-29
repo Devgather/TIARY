@@ -95,6 +95,7 @@ class SaveTest {
 
         // Then
         assertThat(result.getId()).isNotNull();
+        assertThat(result.getUuid().length()).isEqualTo(36);
         assertThat(result.getNickname()).isEqualTo("Test");
         assertThat(result.getPicture()).isEqualTo("https://example.com/");
     }

@@ -1,23 +1,25 @@
 package me.tiary.domain;
 
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import me.tiary.domain.common.Timestamp;
 
 import javax.persistence.*;
+import java.util.UUID;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Builder
+@Getter
 public class Verification extends Timestamp {
     public static final int CODE_MAX_LENGTH = 6;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(columnDefinition = "char(36)", nullable = false, unique = true)
+    private String uuid;
 
     @Column(nullable = false, unique = true)
     private String email;
@@ -27,4 +29,9 @@ public class Verification extends Timestamp {
 
     @Column(nullable = false)
     private Boolean state;
+
+    @PrePersist
+    public void createUuid() {
+        this.uuid = UUID.randomUUID().toString();
+    }
 }

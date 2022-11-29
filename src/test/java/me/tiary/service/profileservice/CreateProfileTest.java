@@ -18,6 +18,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.ModelMapper;
 
 import java.util.Optional;
+import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -67,6 +68,8 @@ class CreateProfileTest {
     @DisplayName("[Success] profile is acceptable")
     void successIfProfileIsAcceptable() {
         // Given
+        final String uuid = UUID.randomUUID().toString();
+
         final ProfileCreationRequestDto requestDto = ProfileCreationRequestDto.builder()
                 .nickname("Test")
                 .build();
@@ -77,6 +80,7 @@ class CreateProfileTest {
 
         final Profile savedProfile = Profile.builder()
                 .id(1L)
+                .uuid(uuid)
                 .nickname("Test")
                 .picture("https://example.com/")
                 .build();
@@ -89,7 +93,7 @@ class CreateProfileTest {
         final ProfileCreationResponseDto result = profileService.createProfile(requestDto);
 
         // Then
-        assertThat(result.getId()).isNotNull();
+        assertThat(result.getUuid().length()).isEqualTo(36);
         assertThat(result.getNickname()).isEqualTo(requestDto.getNickname());
     }
 }
