@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
@@ -42,6 +43,9 @@ public class WebSecurityConfig {
                                                    final CorsConfigurationSource corsConfigurationSource,
                                                    final AuthenticationFilter authenticationFilter) throws Exception {
         http.authorizeRequests()
+                .antMatchers(HttpMethod.HEAD, "/api/account/email/**").anonymous()
+                .antMatchers(HttpMethod.HEAD, "/api/profile/nickname/**").anonymous()
+                .antMatchers(HttpMethod.POST, "/api/profile").anonymous()
                 .anyRequest().authenticated()
                 .and()
                 .exceptionHandling()

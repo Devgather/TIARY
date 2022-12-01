@@ -1,3 +1,9 @@
+DROP TABLE IF EXISTS verification;
+
+DROP TABLE IF EXISTS account;
+
+DROP TABLE IF EXISTS profile;
+
 CREATE TABLE profile
 (
     id                 BIGINT       NOT NULL AUTO_INCREMENT,
