@@ -1,13 +1,15 @@
 package me.tiary.controller.accountcontroller;
 
+import me.tiary.config.WebSecurityConfig;
 import me.tiary.controller.AccountController;
 import me.tiary.service.AccountService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
+import org.springframework.boot.autoconfigure.h2.H2ConsoleProperties;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
 import org.springframework.data.jpa.mapping.JpaMetamodelMappingContext;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
@@ -15,7 +17,8 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(value = AccountController.class, excludeAutoConfiguration = SecurityAutoConfiguration.class)
+@WebMvcTest(AccountController.class)
+@Import({WebSecurityConfig.class, H2ConsoleProperties.class})
 @MockBean(JpaMetamodelMappingContext.class)
 @DisplayName("[AccountController - Integration] checkEmailDuplication")
 class CheckEmailDuplicationIntegrationTest {
