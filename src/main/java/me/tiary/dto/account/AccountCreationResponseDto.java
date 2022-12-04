@@ -1,10 +1,10 @@
 package me.tiary.dto.account;
 
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED, force = true)
+@RequiredArgsConstructor
+@Builder
 @Getter
 public class AccountCreationResponseDto {
     private final String email;
