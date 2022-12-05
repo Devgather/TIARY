@@ -1,14 +1,15 @@
 package me.tiary.controller;
 
 import lombok.RequiredArgsConstructor;
+import me.tiary.dto.account.AccountCreationRequestDto;
+import me.tiary.dto.account.AccountCreationResponseDto;
 import me.tiary.service.AccountService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 
@@ -22,5 +23,12 @@ public class AccountController {
     @RequestMapping(value = "/email/{email}", method = RequestMethod.HEAD)
     public ResponseEntity<Void> checkEmailDuplication(@PathVariable @NotBlank @Email final String email) {
         return (accountService.checkEmailDuplication(email)) ? (ResponseEntity.ok().build()) : (ResponseEntity.notFound().build());
+    }
+
+    @PostMapping("")
+    public ResponseEntity<AccountCreationResponseDto> register(@RequestBody @Valid final AccountCreationRequestDto requestDto) {
+        final AccountCreationResponseDto result = accountService.register(requestDto);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(result);
     }
 }

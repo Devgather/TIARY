@@ -9,6 +9,7 @@ import javax.validation.constraints.NotBlank;
 @RequiredArgsConstructor
 @Builder
 @Getter
+@EqualsAndHashCode
 public class AccountCreationRequestDto {
     @NotBlank
     private final String profileUuid;
