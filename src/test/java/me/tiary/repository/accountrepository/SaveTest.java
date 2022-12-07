@@ -1,5 +1,6 @@
 package me.tiary.repository.accountrepository;
 
+import annotation.repository.RepositoryIntegrationTest;
 import me.tiary.domain.Account;
 import me.tiary.domain.Profile;
 import me.tiary.repository.AccountRepository;
@@ -8,15 +9,12 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.dao.DataIntegrityViolationException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-@DataJpaTest
-@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
+@RepositoryIntegrationTest
 @DisplayName("[AccountRepository] save")
 class SaveTest {
     @Autowired

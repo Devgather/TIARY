@@ -1,5 +1,6 @@
 package me.tiary.controller.profilecontroller;
 
+import annotation.controller.ControllerTest;
 import com.google.gson.Gson;
 import me.tiary.controller.ProfileController;
 import me.tiary.domain.Profile;
@@ -13,10 +14,8 @@ import me.tiary.service.ProfileService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
@@ -33,7 +32,7 @@ import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.doThrow;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@ExtendWith(MockitoExtension.class)
+@ControllerTest
 @DisplayName("[ProfileController] createProfile")
 class CreateProfileTest {
     @InjectMocks

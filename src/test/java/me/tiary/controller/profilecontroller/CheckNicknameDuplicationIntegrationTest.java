@@ -1,17 +1,13 @@
 package me.tiary.controller.profilecontroller;
 
-import me.tiary.config.WebSecurityConfig;
+import annotation.controller.ControllerIntegrationTest;
 import me.tiary.controller.ProfileController;
 import me.tiary.domain.Profile;
 import me.tiary.service.ProfileService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.h2.H2ConsoleProperties;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.Import;
-import org.springframework.data.jpa.mapping.JpaMetamodelMappingContext;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -19,9 +15,7 @@ import utility.StringUtility;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(ProfileController.class)
-@Import({WebSecurityConfig.class, H2ConsoleProperties.class})
-@MockBean(JpaMetamodelMappingContext.class)
+@ControllerIntegrationTest(ProfileController.class)
 @DisplayName("[ProfileController - Integration] checkNicknameDuplication")
 class CheckNicknameDuplicationIntegrationTest {
     @Autowired
