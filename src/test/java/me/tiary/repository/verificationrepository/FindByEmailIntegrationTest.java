@@ -6,8 +6,11 @@ import me.tiary.repository.VerificationRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import utility.JpaUtility;
 import utility.StringUtility;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -17,6 +20,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 class FindByEmailIntegrationTest {
     @Autowired
     private VerificationRepository verificationRepository;
+
+    @PersistenceContext
+    private EntityManager em;
 
     @Test
     @DisplayName("[Success] email does not exist")
@@ -39,6 +45,8 @@ class FindByEmailIntegrationTest {
                 .build();
 
         verificationRepository.save(verification);
+
+        JpaUtility.flushAndClear(em);
 
         // When
         final Optional<Verification> result = verificationRepository.findByEmail("test@example.com");

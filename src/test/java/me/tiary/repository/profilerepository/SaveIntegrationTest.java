@@ -7,7 +7,11 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import utility.JpaUtility;
 import utility.StringUtility;
+
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -17,6 +21,9 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 class SaveIntegrationTest {
     @Autowired
     private ProfileRepository profileRepository;
+
+    @PersistenceContext
+    private EntityManager em;
 
     @Test
     @DisplayName("[Fail] nickname is null")
@@ -59,6 +66,8 @@ class SaveIntegrationTest {
                 .build();
 
         profileRepository.save(profile1);
+
+        JpaUtility.flushAndClear(em);
 
         // Then
         assertThrows(DataIntegrityViolationException.class, () -> profileRepository.save(profile2));

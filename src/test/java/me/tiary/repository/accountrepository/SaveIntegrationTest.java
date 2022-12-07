@@ -10,6 +10,10 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import utility.JpaUtility;
+
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -23,6 +27,9 @@ class SaveIntegrationTest {
     @Autowired
     private ProfileRepository profileRepository;
 
+    @PersistenceContext
+    private EntityManager em;
+
     private Profile profile;
 
     @BeforeEach
@@ -33,6 +40,8 @@ class SaveIntegrationTest {
                 .build();
 
         this.profile = profileRepository.save(profile);
+
+        JpaUtility.flushAndClear(em);
     }
 
     @Test
@@ -87,13 +96,15 @@ class SaveIntegrationTest {
                 .password("test1")
                 .build();
 
+        accountRepository.save(account1);
+
+        JpaUtility.flushAndClear(em);
+
         final Account account2 = Account.builder()
                 .profile(profile2)
                 .email("test@example.com")
                 .password("test2")
                 .build();
-
-        accountRepository.save(account1);
 
         // Then
         assertThrows(DataIntegrityViolationException.class, () -> accountRepository.save(account2));

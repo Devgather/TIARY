@@ -6,7 +6,10 @@ import me.tiary.repository.ProfileRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import utility.JpaUtility;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -16,6 +19,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 class FindByNicknameIntegrationTest {
     @Autowired
     private ProfileRepository profileRepository;
+
+    @PersistenceContext
+    private EntityManager em;
 
     @Test
     @DisplayName("[Success] nickname does not exist")
@@ -37,6 +43,8 @@ class FindByNicknameIntegrationTest {
                 .build();
 
         profileRepository.save(profile);
+
+        JpaUtility.flushAndClear(em);
 
         // When
         final Optional<Profile> result = profileRepository.findByNickname("Test");
