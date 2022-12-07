@@ -15,8 +15,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @RepositoryIntegrationTest
-@DisplayName("[AccountRepository] save")
-class SaveTest {
+@DisplayName("[AccountRepository - Integration] save")
+class SaveIntegrationTest {
     @Autowired
     private AccountRepository accountRepository;
 
