@@ -9,7 +9,10 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import utility.JpaUtility;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -23,6 +26,9 @@ class FindByEmailIntegrationTest {
     @Autowired
     private ProfileRepository profileRepository;
 
+    @PersistenceContext
+    private EntityManager em;
+
     private Profile profile;
 
     @BeforeEach
@@ -33,6 +39,8 @@ class FindByEmailIntegrationTest {
                 .build();
 
         this.profile = profileRepository.save(profile);
+
+        JpaUtility.flushAndClear(em);
     }
 
     @Test
@@ -56,6 +64,8 @@ class FindByEmailIntegrationTest {
                 .build();
 
         accountRepository.save(account);
+
+        JpaUtility.flushAndClear(em);
 
         // When
         final Optional<Account> result = accountRepository.findByEmail("test@example.com");
