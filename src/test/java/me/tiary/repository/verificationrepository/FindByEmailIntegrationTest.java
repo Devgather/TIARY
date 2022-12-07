@@ -13,8 +13,8 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @RepositoryIntegrationTest
-@DisplayName("[VerificationRepository] findByEmail")
-class FindByEmailTest {
+@DisplayName("[VerificationRepository - Integration] findByEmail")
+class FindByEmailIntegrationTest {
     @Autowired
     private VerificationRepository verificationRepository;
 

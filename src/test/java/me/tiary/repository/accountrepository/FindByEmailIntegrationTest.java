@@ -15,8 +15,8 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @RepositoryIntegrationTest
-@DisplayName("[AccountRepository] findByEmail")
-class FindByEmailTest {
+@DisplayName("[AccountRepository - Integration] findByEmail")
+class FindByEmailIntegrationTest {
     @Autowired
     private AccountRepository accountRepository;
 
