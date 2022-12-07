@@ -50,7 +50,7 @@ class AuthenticateTest {
         // Given
         final Authentication authentication = new PreAuthenticatedAuthenticationToken(null, null);
 
-        // Then
+        // When, Then
         assertThrows(BadCredentialsException.class, () -> memberAuthenticationProvider.authenticate(authentication));
     }
 

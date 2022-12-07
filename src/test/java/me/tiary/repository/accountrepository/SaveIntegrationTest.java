@@ -54,7 +54,7 @@ class SaveIntegrationTest {
                 .password("test")
                 .build();
 
-        // Then
+        // When, Then
         assertThrows(DataIntegrityViolationException.class, () -> accountRepository.save(account));
     }
 
@@ -68,7 +68,7 @@ class SaveIntegrationTest {
                 .password("test")
                 .build();
 
-        // Then
+        // When, Then
         assertThrows(DataIntegrityViolationException.class, () -> accountRepository.save(account));
     }
 
@@ -106,7 +106,7 @@ class SaveIntegrationTest {
                 .password("test2")
                 .build();
 
-        // Then
+        // When, Then
         assertThrows(DataIntegrityViolationException.class, () -> accountRepository.save(account2));
     }
 
@@ -120,7 +120,7 @@ class SaveIntegrationTest {
                 .password(null)
                 .build();
 
-        // Then
+        // When, Then
         assertThrows(DataIntegrityViolationException.class, () -> accountRepository.save(account));
     }
 

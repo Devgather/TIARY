@@ -34,7 +34,7 @@ class GenerateTest {
         final Map<String, Short> payload = new HashMap<>();
         payload.put("key", (short) 0);
 
-        // Then
+        // When, Then
         assertThrows(IllegalArgumentException.class, () -> jwtProvider.generate(payload));
     }
 

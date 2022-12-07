@@ -32,7 +32,7 @@ class VerifyTest {
         // Algorithm = HMAC512, Payload = { "data": "Test" }, Secret Key = Test
         final String token = "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjoiVGVzdCJ9.ehkf3FQVbKY4XFGiOdTHcL8rYmmzss8Q-3iSctozmefcAbzibfos-Ch_lydD9FKTN_LmJIVj4YunKi3VmnInUw";
 
-        // Then
+        // When, Then
         assertThrows(AlgorithmMismatchException.class, () -> jwtProvider.verify(token));
     }
 
@@ -42,7 +42,7 @@ class VerifyTest {
         // Given
         final String token = "a.b.c";
 
-        // Then
+        // When, Then
         assertThrows(JWTDecodeException.class, () -> jwtProvider.verify(token));
     }
 
@@ -53,7 +53,7 @@ class VerifyTest {
         // Algorithm = HMAC256, Payload = { "data": "Test" }, Secret Key = Invalid Secret Key
         final String token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjoiVGVzdCJ9.8m2ipdRrtI-MVw6MS8IRff-uMG-mH70maH0tR-gPAW8";
 
-        // Then
+        // When, Then
         assertThrows(SignatureVerificationException.class, () -> jwtProvider.verify(token));
     }
 
@@ -64,7 +64,7 @@ class VerifyTest {
         // Algorithm = HMAC256, Payload = { "data": "Test", "exp": 0 }, Secret Key = Test
         final String token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjoiVGVzdCIsImV4cCI6MH0.ZbhLANDWkjWbQwkoKPDv_Xi8kfObrtTE8Ow_6Hk5D1A";
 
-        // Then
+        // When, Then
         assertThrows(TokenExpiredException.class, () -> jwtProvider.verify(token));
     }
 
