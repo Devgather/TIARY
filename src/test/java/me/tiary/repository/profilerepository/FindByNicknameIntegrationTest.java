@@ -43,7 +43,7 @@ class FindByNicknameIntegrationTest {
 
         // Then
         assertThat(result.isPresent()).isTrue();
-        assertThat(result.get().getUuid().length()).isEqualTo(36);
-        assertThat(result.get().getNickname()).isEqualTo("Test");
+        assertThat(result.get().getNickname()).isEqualTo(profile.getNickname());
+        assertThat(result.get().getPicture()).isEqualTo(profile.getPicture());
     }
 }

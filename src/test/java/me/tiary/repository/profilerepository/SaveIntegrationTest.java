@@ -92,7 +92,7 @@ class SaveIntegrationTest {
         // Then
         assertThat(result.getId()).isNotNull();
         assertThat(result.getUuid().length()).isEqualTo(36);
-        assertThat(result.getNickname()).isEqualTo("Test");
-        assertThat(result.getPicture()).isEqualTo("https://example.com/");
+        assertThat(result.getNickname()).isEqualTo(profile.getNickname());
+        assertThat(result.getPicture()).isEqualTo(profile.getPicture());
     }
 }

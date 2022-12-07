@@ -45,7 +45,6 @@ class FindByEmailIntegrationTest {
 
         // Then
         assertThat(result.isPresent()).isTrue();
-        assertThat(result.get().getUuid().length()).isEqualTo(36);
         assertThat(result.get().getEmail()).isEqualTo(verification.getEmail());
         assertThat(result.get().getCode()).isEqualTo(verification.getCode());
         assertThat(result.get().getState()).isEqualTo(verification.getState());
