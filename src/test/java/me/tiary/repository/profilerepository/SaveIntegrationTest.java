@@ -34,7 +34,7 @@ class SaveIntegrationTest {
                 .picture("https://example.com/")
                 .build();
 
-        // Then
+        // When, Then
         assertThrows(DataIntegrityViolationException.class, () -> profileRepository.save(profile));
     }
 
@@ -47,7 +47,7 @@ class SaveIntegrationTest {
                 .picture("https://example.com/")
                 .build();
 
-        // Then
+        // When, Then
         assertThrows(DataIntegrityViolationException.class, () -> profileRepository.save(profile));
     }
 
@@ -69,7 +69,7 @@ class SaveIntegrationTest {
 
         JpaUtility.flushAndClear(em);
 
-        // Then
+        // When, Then
         assertThrows(DataIntegrityViolationException.class, () -> profileRepository.save(profile2));
     }
 
@@ -82,7 +82,7 @@ class SaveIntegrationTest {
                 .picture(null)
                 .build();
 
-        // Then
+        // When, Then
         assertThrows(DataIntegrityViolationException.class, () -> profileRepository.save(profile));
     }
 

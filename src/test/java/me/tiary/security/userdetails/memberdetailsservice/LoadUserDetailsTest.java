@@ -34,7 +34,7 @@ class LoadUserDetailsTest {
 
         final PreAuthenticatedAuthenticationToken token = new PreAuthenticatedAuthenticationToken(null, accessToken);
 
-        // Then
+        // When, Then
         assertThrows(BadCredentialsException.class, () -> memberDetailsService.loadUserDetails(token));
     }
 
@@ -47,7 +47,7 @@ class LoadUserDetailsTest {
 
         final PreAuthenticatedAuthenticationToken token = new PreAuthenticatedAuthenticationToken(null, accessToken);
 
-        // Then
+        // When, Then
         assertThrows(BadCredentialsException.class, () -> memberDetailsService.loadUserDetails(token));
     }
 
@@ -60,7 +60,7 @@ class LoadUserDetailsTest {
 
         final PreAuthenticatedAuthenticationToken token = new PreAuthenticatedAuthenticationToken(null, accessToken);
 
-        // Then
+        // When, Then
         assertThrows(BadCredentialsException.class, () -> memberDetailsService.loadUserDetails(token));
     }
 
@@ -73,7 +73,7 @@ class LoadUserDetailsTest {
 
         final PreAuthenticatedAuthenticationToken token = new PreAuthenticatedAuthenticationToken(null, accessToken);
 
-        // Then
+        // When, Then
         assertThrows(BadCredentialsException.class, () -> memberDetailsService.loadUserDetails(token));
     }
 

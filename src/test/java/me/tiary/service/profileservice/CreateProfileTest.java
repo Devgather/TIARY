@@ -56,10 +56,9 @@ class CreateProfileTest {
                 .when(profileRepository)
                 .findByNickname(eq(requestDto.getNickname()));
 
-        // When
+        // When, Then
         final ProfileException result = assertThrows(ProfileException.class, () -> profileService.createProfile(requestDto));
 
-        // Then
         assertThat(result.getStatus()).isEqualTo(ProfileStatus.EXISTING_NICKNAME);
     }
 

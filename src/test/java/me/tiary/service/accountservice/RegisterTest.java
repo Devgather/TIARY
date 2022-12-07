@@ -77,10 +77,9 @@ class RegisterTest {
                 UUID.randomUUID().toString()
         );
 
-        // When
+        // When, Then
         final AccountException result = assertThrows(AccountException.class, () -> accountService.register(requestDto));
 
-        // Then
         assertThat(result.getStatus()).isEqualTo(AccountStatus.EXISTING_EMAIL);
     }
 
@@ -100,10 +99,9 @@ class RegisterTest {
                 UUID.randomUUID().toString()
         );
 
-        // When
+        // When, Then
         final AccountException result = assertThrows(AccountException.class, () -> accountService.register(requestDto));
 
-        // Then
         assertThat(result.getStatus()).isEqualTo(AccountStatus.UNREQUESTED_EMAIL_VERIFICATION);
     }
 
@@ -125,10 +123,9 @@ class RegisterTest {
                 UUID.randomUUID().toString()
         );
 
-        // When
+        // When, Then
         final AccountException result = assertThrows(AccountException.class, () -> accountService.register(requestDto));
 
-        // Then
         assertThat(result.getStatus()).isEqualTo(AccountStatus.UNVERIFIED_EMAIL);
     }
 
@@ -154,10 +151,9 @@ class RegisterTest {
                 UUID.randomUUID().toString()
         );
 
-        // When
+        // When, Then
         final AccountException result = assertThrows(AccountException.class, () -> accountService.register(requestDto));
 
-        // Then
         assertThat(result.getStatus()).isEqualTo(AccountStatus.NOT_EXISTING_PROFILE_UUID);
     }
 
@@ -187,10 +183,9 @@ class RegisterTest {
                 profile.getUuid()
         );
 
-        // When
+        // When, Then
         final AccountException result = assertThrows(AccountException.class, () -> accountService.register(requestDto));
 
-        // Then
         assertThat(result.getStatus()).isEqualTo(AccountStatus.EXISTING_ANOTHER_ACCOUNT_ON_PROFILE);
     }
 
