@@ -1,5 +1,6 @@
 package me.tiary.controller.accountcontroller;
 
+import annotation.controller.ControllerTest;
 import com.google.gson.Gson;
 import factory.dto.account.AccountCreationRequestDtoFactory;
 import factory.dto.account.AccountCreationResponseDtoFactory;
@@ -14,10 +15,8 @@ import me.tiary.service.AccountService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
@@ -33,7 +32,7 @@ import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.doThrow;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@ExtendWith(MockitoExtension.class)
+@ControllerTest
 @DisplayName("[AccountController] register")
 class RegisterTest {
     public static final String URL = "/api/account";

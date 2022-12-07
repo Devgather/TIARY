@@ -1,20 +1,18 @@
 package me.tiary.repository.profilerepository;
 
+import annotation.repository.RepositoryIntegrationTest;
 import me.tiary.domain.Profile;
 import me.tiary.repository.ProfileRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.dao.DataIntegrityViolationException;
 import utility.StringUtility;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-@DataJpaTest
-@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
+@RepositoryIntegrationTest
 @DisplayName("[ProfileRepository] save")
 class SaveTest {
     @Autowired

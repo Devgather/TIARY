@@ -1,14 +1,13 @@
 package me.tiary.service.profileservice;
 
+import annotation.service.ServiceTest;
 import me.tiary.domain.Profile;
 import me.tiary.repository.ProfileRepository;
 import me.tiary.service.ProfileService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
 
@@ -17,7 +16,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doReturn;
 
-@ExtendWith(MockitoExtension.class)
+@ServiceTest
 @DisplayName("[ProfileService] checkNicknameDuplication")
 class CheckNicknameDuplicationTest {
     @InjectMocks
