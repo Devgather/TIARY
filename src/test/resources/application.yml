@@ -14,5 +14,7 @@ spring:
       schema-locations: classpath*:database/schema.sql
 
   jpa:
+    show-sql: true
+
     hibernate:
       ddl-auto: none

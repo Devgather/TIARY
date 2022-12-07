@@ -1,0 +1,4 @@
+jwt:
+  access-token:
+    secret-key: ${JWT_ACCESS_TOKEN_SECRET_KEY:jwt-access-token-secret-key}
+    valid-seconds: 300
