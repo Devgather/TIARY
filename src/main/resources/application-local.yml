@@ -1,9 +1,9 @@
 spring:
   config:
     import:
-      - classpath:config/properties/jwt.yml
-      - classpath:config/properties/security.yml
-      - classpath:config/properties/aws.yml
+      - classpath:properties/jwt.yml
+      - classpath:properties/security.yml
+      - classpath:properties/aws.yml
 
   servlet:
     multipart:
