@@ -1,6 +1,7 @@
 package me.tiary.controller.profilecontroller;
 
 import annotation.controller.ControllerIntegrationTest;
+import config.url.ProfileApiUrl;
 import me.tiary.controller.ProfileController;
 import me.tiary.domain.Profile;
 import me.tiary.service.ProfileService;
@@ -28,7 +29,7 @@ class CheckNicknameDuplicationIntegrationTest {
     @DisplayName("[Fail] nickname is blank")
     void failIfNicknameIsBlank() throws Exception {
         // Given
-        final String url = "/api/profile/nickname/ ";
+        final String url = ProfileApiUrl.NICKNAME_DUPLICATION_CHECK.getEntireUrl() + " ";
 
         // When
         final ResultActions resultActions = mockMvc.perform(
@@ -44,7 +45,7 @@ class CheckNicknameDuplicationIntegrationTest {
     void failIfNicknameExceedsMaxLength() throws Exception {
         // Given
         final String nickname = StringUtility.generateRandomString(Profile.NICKNAME_MAX_LENGTH + 1);
-        final String url = "/api/profile/nickname/" + nickname;
+        final String url = ProfileApiUrl.NICKNAME_DUPLICATION_CHECK.getEntireUrl() + nickname;
 
         // When
         final ResultActions resultActions = mockMvc.perform(

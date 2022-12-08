@@ -1,6 +1,7 @@
 package me.tiary.controller.profilecontroller;
 
 import annotation.controller.ControllerTest;
+import config.url.ProfileApiUrl;
 import me.tiary.controller.ProfileController;
 import me.tiary.service.ProfileService;
 import org.junit.jupiter.api.BeforeEach;
@@ -40,7 +41,7 @@ class CheckNicknameDuplicationTest {
     @DisplayName("[Success] nickname does not exist")
     void successIfNicknameDoesNotExist() throws Exception {
         // Given
-        final String url = "/api/profile/nickname/Test";
+        final String url = ProfileApiUrl.NICKNAME_DUPLICATION_CHECK.getEntireUrl() + "Test";
 
         doReturn(false)
                 .when(profileService)
@@ -59,7 +60,7 @@ class CheckNicknameDuplicationTest {
     @DisplayName("[Success] nickname does exist")
     void successIfNicknameDoesExist() throws Exception {
         // Given
-        final String url = "/api/profile/nickname/Test";
+        final String url = ProfileApiUrl.NICKNAME_DUPLICATION_CHECK.getEntireUrl() + "Test";
 
         doReturn(true)
                 .when(profileService)

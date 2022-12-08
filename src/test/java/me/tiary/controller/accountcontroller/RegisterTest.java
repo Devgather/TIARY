@@ -2,6 +2,7 @@ package me.tiary.controller.accountcontroller;
 
 import annotation.controller.ControllerTest;
 import com.google.gson.Gson;
+import config.url.AccountApiUrl;
 import factory.dto.account.AccountCreationRequestDtoFactory;
 import factory.dto.account.AccountCreationResponseDtoFactory;
 import me.tiary.controller.AccountController;
@@ -35,8 +36,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ControllerTest
 @DisplayName("[AccountController] register")
 class RegisterTest {
-    public static final String URL = "/api/account";
-
     @InjectMocks
     private AccountController accountController;
 
@@ -66,7 +65,7 @@ class RegisterTest {
 
         // When
         final ResultActions resultActions = mockMvc.perform(
-                MockMvcRequestBuilders.post(URL)
+                MockMvcRequestBuilders.post(AccountApiUrl.REGISTER.getEntireUrl())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(gson.toJson(requestDto))
         );
@@ -85,7 +84,7 @@ class RegisterTest {
 
         // When
         final ResultActions resultActions = mockMvc.perform(
-                MockMvcRequestBuilders.post(URL)
+                MockMvcRequestBuilders.post(AccountApiUrl.REGISTER.getEntireUrl())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(gson.toJson(requestDto))
         );
@@ -104,7 +103,7 @@ class RegisterTest {
 
         // When
         final ResultActions resultActions = mockMvc.perform(
-                MockMvcRequestBuilders.post(URL)
+                MockMvcRequestBuilders.post(AccountApiUrl.REGISTER.getEntireUrl())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(gson.toJson(requestDto))
         );
@@ -123,7 +122,7 @@ class RegisterTest {
 
         // When
         final ResultActions resultActions = mockMvc.perform(
-                MockMvcRequestBuilders.post(URL)
+                MockMvcRequestBuilders.post(AccountApiUrl.REGISTER.getEntireUrl())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(gson.toJson(requestDto))
         );
@@ -142,7 +141,7 @@ class RegisterTest {
 
         // When
         final ResultActions resultActions = mockMvc.perform(
-                MockMvcRequestBuilders.post(URL)
+                MockMvcRequestBuilders.post(AccountApiUrl.REGISTER.getEntireUrl())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(gson.toJson(requestDto))
         );
@@ -161,7 +160,7 @@ class RegisterTest {
 
         // When
         final ResultActions resultActions = mockMvc.perform(
-                MockMvcRequestBuilders.post(URL)
+                MockMvcRequestBuilders.post(AccountApiUrl.REGISTER.getEntireUrl())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(gson.toJson(requestDto))
         );
@@ -180,7 +179,7 @@ class RegisterTest {
 
         // When
         final ResultActions resultActions = mockMvc.perform(
-                MockMvcRequestBuilders.post(URL)
+                MockMvcRequestBuilders.post(AccountApiUrl.REGISTER.getEntireUrl())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(gson.toJson(requestDto))
         );
@@ -199,7 +198,7 @@ class RegisterTest {
 
         // When
         final ResultActions resultActions = mockMvc.perform(
-                MockMvcRequestBuilders.post(URL)
+                MockMvcRequestBuilders.post(AccountApiUrl.REGISTER.getEntireUrl())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(gson.toJson(requestDto))
         );
@@ -218,7 +217,7 @@ class RegisterTest {
 
         // When
         final ResultActions resultActions = mockMvc.perform(
-                MockMvcRequestBuilders.post(URL)
+                MockMvcRequestBuilders.post(AccountApiUrl.REGISTER.getEntireUrl())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(gson.toJson(requestDto))
         );
@@ -237,7 +236,7 @@ class RegisterTest {
 
         // When
         final ResultActions resultActions = mockMvc.perform(
-                MockMvcRequestBuilders.post(URL)
+                MockMvcRequestBuilders.post(AccountApiUrl.REGISTER.getEntireUrl())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(gson.toJson(requestDto))
         );
@@ -260,7 +259,7 @@ class RegisterTest {
 
         // When
         final ResultActions resultActions = mockMvc.perform(
-                MockMvcRequestBuilders.post(URL)
+                MockMvcRequestBuilders.post(AccountApiUrl.REGISTER.getEntireUrl())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(gson.toJson(requestDto))
         );
@@ -291,7 +290,7 @@ class RegisterTest {
 
         // When
         final ResultActions resultActions = mockMvc.perform(
-                MockMvcRequestBuilders.post(URL)
+                MockMvcRequestBuilders.post(AccountApiUrl.REGISTER.getEntireUrl())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(gson.toJson(requestDto))
         );
@@ -322,7 +321,7 @@ class RegisterTest {
 
         // When
         final ResultActions resultActions = mockMvc.perform(
-                MockMvcRequestBuilders.post(URL)
+                MockMvcRequestBuilders.post(AccountApiUrl.REGISTER.getEntireUrl())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(gson.toJson(requestDto))
         );
@@ -353,7 +352,7 @@ class RegisterTest {
 
         // When
         final ResultActions resultActions = mockMvc.perform(
-                MockMvcRequestBuilders.post(URL)
+                MockMvcRequestBuilders.post(AccountApiUrl.REGISTER.getEntireUrl())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(gson.toJson(requestDto))
         );
@@ -384,7 +383,7 @@ class RegisterTest {
 
         // When
         final ResultActions resultActions = mockMvc.perform(
-                MockMvcRequestBuilders.post(URL)
+                MockMvcRequestBuilders.post(AccountApiUrl.REGISTER.getEntireUrl())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(gson.toJson(requestDto))
         );
@@ -417,7 +416,7 @@ class RegisterTest {
 
         // When
         final ResultActions resultActions = mockMvc.perform(
-                MockMvcRequestBuilders.post(URL)
+                MockMvcRequestBuilders.post(AccountApiUrl.REGISTER.getEntireUrl())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(gson.toJson(requestDto))
         );
