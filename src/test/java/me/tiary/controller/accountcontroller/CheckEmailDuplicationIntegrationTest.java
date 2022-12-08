@@ -1,6 +1,7 @@
 package me.tiary.controller.accountcontroller;
 
 import annotation.controller.ControllerIntegrationTest;
+import config.url.AccountApiUrl;
 import me.tiary.controller.AccountController;
 import me.tiary.service.AccountService;
 import org.junit.jupiter.api.DisplayName;
@@ -26,7 +27,7 @@ class CheckEmailDuplicationIntegrationTest {
     @DisplayName("[Fail] email is blank")
     void failIfEmailIsBlank() throws Exception {
         // Given
-        final String url = "/api/account/email/ ";
+        final String url = AccountApiUrl.EMAIL_DUPLICATION_CHECK.getEntireUrl() + " ";
 
         // When
         final ResultActions resultActions = mockMvc.perform(
@@ -41,7 +42,7 @@ class CheckEmailDuplicationIntegrationTest {
     @DisplayName("[Fail] email does not satisfy format")
     void failIfEmailDoesNotSatisfyFormat() throws Exception {
         // Given
-        final String url = "/api/account/email/test";
+        final String url = AccountApiUrl.EMAIL_DUPLICATION_CHECK.getEntireUrl() + "test";
 
         // When
         final ResultActions resultActions = mockMvc.perform(

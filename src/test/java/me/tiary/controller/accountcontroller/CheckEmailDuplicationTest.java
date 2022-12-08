@@ -1,6 +1,7 @@
 package me.tiary.controller.accountcontroller;
 
 import annotation.controller.ControllerTest;
+import config.url.AccountApiUrl;
 import me.tiary.controller.AccountController;
 import me.tiary.service.AccountService;
 import org.junit.jupiter.api.BeforeEach;
@@ -38,7 +39,7 @@ class CheckEmailDuplicationTest {
     @DisplayName("[Success] email does not exist")
     void successIfEmailDoesNotExist() throws Exception {
         // Given
-        final String url = "/api/account/email/test@example.com";
+        final String url = AccountApiUrl.EMAIL_DUPLICATION_CHECK.getEntireUrl() + "test@example.com";
 
         doReturn(false)
                 .when(accountService)
@@ -57,7 +58,7 @@ class CheckEmailDuplicationTest {
     @DisplayName("[Success] email does exist")
     void successIfEmailDoesExist() throws Exception {
         // Given
-        final String url = "/api/account/email/test@example.com";
+        final String url = AccountApiUrl.EMAIL_DUPLICATION_CHECK.getEntireUrl() + "test@example.com";
 
         doReturn(true)
                 .when(accountService)
