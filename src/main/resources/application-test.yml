@@ -3,6 +3,7 @@ spring:
     import:
       - classpath:config/properties/jwt.yml
       - classpath:config/properties/security.yml
+      - classpath:config/properties/aws.yml
 
   datasource:
     driver-class-name: org.h2.Driver

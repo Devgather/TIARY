@@ -3,6 +3,12 @@ spring:
     import:
       - classpath:config/properties/jwt.yml
       - classpath:config/properties/security.yml
+      - classpath:config/properties/aws.yml
+
+  servlet:
+    multipart:
+      max-file-size: 5MB
+      max-request-size: 5MB
 
   datasource:
     driver-class-name: org.h2.Driver
