@@ -1,6 +1,8 @@
 package me.tiary.service.profileservice;
 
 import annotation.service.ServiceTest;
+import config.factory.FactoryPreset;
+import factory.domain.ProfileFactory;
 import me.tiary.domain.Profile;
 import me.tiary.repository.ProfileRepository;
 import me.tiary.service.ProfileService;
@@ -34,7 +36,7 @@ class CheckNicknameDuplicationTest {
                 .findByNickname(any(String.class));
 
         // When
-        final boolean result = profileService.checkNicknameDuplication("Test");
+        final boolean result = profileService.checkNicknameDuplication(FactoryPreset.NICKNAME);
 
         // Then
         assertThat(result).isFalse();
@@ -44,12 +46,14 @@ class CheckNicknameDuplicationTest {
     @DisplayName("[Success] nickname does exist")
     void successIfNicknameDoesExist() {
         // Given
-        doReturn(Optional.ofNullable(Profile.builder().build()))
+        final Profile profile = ProfileFactory.createDefaultProfile();
+
+        doReturn(Optional.ofNullable(profile))
                 .when(profileRepository)
-                .findByNickname(eq("Test"));
+                .findByNickname(eq(profile.getNickname()));
 
         // When
-        final boolean result = profileService.checkNicknameDuplication("Test");
+        final boolean result = profileService.checkNicknameDuplication(FactoryPreset.NICKNAME);
 
         // Then
         assertThat(result).isTrue();

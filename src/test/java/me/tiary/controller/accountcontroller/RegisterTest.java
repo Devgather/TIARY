@@ -2,6 +2,7 @@ package me.tiary.controller.accountcontroller;
 
 import annotation.controller.ControllerTest;
 import com.google.gson.Gson;
+import config.factory.FactoryPreset;
 import config.url.AccountApiUrl;
 import factory.dto.account.AccountCreationRequestDtoFactory;
 import factory.dto.account.AccountCreationResponseDtoFactory;
@@ -60,7 +61,7 @@ class RegisterTest {
     void failIfProfileUuidIsNull() throws Exception {
         // Given
         final AccountCreationRequestDto requestDto = AccountCreationRequestDtoFactory.create(
-                null, "test@example.com", "test"
+                null, FactoryPreset.EMAIL, FactoryPreset.PASSWORD
         );
 
         // When
@@ -79,7 +80,7 @@ class RegisterTest {
     void failIfProfileUuidIsEmpty() throws Exception {
         // Given
         final AccountCreationRequestDto requestDto = AccountCreationRequestDtoFactory.create(
-                "", "test@example.com", "test"
+                "", FactoryPreset.EMAIL, FactoryPreset.PASSWORD
         );
 
         // When
@@ -98,7 +99,7 @@ class RegisterTest {
     void failIfProfileUuidIsBlank() throws Exception {
         // Given
         final AccountCreationRequestDto requestDto = AccountCreationRequestDtoFactory.create(
-                " ", "test@example.com", "test"
+                " ", FactoryPreset.EMAIL, FactoryPreset.PASSWORD
         );
 
         // When
@@ -117,7 +118,7 @@ class RegisterTest {
     void failIfEmailIsNull() throws Exception {
         // Given
         final AccountCreationRequestDto requestDto = AccountCreationRequestDtoFactory.create(
-                UUID.randomUUID().toString(), null, "test"
+                UUID.randomUUID().toString(), null, FactoryPreset.PASSWORD
         );
 
         // When
@@ -136,7 +137,7 @@ class RegisterTest {
     void failIfEmailIsEmpty() throws Exception {
         // Given
         final AccountCreationRequestDto requestDto = AccountCreationRequestDtoFactory.create(
-                UUID.randomUUID().toString(), "", "test"
+                UUID.randomUUID().toString(), "", FactoryPreset.PASSWORD
         );
 
         // When
@@ -155,7 +156,7 @@ class RegisterTest {
     void failIfEmailIsBlank() throws Exception {
         // Given
         final AccountCreationRequestDto requestDto = AccountCreationRequestDtoFactory.create(
-                UUID.randomUUID().toString(), " ", "test"
+                UUID.randomUUID().toString(), " ", FactoryPreset.PASSWORD
         );
 
         // When
@@ -174,7 +175,7 @@ class RegisterTest {
     void failIfEmailIsInvalidFormat() throws Exception {
         // Given
         final AccountCreationRequestDto requestDto = AccountCreationRequestDtoFactory.create(
-                UUID.randomUUID().toString(), "test", "test"
+                UUID.randomUUID().toString(), "test", FactoryPreset.PASSWORD
         );
 
         // When
@@ -193,7 +194,7 @@ class RegisterTest {
     void failIfPasswordIsNull() throws Exception {
         // Given
         final AccountCreationRequestDto requestDto = AccountCreationRequestDtoFactory.create(
-                UUID.randomUUID().toString(), "test@example.com", null
+                UUID.randomUUID().toString(), FactoryPreset.EMAIL, null
         );
 
         // When
@@ -212,7 +213,7 @@ class RegisterTest {
     void failIfPasswordIsEmpty() throws Exception {
         // Given
         final AccountCreationRequestDto requestDto = AccountCreationRequestDtoFactory.create(
-                UUID.randomUUID().toString(), "test@example.com", ""
+                UUID.randomUUID().toString(), FactoryPreset.EMAIL, ""
         );
 
         // When
@@ -231,7 +232,7 @@ class RegisterTest {
     void failIfPasswordIsBlank() throws Exception {
         // Given
         final AccountCreationRequestDto requestDto = AccountCreationRequestDtoFactory.create(
-                UUID.randomUUID().toString(), "test@example.com", " "
+                UUID.randomUUID().toString(), FactoryPreset.EMAIL, " "
         );
 
         // When

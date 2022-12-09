@@ -1,7 +1,6 @@
 package me.tiary.security.userdetails.memberdetailsservice;
 
-import me.tiary.properties.jwt.AccessTokenProperties;
-import me.tiary.properties.jwt.JwtProperties;
+import factory.utility.jwt.JwtProviderFactory;
 import me.tiary.security.userdetails.MemberDetails;
 import me.tiary.security.userdetails.MemberDetailsService;
 import me.tiary.utility.jwt.JwtProvider;
@@ -20,8 +19,7 @@ class LoadUserDetailsTest {
 
     @BeforeEach
     void beforeEach() {
-        final JwtProperties properties = new AccessTokenProperties("Test", 300);
-        final JwtProvider accessTokenProvider = new JwtProvider(properties);
+        final JwtProvider accessTokenProvider = JwtProviderFactory.createAccessTokenProvider();
 
         memberDetailsService = new MemberDetailsService(accessTokenProvider);
     }
@@ -42,8 +40,8 @@ class LoadUserDetailsTest {
     @DisplayName("[Fail] access token algorithm is mismatch")
     void failIfAccessTokenAlgorithmIsMismatch() {
         // Given
-        // Algorithm = HMAC512, Payload = { "data": "Test" }, Secret Key = Test
-        final String accessToken = "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjoiVGVzdCJ9.ehkf3FQVbKY4XFGiOdTHcL8rYmmzss8Q-3iSctozmefcAbzibfos-Ch_lydD9FKTN_LmJIVj4YunKi3VmnInUw";
+        // Algorithm = HMAC512, Payload = { "uuid": "cbf0f220-97b8-4312-82ce-f98266c428d4" }, Secret Key = jwt-access-token-secret-key
+        final String accessToken = "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiY2JmMGYyMjAtOTdiOC00MzEyLTgyY2UtZjk4MjY2YzQyOGQ0In0.cCJL6etYw6r7tlXpuJqEQ7LccTOSsKbBW3LzavvqSvLPSJRBt8w7yMAB6d53Bs_FXf7YRqF5F9xrWyKMr7_KZw";
 
         final PreAuthenticatedAuthenticationToken token = new PreAuthenticatedAuthenticationToken(null, accessToken);
 
@@ -55,8 +53,8 @@ class LoadUserDetailsTest {
     @DisplayName("[Fail] access token has expired")
     void failIfAccessTokenHasExpired() {
         // Given
-        // Algorithm = HMAC256, Payload = { "data": "Test", "exp": 0 }, Secret Key = Test
-        final String accessToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjoiVGVzdCIsImV4cCI6MH0.ZbhLANDWkjWbQwkoKPDv_Xi8kfObrtTE8Ow_6Hk5D1A";
+        // Algorithm = HMAC256, Payload = { "uuid": "cbf0f220-97b8-4312-82ce-f98266c428d4", "exp": 0 }, Secret Key = jwt-access-token-secret-key
+        final String accessToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiY2JmMGYyMjAtOTdiOC00MzEyLTgyY2UtZjk4MjY2YzQyOGQ0IiwiZXhwIjowfQ.3xL9qBUNtPop2bKoKloECcG0Pu-nCJC7tdE3tTXJ2fk";
 
         final PreAuthenticatedAuthenticationToken token = new PreAuthenticatedAuthenticationToken(null, accessToken);
 
@@ -68,8 +66,8 @@ class LoadUserDetailsTest {
     @DisplayName("[Fail] access token signature is invalid")
     void failIfAccessTokenSignatureIsInvalid() {
         // Given
-        // Algorithm = HMAC256, Payload = { "data": "Test" }, Secret Key = Invalid Secret Key
-        final String accessToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjoiVGVzdCJ9.8m2ipdRrtI-MVw6MS8IRff-uMG-mH70maH0tR-gPAW8";
+        // Algorithm = HMAC256, Payload = { "uuid": "cbf0f220-97b8-4312-82ce-f98266c428d4" }, Secret Key = invalid-secret-key
+        final String accessToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiY2JmMGYyMjAtOTdiOC00MzEyLTgyY2UtZjk4MjY2YzQyOGQ0In0.ftqXO7VbB5rpAaJks-B9V2a43TmE23TOtTbVzzxAwg4";
 
         final PreAuthenticatedAuthenticationToken token = new PreAuthenticatedAuthenticationToken(null, accessToken);
 
@@ -81,8 +79,8 @@ class LoadUserDetailsTest {
     @DisplayName("[Success] access token is valid")
     void successIfAccessTokenIsValid() {
         // Given
-        // Algorithm = HMAC256, Payload = { "uuid": "cbf0f220-97b8-4312-82ce-f98266c428d4" }, Secret Key = Test
-        final String accessToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiY2JmMGYyMjAtOTdiOC00MzEyLTgyY2UtZjk4MjY2YzQyOGQ0In0.G0z3gVEh_uwH0cq0stN6JE7PkwC8L4DwzginXwX-1qg";
+        // Algorithm = HMAC256, Payload = { "uuid": "cbf0f220-97b8-4312-82ce-f98266c428d4" }, Secret Key = jwt-access-token-secret-key
+        final String accessToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiY2JmMGYyMjAtOTdiOC00MzEyLTgyY2UtZjk4MjY2YzQyOGQ0In0.rftGC07wvthl89A-lHN4NzeP2gcVv9UxTTnST3Nhqz8";
 
         final PreAuthenticatedAuthenticationToken token = new PreAuthenticatedAuthenticationToken(null, accessToken);
 

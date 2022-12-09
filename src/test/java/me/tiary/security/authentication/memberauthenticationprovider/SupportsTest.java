@@ -1,7 +1,6 @@
 package me.tiary.security.authentication.memberauthenticationprovider;
 
-import me.tiary.properties.jwt.AccessTokenProperties;
-import me.tiary.properties.jwt.JwtProperties;
+import factory.utility.jwt.JwtProviderFactory;
 import me.tiary.security.authentication.MemberAuthenticationProvider;
 import me.tiary.security.userdetails.MemberDetailsService;
 import me.tiary.utility.jwt.JwtProvider;
@@ -20,8 +19,7 @@ class SupportsTest {
 
     @BeforeEach
     void beforeEach() {
-        final JwtProperties properties = new AccessTokenProperties("Test", 300);
-        final JwtProvider accessTokenProvider = new JwtProvider(properties);
+        final JwtProvider accessTokenProvider = JwtProviderFactory.createAccessTokenProvider();
         final AuthenticationUserDetailsService<PreAuthenticatedAuthenticationToken> memberDetailsService = new MemberDetailsService(accessTokenProvider);
 
         memberAuthenticationProvider = new MemberAuthenticationProvider(memberDetailsService);

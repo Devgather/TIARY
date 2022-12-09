@@ -1,6 +1,9 @@
 package me.tiary.repository.accountrepository;
 
 import annotation.repository.RepositoryIntegrationTest;
+import config.factory.FactoryPreset;
+import factory.domain.AccountFactory;
+import factory.domain.ProfileFactory;
 import me.tiary.domain.Account;
 import me.tiary.domain.Profile;
 import me.tiary.repository.AccountRepository;
@@ -33,12 +36,7 @@ class FindByEmailIntegrationTest {
 
     @BeforeEach
     void beforeEach() {
-        final Profile profile = Profile.builder()
-                .nickname("Test")
-                .picture("https://example.com/")
-                .build();
-
-        this.profile = profileRepository.save(profile);
+        profile = profileRepository.save(ProfileFactory.createDefaultProfile());
 
         JpaUtility.flushAndClear(em);
     }
@@ -47,7 +45,7 @@ class FindByEmailIntegrationTest {
     @DisplayName("[Success] email does not exist")
     void successIfEmailDoesNotExist() {
         // When
-        final Optional<Account> result = accountRepository.findByEmail("test@example.com");
+        final Optional<Account> result = accountRepository.findByEmail(FactoryPreset.EMAIL);
 
         // Then
         assertThat(result.isEmpty()).isTrue();
@@ -57,18 +55,14 @@ class FindByEmailIntegrationTest {
     @DisplayName("[Success] email does exist")
     void successIfEmailDoesExist() {
         // Given
-        final Account account = Account.builder()
-                .profile(profile)
-                .email("test@example.com")
-                .password("test")
-                .build();
+        final Account account = AccountFactory.createDefaultAccount(profile);
 
         accountRepository.save(account);
 
         JpaUtility.flushAndClear(em);
 
         // When
-        final Optional<Account> result = accountRepository.findByEmail("test@example.com");
+        final Optional<Account> result = accountRepository.findByEmail(FactoryPreset.EMAIL);
 
         // Then
         assertThat(result.isPresent()).isTrue();

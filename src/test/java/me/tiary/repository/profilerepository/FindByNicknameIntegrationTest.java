@@ -1,6 +1,8 @@
 package me.tiary.repository.profilerepository;
 
 import annotation.repository.RepositoryIntegrationTest;
+import config.factory.FactoryPreset;
+import factory.domain.ProfileFactory;
 import me.tiary.domain.Profile;
 import me.tiary.repository.ProfileRepository;
 import org.junit.jupiter.api.DisplayName;
@@ -27,7 +29,7 @@ class FindByNicknameIntegrationTest {
     @DisplayName("[Success] nickname does not exist")
     void successIfNicknameDoesNotExist() {
         // When
-        final Optional<Profile> result = profileRepository.findByNickname("Test");
+        final Optional<Profile> result = profileRepository.findByNickname(FactoryPreset.NICKNAME);
 
         // Then
         assertThat(result.isEmpty()).isTrue();
@@ -37,17 +39,14 @@ class FindByNicknameIntegrationTest {
     @DisplayName("[Success] nickname does exist")
     void successIfNicknameDoesExist() {
         // Given
-        final Profile profile = Profile.builder()
-                .nickname("Test")
-                .picture("https://example.com/")
-                .build();
+        final Profile profile = ProfileFactory.createDefaultProfile();
 
         profileRepository.save(profile);
 
         JpaUtility.flushAndClear(em);
 
         // When
-        final Optional<Profile> result = profileRepository.findByNickname("Test");
+        final Optional<Profile> result = profileRepository.findByNickname(FactoryPreset.NICKNAME);
 
         // Then
         assertThat(result.isPresent()).isTrue();
