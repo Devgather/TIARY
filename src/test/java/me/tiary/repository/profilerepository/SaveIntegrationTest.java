@@ -1,6 +1,8 @@
 package me.tiary.repository.profilerepository;
 
 import annotation.repository.RepositoryIntegrationTest;
+import config.factory.FactoryPreset;
+import factory.domain.ProfileFactory;
 import me.tiary.domain.Profile;
 import me.tiary.repository.ProfileRepository;
 import org.junit.jupiter.api.DisplayName;
@@ -29,10 +31,7 @@ class SaveIntegrationTest {
     @DisplayName("[Fail] nickname is null")
     void failIfNicknameIsNull() {
         // Given
-        final Profile profile = Profile.builder()
-                .nickname(null)
-                .picture("https://example.com/")
-                .build();
+        final Profile profile = ProfileFactory.create(null, FactoryPreset.PICTURE);
 
         // When, Then
         assertThrows(DataIntegrityViolationException.class, () -> profileRepository.save(profile));
@@ -42,10 +41,9 @@ class SaveIntegrationTest {
     @DisplayName("[Fail] nickname exceeds max length")
     void failIfNicknameExceedsMaxLength() {
         // Given
-        final Profile profile = Profile.builder()
-                .nickname(StringUtility.generateRandomString(Profile.NICKNAME_MAX_LENGTH + 1))
-                .picture("https://example.com/")
-                .build();
+        final String nickname = StringUtility.generateRandomString(Profile.NICKNAME_MAX_LENGTH + 1);
+
+        final Profile profile = ProfileFactory.create(nickname, FactoryPreset.PICTURE);
 
         // When, Then
         assertThrows(DataIntegrityViolationException.class, () -> profileRepository.save(profile));
@@ -55,15 +53,9 @@ class SaveIntegrationTest {
     @DisplayName("[Fail] nickname is duplicated")
     void failIfNicknameIsDuplicated() {
         // Given
-        final Profile profile1 = Profile.builder()
-                .nickname("Test")
-                .picture("https://example.com/")
-                .build();
+        final Profile profile1 = ProfileFactory.createDefaultProfile();
 
-        final Profile profile2 = Profile.builder()
-                .nickname("Test")
-                .picture("https://example.com/")
-                .build();
+        final Profile profile2 = ProfileFactory.createDefaultProfile();
 
         profileRepository.save(profile1);
 
@@ -77,10 +69,7 @@ class SaveIntegrationTest {
     @DisplayName("[Fail] picture is null")
     void failIfPictureIsNull() {
         // Given
-        final Profile profile = Profile.builder()
-                .nickname("Test")
-                .picture(null)
-                .build();
+        final Profile profile = ProfileFactory.create(FactoryPreset.NICKNAME, null);
 
         // When, Then
         assertThrows(DataIntegrityViolationException.class, () -> profileRepository.save(profile));
@@ -90,10 +79,7 @@ class SaveIntegrationTest {
     @DisplayName("[Success] profile is acceptable")
     void successIfProfileIsAcceptable() {
         // Given
-        final Profile profile = Profile.builder()
-                .nickname("Test")
-                .picture("https://example.com/")
-                .build();
+        final Profile profile = ProfileFactory.createDefaultProfile();
 
         // When
         final Profile result = profileRepository.save(profile);

@@ -2,8 +2,10 @@ package me.tiary.config.websecurityconfig;
 
 import annotation.application.ApplicationIntegrationTest;
 import com.google.gson.Gson;
+import config.factory.FactoryPreset;
 import config.url.AccountApiUrl;
 import config.url.ProfileApiUrl;
+import factory.dto.profile.ProfileCreationRequestDtoFactory;
 import me.tiary.dto.profile.ProfileCreationRequestDto;
 import me.tiary.properties.jwt.AccessTokenProperties;
 import org.junit.jupiter.api.BeforeEach;
@@ -36,7 +38,7 @@ class SecurityFilterChainIntegrationTest {
     @DisplayName("[Fail] member requests email duplication check api")
     void failIfMemberRequestsEmailDuplicationCheckApi() throws Exception {
         // Given
-        final String url = AccountApiUrl.EMAIL_DUPLICATION_CHECK.getEntireUrl() + "test@example.com";
+        final String url = AccountApiUrl.EMAIL_DUPLICATION_CHECK.getEntireUrl() + FactoryPreset.EMAIL;
 
         // Algorithm = HMAC256, Payload = { "uuid": "cbf0f220-97b8-4312-82ce-f98266c428d4" }, Secret Key = Test
         final String accessToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiY2JmMGYyMjAtOTdiOC00MzEyLTgyY2UtZjk4MjY2YzQyOGQ0In0.G0z3gVEh_uwH0cq0stN6JE7PkwC8L4DwzginXwX-1qg";
@@ -55,7 +57,7 @@ class SecurityFilterChainIntegrationTest {
     @DisplayName("[Success] anonymous requests email duplication check api")
     void successIfAnonymousRequestsEmailDuplicationCheckApi() throws Exception {
         // Given
-        final String url = AccountApiUrl.EMAIL_DUPLICATION_CHECK.getEntireUrl() + "test@example.com";
+        final String url = AccountApiUrl.EMAIL_DUPLICATION_CHECK.getEntireUrl() + FactoryPreset.EMAIL;
 
         // When
         final ResultActions resultActions = mockMvc.perform(
@@ -70,7 +72,7 @@ class SecurityFilterChainIntegrationTest {
     @DisplayName("[Fail] member requests nickname duplication check api")
     void failIfMemberRequestsNicknameDuplicationCheckApi() throws Exception {
         // Given
-        final String url = ProfileApiUrl.NICKNAME_DUPLICATION_CHECK.getEntireUrl() + "Test";
+        final String url = ProfileApiUrl.NICKNAME_DUPLICATION_CHECK.getEntireUrl() + FactoryPreset.NICKNAME;
 
         // Algorithm = HMAC256, Payload = { "uuid": "cbf0f220-97b8-4312-82ce-f98266c428d4" }, Secret Key = Test
         final String accessToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiY2JmMGYyMjAtOTdiOC00MzEyLTgyY2UtZjk4MjY2YzQyOGQ0In0.G0z3gVEh_uwH0cq0stN6JE7PkwC8L4DwzginXwX-1qg";
@@ -89,7 +91,7 @@ class SecurityFilterChainIntegrationTest {
     @DisplayName("[Success] anonymous requests nickname duplication check api")
     void successIfAnonymousRequestsNicknameDuplicationCheckApi() throws Exception {
         // Given
-        final String url = ProfileApiUrl.NICKNAME_DUPLICATION_CHECK.getEntireUrl() + "Test";
+        final String url = ProfileApiUrl.NICKNAME_DUPLICATION_CHECK.getEntireUrl() + FactoryPreset.NICKNAME;
 
         // When
         final ResultActions resultActions = mockMvc.perform(
@@ -109,9 +111,7 @@ class SecurityFilterChainIntegrationTest {
         // Algorithm = HMAC256, Payload = { "uuid": "cbf0f220-97b8-4312-82ce-f98266c428d4" }, Secret Key = Test
         final String accessToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiY2JmMGYyMjAtOTdiOC00MzEyLTgyY2UtZjk4MjY2YzQyOGQ0In0.G0z3gVEh_uwH0cq0stN6JE7PkwC8L4DwzginXwX-1qg";
 
-        final ProfileCreationRequestDto requestDto = ProfileCreationRequestDto.builder()
-                .nickname("Test")
-                .build();
+        final ProfileCreationRequestDto requestDto = ProfileCreationRequestDtoFactory.createDefaultProfileCreationRequestDto();
 
         // When
         final ResultActions resultActions = mockMvc.perform(
@@ -131,9 +131,7 @@ class SecurityFilterChainIntegrationTest {
         // Given
         final String url = ProfileApiUrl.PROFILE_CREATION.getEntireUrl();
 
-        final ProfileCreationRequestDto requestDto = ProfileCreationRequestDto.builder()
-                .nickname("Test")
-                .build();
+        final ProfileCreationRequestDto requestDto = ProfileCreationRequestDtoFactory.createDefaultProfileCreationRequestDto();
 
         // When
         final ResultActions resultActions = mockMvc.perform(

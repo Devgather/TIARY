@@ -1,7 +1,8 @@
 package me.tiary.repository.profilerepository;
 
 import annotation.repository.RepositoryIntegrationTest;
-import me.tiary.domain.Account;
+import factory.domain.AccountFactory;
+import factory.domain.ProfileFactory;
 import me.tiary.domain.Profile;
 import me.tiary.repository.AccountRepository;
 import me.tiary.repository.ProfileRepository;
@@ -42,12 +43,7 @@ class FindByUuidLeftJoinFetchAccountIntegrationTest {
     @DisplayName("[Success] uuid does exist and account is null")
     void successIfUuidDoesExistAndAccountIsNull() {
         // Given
-        final Profile profile = profileRepository.save(
-                Profile.builder()
-                        .nickname("Test")
-                        .picture("https://example.com/")
-                        .build()
-        );
+        final Profile profile = profileRepository.save(ProfileFactory.createDefaultProfile());
 
         JpaUtility.flushAndClear(em);
 
@@ -65,20 +61,9 @@ class FindByUuidLeftJoinFetchAccountIntegrationTest {
     @DisplayName("[Success] uuid does exist and account is not null")
     void successIfUuidDoesExistAndAccountIsNotNull() {
         // Given
-        final Profile profile = profileRepository.save(
-                Profile.builder()
-                        .nickname("Test")
-                        .picture("https://example.com/")
-                        .build()
-        );
+        final Profile profile = profileRepository.save(ProfileFactory.createDefaultProfile());
 
-        accountRepository.save(
-                Account.builder()
-                        .profile(profile)
-                        .email("test@example.com")
-                        .password("test")
-                        .build()
-        );
+        accountRepository.save(AccountFactory.createDefaultAccount(profile));
 
         JpaUtility.flushAndClear(em);
 

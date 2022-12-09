@@ -1,6 +1,9 @@
 package me.tiary.service.accountservice;
 
 import annotation.service.ServiceTest;
+import config.factory.FactoryPreset;
+import factory.domain.AccountFactory;
+import factory.domain.ProfileFactory;
 import me.tiary.domain.Account;
 import me.tiary.repository.AccountRepository;
 import me.tiary.service.AccountService;
@@ -34,7 +37,7 @@ class CheckEmailDuplicationTest {
                 .findByEmail(any(String.class));
 
         // When
-        final boolean result = accountService.checkEmailDuplication("test@example.com");
+        final boolean result = accountService.checkEmailDuplication(FactoryPreset.EMAIL);
 
         // Then
         assertThat(result).isFalse();
@@ -44,12 +47,14 @@ class CheckEmailDuplicationTest {
     @DisplayName("[Success] email does exist")
     void successIfEmailDoesExist() {
         // Given
-        doReturn(Optional.ofNullable(Account.builder().build()))
+        final Account account = AccountFactory.createDefaultAccount(ProfileFactory.createDefaultProfile());
+
+        doReturn(Optional.ofNullable(account))
                 .when(accountRepository)
-                .findByEmail(eq("test@example.com"));
+                .findByEmail(eq(account.getEmail()));
 
         // When
-        final boolean result = accountService.checkEmailDuplication("test@example.com");
+        final boolean result = accountService.checkEmailDuplication(FactoryPreset.EMAIL);
 
         // Then
         assertThat(result).isTrue();

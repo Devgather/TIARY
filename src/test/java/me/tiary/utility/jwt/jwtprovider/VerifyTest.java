@@ -5,6 +5,7 @@ import com.auth0.jwt.exceptions.JWTDecodeException;
 import com.auth0.jwt.exceptions.SignatureVerificationException;
 import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.auth0.jwt.interfaces.DecodedJWT;
+import factory.utility.jwt.JwtProviderFactory;
 import me.tiary.properties.jwt.JwtProperties;
 import me.tiary.utility.jwt.JwtProvider;
 import org.junit.jupiter.api.BeforeEach;
@@ -22,7 +23,7 @@ class VerifyTest {
     void beforeEach() {
         final JwtProperties properties = new TestTokenProperties("Test", 300);
 
-        jwtProvider = new JwtProvider(properties);
+        jwtProvider = JwtProviderFactory.create(properties);
     }
 
     @Test

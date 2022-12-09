@@ -1,13 +1,14 @@
 package me.tiary.repository.verificationrepository;
 
 import annotation.repository.RepositoryIntegrationTest;
+import config.factory.FactoryPreset;
+import factory.domain.VerificationFactory;
 import me.tiary.domain.Verification;
 import me.tiary.repository.VerificationRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import utility.JpaUtility;
-import utility.StringUtility;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -28,7 +29,7 @@ class FindByEmailIntegrationTest {
     @DisplayName("[Success] email does not exist")
     void successIfEmailDoesNotExist() {
         // When
-        final Optional<Verification> result = verificationRepository.findByEmail("test@example.com");
+        final Optional<Verification> result = verificationRepository.findByEmail(FactoryPreset.EMAIL);
 
         // Then
         assertThat(result.isEmpty()).isTrue();
@@ -38,18 +39,14 @@ class FindByEmailIntegrationTest {
     @DisplayName("[Success] email does exist")
     void successIfEmailDoesExist() {
         // Given
-        final Verification verification = Verification.builder()
-                .email("test@example.com")
-                .code(StringUtility.generateRandomString(Verification.CODE_MAX_LENGTH))
-                .state(false)
-                .build();
+        final Verification verification = VerificationFactory.createVerifiedVerification();
 
         verificationRepository.save(verification);
 
         JpaUtility.flushAndClear(em);
 
         // When
-        final Optional<Verification> result = verificationRepository.findByEmail("test@example.com");
+        final Optional<Verification> result = verificationRepository.findByEmail(FactoryPreset.EMAIL);
 
         // Then
         assertThat(result.isPresent()).isTrue();
