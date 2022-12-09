@@ -1,6 +1,10 @@
 package me.tiary.controller.profilecontroller;
 
+import annotation.controller.ControllerTest;
 import com.google.gson.Gson;
+import config.url.ProfileApiUrl;
+import factory.dto.profile.ProfileCreationRequestDtoFactory;
+import factory.dto.profile.ProfileCreationResponseDtoFactory;
 import me.tiary.controller.ProfileController;
 import me.tiary.domain.Profile;
 import me.tiary.dto.profile.ProfileCreationRequestDto;
@@ -13,10 +17,8 @@ import me.tiary.service.ProfileService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
@@ -25,7 +27,6 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import utility.StringUtility;
 
 import java.nio.charset.StandardCharsets;
-import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.eq;
@@ -33,7 +34,7 @@ import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.doThrow;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@ExtendWith(MockitoExtension.class)
+@ControllerTest
 @DisplayName("[ProfileController] createProfile")
 class CreateProfileTest {
     @InjectMocks
@@ -60,15 +61,11 @@ class CreateProfileTest {
     @DisplayName("[Fail] nickname is null")
     void failIfNicknameIsNull() throws Exception {
         // Given
-        final String url = "/api/profile";
-
-        final ProfileCreationRequestDto requestDto = ProfileCreationRequestDto.builder()
-                .nickname(null)
-                .build();
+        final ProfileCreationRequestDto requestDto = ProfileCreationRequestDtoFactory.create(null);
 
         // When
         final ResultActions resultActions = mockMvc.perform(
-                MockMvcRequestBuilders.post(url)
+                MockMvcRequestBuilders.post(ProfileApiUrl.PROFILE_CREATION.getEntireUrl())
                         .content(gson.toJson(requestDto))
                         .contentType(MediaType.APPLICATION_JSON)
         );
@@ -81,15 +78,11 @@ class CreateProfileTest {
     @DisplayName("[Fail] nickname is empty")
     void failIfNicknameIsEmpty() throws Exception {
         // Given
-        final String url = "/api/profile";
-
-        final ProfileCreationRequestDto requestDto = ProfileCreationRequestDto.builder()
-                .nickname("")
-                .build();
+        final ProfileCreationRequestDto requestDto = ProfileCreationRequestDtoFactory.create("");
 
         // When
         final ResultActions resultActions = mockMvc.perform(
-                MockMvcRequestBuilders.post(url)
+                MockMvcRequestBuilders.post(ProfileApiUrl.PROFILE_CREATION.getEntireUrl())
                         .content(gson.toJson(requestDto))
                         .contentType(MediaType.APPLICATION_JSON)
         );
@@ -102,15 +95,11 @@ class CreateProfileTest {
     @DisplayName("[Fail] nickname is blank")
     void failIfNicknameIsBlank() throws Exception {
         // Given
-        final String url = "/api/profile";
-
-        final ProfileCreationRequestDto requestDto = ProfileCreationRequestDto.builder()
-                .nickname(" ")
-                .build();
+        final ProfileCreationRequestDto requestDto = ProfileCreationRequestDtoFactory.create(" ");
 
         // When
         final ResultActions resultActions = mockMvc.perform(
-                MockMvcRequestBuilders.post(url)
+                MockMvcRequestBuilders.post(ProfileApiUrl.PROFILE_CREATION.getEntireUrl())
                         .content(gson.toJson(requestDto))
                         .contentType(MediaType.APPLICATION_JSON)
         );
@@ -123,17 +112,13 @@ class CreateProfileTest {
     @DisplayName("[Fail] nickname exceeds max length")
     void failIfNicknameExceedsMaxLength() throws Exception {
         // Given
-        final String url = "/api/profile";
-
         final String nickname = StringUtility.generateRandomString(Profile.NICKNAME_MAX_LENGTH + 1);
 
-        final ProfileCreationRequestDto requestDto = ProfileCreationRequestDto.builder()
-                .nickname(nickname)
-                .build();
+        final ProfileCreationRequestDto requestDto = ProfileCreationRequestDtoFactory.create(nickname);
 
         // When
         final ResultActions resultActions = mockMvc.perform(
-                MockMvcRequestBuilders.post(url)
+                MockMvcRequestBuilders.post(ProfileApiUrl.PROFILE_CREATION.getEntireUrl())
                         .content(gson.toJson(requestDto))
                         .contentType(MediaType.APPLICATION_JSON)
         );
@@ -146,11 +131,7 @@ class CreateProfileTest {
     @DisplayName("[Fail] nickname does exist")
     void failIfNicknameDoesExist() throws Exception {
         // Given
-        final String url = "/api/profile";
-
-        final ProfileCreationRequestDto requestDto = ProfileCreationRequestDto.builder()
-                .nickname("Test")
-                .build();
+        final ProfileCreationRequestDto requestDto = ProfileCreationRequestDtoFactory.createDefaultProfileCreationRequestDto();
 
         doThrow(new ProfileException(ProfileStatus.EXISTING_NICKNAME))
                 .when(profileService)
@@ -158,7 +139,7 @@ class CreateProfileTest {
 
         // When
         final ResultActions resultActions = mockMvc.perform(
-                MockMvcRequestBuilders.post(url)
+                MockMvcRequestBuilders.post(ProfileApiUrl.PROFILE_CREATION.getEntireUrl())
                         .content(gson.toJson(requestDto))
                         .contentType(MediaType.APPLICATION_JSON)
         );
@@ -177,24 +158,15 @@ class CreateProfileTest {
     @DisplayName("[Success] profile is acceptable")
     void successIfProfileIsAcceptable() throws Exception {
         // Given
-        final String url = "/api/profile";
+        final ProfileCreationRequestDto requestDto = ProfileCreationRequestDtoFactory.createDefaultProfileCreationRequestDto();
 
-        final String uuid = UUID.randomUUID().toString();
-
-        final ProfileCreationRequestDto requestDto = ProfileCreationRequestDto.builder()
-                .nickname("Test")
-                .build();
-
-        final ProfileCreationResponseDto responseDto = ProfileCreationResponseDto.builder()
-                .uuid(uuid)
-                .nickname(requestDto.getNickname())
-                .build();
+        final ProfileCreationResponseDto responseDto = ProfileCreationResponseDtoFactory.createDefaultProfileCreationResponseDto();
 
         doReturn(responseDto).when(profileService).createProfile(eq(requestDto));
 
         // When
         final ResultActions resultActions = mockMvc.perform(
-                MockMvcRequestBuilders.post(url)
+                MockMvcRequestBuilders.post(ProfileApiUrl.PROFILE_CREATION.getEntireUrl())
                         .content(gson.toJson(requestDto))
                         .contentType(MediaType.APPLICATION_JSON)
         );

@@ -1,5 +1,9 @@
 package me.tiary.repository.accountrepository;
 
+import annotation.repository.RepositoryIntegrationTest;
+import config.factory.FactoryPreset;
+import factory.domain.AccountFactory;
+import factory.domain.ProfileFactory;
 import me.tiary.domain.Account;
 import me.tiary.domain.Profile;
 import me.tiary.repository.AccountRepository;
@@ -8,46 +12,43 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.dao.DataIntegrityViolationException;
+import utility.JpaUtility;
+
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-@DataJpaTest
-@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-@DisplayName("[AccountRepository] save")
-class SaveTest {
+@RepositoryIntegrationTest
+@DisplayName("[AccountRepository - Integration] save")
+class SaveIntegrationTest {
     @Autowired
     private AccountRepository accountRepository;
 
     @Autowired
     private ProfileRepository profileRepository;
 
+    @PersistenceContext
+    private EntityManager em;
+
     private Profile profile;
 
     @BeforeEach
     void beforeEach() {
-        final Profile profile = Profile.builder()
-                .nickname("Test")
-                .picture("https://example.com/")
-                .build();
+        profile = profileRepository.save(ProfileFactory.createDefaultProfile());
 
-        this.profile = profileRepository.save(profile);
+        JpaUtility.flushAndClear(em);
     }
 
     @Test
     @DisplayName("[Fail] profile is null")
     void failIfProfileIsNull() {
         // Given
-        final Account account = Account.builder()
-                .profile(null)
-                .email("test@example.com")
-                .password("test")
-                .build();
+        final Account account = AccountFactory.create(null, FactoryPreset.EMAIL, FactoryPreset.PASSWORD);
 
-        // Then
+        // When, Then
         assertThrows(DataIntegrityViolationException.class, () -> accountRepository.save(account));
     }
 
@@ -55,13 +56,9 @@ class SaveTest {
     @DisplayName("[Fail] email is null")
     void failIfEmailIsNull() {
         // Given
-        final Account account = Account.builder()
-                .profile(profile)
-                .email(null)
-                .password("test")
-                .build();
+        final Account account = AccountFactory.create(profile, null, FactoryPreset.PASSWORD);
 
-        // Then
+        // When, Then
         assertThrows(DataIntegrityViolationException.class, () -> accountRepository.save(account));
     }
 
@@ -69,35 +66,19 @@ class SaveTest {
     @DisplayName("[Fail] email is duplicated")
     void failIfEmailIsDuplicated() {
         // Given
-        final Profile profile1 = profileRepository.save(
-                Profile.builder()
-                        .nickname("Test1")
-                        .picture("https://example.com/")
-                        .build()
-        );
+        final Profile profile1 = profileRepository.save(ProfileFactory.create("Test1", FactoryPreset.PICTURE));
 
-        final Profile profile2 = profileRepository.save(
-                Profile.builder()
-                        .nickname("Test2")
-                        .picture("https://example.com/")
-                        .build()
-        );
+        final Profile profile2 = profileRepository.save(ProfileFactory.create("Test2", FactoryPreset.PICTURE));
 
-        final Account account1 = Account.builder()
-                .profile(profile1)
-                .email("test@example.com")
-                .password("test1")
-                .build();
-
-        final Account account2 = Account.builder()
-                .profile(profile2)
-                .email("test@example.com")
-                .password("test2")
-                .build();
+        final Account account1 = AccountFactory.createDefaultAccount(profile1);
 
         accountRepository.save(account1);
 
-        // Then
+        JpaUtility.flushAndClear(em);
+
+        final Account account2 = AccountFactory.createDefaultAccount(profile2);
+
+        // When, Then
         assertThrows(DataIntegrityViolationException.class, () -> accountRepository.save(account2));
     }
 
@@ -105,13 +86,9 @@ class SaveTest {
     @DisplayName("[Fail] password is null")
     void failIfPasswordIsNull() {
         // Given
-        final Account account = Account.builder()
-                .profile(profile)
-                .email("test@example.com")
-                .password(null)
-                .build();
+        final Account account = AccountFactory.create(profile, FactoryPreset.EMAIL, null);
 
-        // Then
+        // When, Then
         assertThrows(DataIntegrityViolationException.class, () -> accountRepository.save(account));
     }
 
@@ -119,16 +96,13 @@ class SaveTest {
     @DisplayName("[Success] account is acceptable")
     void successIfAccountIsAcceptable() {
         // Given
-        final Account account = Account.builder()
-                .profile(profile)
-                .email("test@example.com")
-                .password("test")
-                .build();
+        final Account account = AccountFactory.createDefaultAccount(profile);
 
         // When
         final Account result = accountRepository.save(account);
 
         // Then
+        assertThat(result.getId()).isNotNull();
         assertThat(result.getProfile()).isEqualTo(account.getProfile());
         assertThat(result.getUuid().length()).isEqualTo(36);
         assertThat(result.getEmail()).isEqualTo(account.getEmail());

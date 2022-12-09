@@ -1,12 +1,13 @@
 package factory.domain;
 
+import config.factory.FactoryPreset;
 import me.tiary.domain.Verification;
 import utility.StringUtility;
 
 public final class VerificationFactory {
     public static Verification createUnverifiedVerification() {
         return create(
-                "test@example.com",
+                FactoryPreset.EMAIL,
                 StringUtility.generateRandomString(Verification.CODE_MAX_LENGTH),
                 false
         );
@@ -14,7 +15,7 @@ public final class VerificationFactory {
 
     public static Verification createVerifiedVerification() {
         return create(
-                "test@example.com",
+                FactoryPreset.EMAIL,
                 StringUtility.generateRandomString(Verification.CODE_MAX_LENGTH),
                 true
         );

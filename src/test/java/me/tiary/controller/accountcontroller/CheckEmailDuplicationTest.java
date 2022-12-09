@@ -1,14 +1,15 @@
 package me.tiary.controller.accountcontroller;
 
+import annotation.controller.ControllerTest;
+import config.factory.FactoryPreset;
+import config.url.AccountApiUrl;
 import me.tiary.controller.AccountController;
 import me.tiary.service.AccountService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -19,7 +20,7 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doReturn;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@ExtendWith(MockitoExtension.class)
+@ControllerTest
 @DisplayName("[AccountController] checkEmailDuplication")
 class CheckEmailDuplicationTest {
     @InjectMocks
@@ -39,7 +40,7 @@ class CheckEmailDuplicationTest {
     @DisplayName("[Success] email does not exist")
     void successIfEmailDoesNotExist() throws Exception {
         // Given
-        final String url = "/api/account/email/test@example.com";
+        final String url = AccountApiUrl.EMAIL_DUPLICATION_CHECK.getEntireUrl() + FactoryPreset.EMAIL;
 
         doReturn(false)
                 .when(accountService)
@@ -58,11 +59,11 @@ class CheckEmailDuplicationTest {
     @DisplayName("[Success] email does exist")
     void successIfEmailDoesExist() throws Exception {
         // Given
-        final String url = "/api/account/email/test@example.com";
+        final String url = AccountApiUrl.EMAIL_DUPLICATION_CHECK.getEntireUrl() + FactoryPreset.EMAIL;
 
         doReturn(true)
                 .when(accountService)
-                .checkEmailDuplication(eq("test@example.com"));
+                .checkEmailDuplication(eq(FactoryPreset.EMAIL));
 
         // When
         final ResultActions resultActions = mockMvc.perform(

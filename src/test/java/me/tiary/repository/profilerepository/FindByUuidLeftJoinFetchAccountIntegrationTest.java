@@ -1,14 +1,14 @@
 package me.tiary.repository.profilerepository;
 
-import me.tiary.domain.Account;
+import annotation.repository.RepositoryIntegrationTest;
+import factory.domain.AccountFactory;
+import factory.domain.ProfileFactory;
 import me.tiary.domain.Profile;
 import me.tiary.repository.AccountRepository;
 import me.tiary.repository.ProfileRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import utility.JpaUtility;
 
 import javax.persistence.EntityManager;
@@ -17,10 +17,9 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@DataJpaTest
-@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-@DisplayName("[ProfileRepository] findByUuidLeftJoinFetchAccount")
-class FindByUuidLeftJoinFetchAccountTest {
+@RepositoryIntegrationTest
+@DisplayName("[ProfileRepository - Integration] findByUuidLeftJoinFetchAccount")
+class FindByUuidLeftJoinFetchAccountIntegrationTest {
     @Autowired
     private ProfileRepository profileRepository;
 
@@ -44,12 +43,7 @@ class FindByUuidLeftJoinFetchAccountTest {
     @DisplayName("[Success] uuid does exist and account is null")
     void successIfUuidDoesExistAndAccountIsNull() {
         // Given
-        final Profile profile = profileRepository.save(
-                Profile.builder()
-                        .nickname("Test")
-                        .picture("https://example.com/")
-                        .build()
-        );
+        final Profile profile = profileRepository.save(ProfileFactory.createDefaultProfile());
 
         JpaUtility.flushAndClear(em);
 
@@ -58,9 +52,8 @@ class FindByUuidLeftJoinFetchAccountTest {
 
         // Then
         assertThat(result.isPresent()).isTrue();
-        assertThat(result.get().getUuid()).isEqualTo(profile.getUuid());
-        assertThat(result.get().getNickname()).isEqualTo("Test");
-        assertThat(result.get().getPicture()).isEqualTo("https://example.com/");
+        assertThat(result.get().getNickname()).isEqualTo(profile.getNickname());
+        assertThat(result.get().getPicture()).isEqualTo(profile.getPicture());
         assertThat(result.get().getAccount()).isNull();
     }
 
@@ -68,20 +61,9 @@ class FindByUuidLeftJoinFetchAccountTest {
     @DisplayName("[Success] uuid does exist and account is not null")
     void successIfUuidDoesExistAndAccountIsNotNull() {
         // Given
-        final Profile profile = profileRepository.save(
-                Profile.builder()
-                        .nickname("Test")
-                        .picture("https://example.com/")
-                        .build()
-        );
+        final Profile profile = profileRepository.save(ProfileFactory.createDefaultProfile());
 
-        accountRepository.save(
-                Account.builder()
-                        .profile(profile)
-                        .email("test@example.com")
-                        .password("test")
-                        .build()
-        );
+        accountRepository.save(AccountFactory.createDefaultAccount(profile));
 
         JpaUtility.flushAndClear(em);
 
@@ -90,9 +72,8 @@ class FindByUuidLeftJoinFetchAccountTest {
 
         // Then
         assertThat(result.isPresent()).isTrue();
-        assertThat(result.get().getUuid()).isEqualTo(profile.getUuid());
-        assertThat(result.get().getNickname()).isEqualTo("Test");
-        assertThat(result.get().getPicture()).isEqualTo("https://example.com/");
+        assertThat(result.get().getNickname()).isEqualTo(profile.getNickname());
+        assertThat(result.get().getPicture()).isEqualTo(profile.getPicture());
         assertThat(result.get().getAccount()).isNotNull();
     }
 }
