@@ -12,6 +12,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
@@ -19,6 +20,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import javax.servlet.http.Cookie;
 
+import static org.hamcrest.Matchers.not;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ApplicationIntegrationTest
@@ -40,8 +42,8 @@ class SecurityFilterChainIntegrationTest {
         // Given
         final String url = AccountApiUrl.EMAIL_DUPLICATION_CHECK.getEntireUrl() + FactoryPreset.EMAIL;
 
-        // Algorithm = HMAC256, Payload = { "uuid": "cbf0f220-97b8-4312-82ce-f98266c428d4" }, Secret Key = Test
-        final String accessToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiY2JmMGYyMjAtOTdiOC00MzEyLTgyY2UtZjk4MjY2YzQyOGQ0In0.G0z3gVEh_uwH0cq0stN6JE7PkwC8L4DwzginXwX-1qg";
+        // Algorithm = HMAC256, Payload = { "uuid": "cbf0f220-97b8-4312-82ce-f98266c428d4" }, Secret Key = jwt-access-token-secret-key
+        final String accessToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiY2JmMGYyMjAtOTdiOC00MzEyLTgyY2UtZjk4MjY2YzQyOGQ0In0.rftGC07wvthl89A-lHN4NzeP2gcVv9UxTTnST3Nhqz8";
 
         // When
         final ResultActions resultActions = mockMvc.perform(
@@ -50,7 +52,7 @@ class SecurityFilterChainIntegrationTest {
         );
 
         // Then
-        resultActions.andExpect(status().isUnauthorized());
+        resultActions.andExpect(status().isForbidden());
     }
 
     @Test
@@ -65,7 +67,7 @@ class SecurityFilterChainIntegrationTest {
         );
 
         // Then
-        resultActions.andExpect(status().isNotFound());
+        resultActions.andExpect(status().is(not(HttpStatus.FORBIDDEN.value())));
     }
 
     @Test
@@ -74,8 +76,8 @@ class SecurityFilterChainIntegrationTest {
         // Given
         final String url = ProfileApiUrl.NICKNAME_DUPLICATION_CHECK.getEntireUrl() + FactoryPreset.NICKNAME;
 
-        // Algorithm = HMAC256, Payload = { "uuid": "cbf0f220-97b8-4312-82ce-f98266c428d4" }, Secret Key = Test
-        final String accessToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiY2JmMGYyMjAtOTdiOC00MzEyLTgyY2UtZjk4MjY2YzQyOGQ0In0.G0z3gVEh_uwH0cq0stN6JE7PkwC8L4DwzginXwX-1qg";
+        // Algorithm = HMAC256, Payload = { "uuid": "cbf0f220-97b8-4312-82ce-f98266c428d4" }, Secret Key = jwt-access-token-secret-key
+        final String accessToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiY2JmMGYyMjAtOTdiOC00MzEyLTgyY2UtZjk4MjY2YzQyOGQ0In0.rftGC07wvthl89A-lHN4NzeP2gcVv9UxTTnST3Nhqz8";
 
         // When
         final ResultActions resultActions = mockMvc.perform(
@@ -84,7 +86,7 @@ class SecurityFilterChainIntegrationTest {
         );
 
         // Then
-        resultActions.andExpect(status().isUnauthorized());
+        resultActions.andExpect(status().isForbidden());
     }
 
     @Test
@@ -99,7 +101,7 @@ class SecurityFilterChainIntegrationTest {
         );
 
         // Then
-        resultActions.andExpect(status().isNotFound());
+        resultActions.andExpect(status().is(not(HttpStatus.FORBIDDEN.value())));
     }
 
     @Test
@@ -108,8 +110,8 @@ class SecurityFilterChainIntegrationTest {
         // Given
         final String url = ProfileApiUrl.PROFILE_CREATION.getEntireUrl();
 
-        // Algorithm = HMAC256, Payload = { "uuid": "cbf0f220-97b8-4312-82ce-f98266c428d4" }, Secret Key = Test
-        final String accessToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiY2JmMGYyMjAtOTdiOC00MzEyLTgyY2UtZjk4MjY2YzQyOGQ0In0.G0z3gVEh_uwH0cq0stN6JE7PkwC8L4DwzginXwX-1qg";
+        // Algorithm = HMAC256, Payload = { "uuid": "cbf0f220-97b8-4312-82ce-f98266c428d4" }, Secret Key = jwt-access-token-secret-key
+        final String accessToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiY2JmMGYyMjAtOTdiOC00MzEyLTgyY2UtZjk4MjY2YzQyOGQ0In0.rftGC07wvthl89A-lHN4NzeP2gcVv9UxTTnST3Nhqz8";
 
         final ProfileCreationRequestDto requestDto = ProfileCreationRequestDtoFactory.createDefaultProfileCreationRequestDto();
 
@@ -122,7 +124,7 @@ class SecurityFilterChainIntegrationTest {
         );
 
         // Then
-        resultActions.andExpect(status().isUnauthorized());
+        resultActions.andExpect(status().isForbidden());
     }
 
     @Test
@@ -141,6 +143,6 @@ class SecurityFilterChainIntegrationTest {
         );
 
         // Then
-        resultActions.andExpect(status().isCreated());
+        resultActions.andExpect(status().is(not(HttpStatus.FORBIDDEN.value())));
     }
 }
