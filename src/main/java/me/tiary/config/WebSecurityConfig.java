@@ -46,6 +46,7 @@ public class WebSecurityConfig {
                                                    final AuthenticationFilter authenticationFilter) throws Exception {
         http.authorizeRequests()
                 .antMatchers(HttpMethod.HEAD, "/api/account/email/**").anonymous()
+                .antMatchers(HttpMethod.POST, "/api/account").anonymous()
                 .antMatchers(HttpMethod.HEAD, "/api/profile/nickname/**").anonymous()
                 .antMatchers(HttpMethod.POST, "/api/profile").anonymous()
                 .anyRequest().authenticated()
