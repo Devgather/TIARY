@@ -1,3 +1,5 @@
+DROP TABLE IF EXISTS oauth;
+
 DROP TABLE IF EXISTS verification;
 
 DROP TABLE IF EXISTS account;
@@ -47,4 +49,22 @@ CREATE TABLE verification
     PRIMARY KEY (id),
     UNIQUE INDEX (uuid),
     UNIQUE INDEX (email)
+) ENGINE=InnoDB;
+
+CREATE TABLE oauth
+(
+    id                 BIGINT       NOT NULL AUTO_INCREMENT,
+    profile_id         BIGINT       NOT NULL,
+    uuid               CHAR(36)     NOT NULL,
+    identifier         VARCHAR(255) NOT NULL,
+    provider           VARCHAR(255) NOT NULL,
+    created_date       DATETIME     NOT NULL,
+    last_modified_date DATETIME     NOT NULL,
+    PRIMARY KEY (id),
+    FOREIGN KEY (profile_id)
+        REFERENCES profile (id)
+        ON UPDATE CASCADE
+        ON DELETE CASCADE,
+    UNIQUE INDEX (uuid),
+    UNIQUE INDEX (identifier)
 ) ENGINE=InnoDB;
