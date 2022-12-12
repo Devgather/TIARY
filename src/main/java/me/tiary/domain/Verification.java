@@ -7,6 +7,7 @@ import javax.persistence.*;
 import java.util.UUID;
 
 @Entity
+@Table(name = "verification")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Builder
