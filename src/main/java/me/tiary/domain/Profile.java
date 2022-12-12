@@ -4,6 +4,8 @@ import lombok.*;
 import me.tiary.domain.common.Timestamp;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -34,6 +36,9 @@ public class Profile extends Timestamp {
 
     @OneToOne(mappedBy = "profile", fetch = FetchType.LAZY)
     private Account account;
+
+    @OneToMany(mappedBy = "profile", fetch = FetchType.LAZY)
+    private List<OAuth> oAuths = new ArrayList<>();
 
     @PrePersist
     public void createUuid() {
