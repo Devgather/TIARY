@@ -5,12 +5,12 @@ import config.factory.FactoryPreset;
 import factory.domain.VerificationFactory;
 import me.tiary.domain.Verification;
 import me.tiary.repository.VerificationRepository;
+import me.tiary.utility.common.StringUtility;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import utility.JpaUtility;
-import utility.StringUtility;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
