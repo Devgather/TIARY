@@ -40,6 +40,9 @@ public class Profile extends Timestamp {
     @OneToMany(mappedBy = "profile", fetch = FetchType.LAZY)
     private List<OAuth> oAuths = new ArrayList<>();
 
+    @OneToMany(mappedBy = "profile", fetch = FetchType.LAZY)
+    private List<Til> tils = new ArrayList<>();
+
     @PrePersist
     public void createUuid() {
         this.uuid = UUID.randomUUID().toString();
