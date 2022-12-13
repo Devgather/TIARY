@@ -1,4 +1,4 @@
-package utility;
+package me.tiary.utility.common;
 
 import java.util.Random;
 

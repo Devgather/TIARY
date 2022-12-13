@@ -2,7 +2,7 @@ package factory.domain;
 
 import config.factory.FactoryPreset;
 import me.tiary.domain.Verification;
-import utility.StringUtility;
+import me.tiary.utility.common.StringUtility;
 
 public final class VerificationFactory {
     public static Verification createUnverifiedVerification() {
@@ -24,7 +24,7 @@ public final class VerificationFactory {
     public static Verification create(final String email, final String code, final Boolean state) {
         final Verification verification = Verification.builder()
                 .email(email)
-                .code(code)
+                .code((code == null) ? (null) : (code.toUpperCase()))
                 .state(state)
                 .build();
 

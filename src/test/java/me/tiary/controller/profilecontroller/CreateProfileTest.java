@@ -14,6 +14,7 @@ import me.tiary.exception.handler.ExceptionResponse;
 import me.tiary.exception.handler.controller.GlobalExceptionHandler;
 import me.tiary.exception.status.ProfileStatus;
 import me.tiary.service.ProfileService;
+import me.tiary.utility.common.StringUtility;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -24,7 +25,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import utility.StringUtility;
 
 import java.nio.charset.StandardCharsets;
 

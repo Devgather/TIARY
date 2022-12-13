@@ -2,6 +2,7 @@ package me.tiary.domain;
 
 import lombok.*;
 import me.tiary.domain.common.Timestamp;
+import me.tiary.utility.common.StringUtility;
 
 import javax.persistence.*;
 import java.util.UUID;
@@ -36,5 +37,13 @@ public class Verification extends Timestamp {
     @PrePersist
     public void createUuid() {
         this.uuid = UUID.randomUUID().toString();
+    }
+
+    public void refreshCode() {
+        if (this.state) {
+            throw new IllegalStateException();
+        }
+
+        this.code = StringUtility.generateRandomString(CODE_MAX_LENGTH).toUpperCase();
     }
 }
