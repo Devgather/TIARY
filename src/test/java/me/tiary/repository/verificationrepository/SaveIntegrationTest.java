@@ -58,20 +58,6 @@ class SaveIntegrationTest {
     }
 
     @Test
-    @DisplayName("[Fail] code is null")
-    void failIfCodeIsNull() {
-        // Given
-        final Verification verification = VerificationFactory.create(
-                FactoryPreset.EMAIL,
-                null,
-                false
-        );
-
-        // When, Then
-        assertThrows(DataIntegrityViolationException.class, () -> verificationRepository.save(verification));
-    }
-
-    @Test
     @DisplayName("[Fail] code exceeds max length")
     void failIfCodeExceedsMaxLength() {
         // Given

@@ -24,7 +24,7 @@ public final class VerificationFactory {
     public static Verification create(final String email, final String code, final Boolean state) {
         final Verification verification = Verification.builder()
                 .email(email)
-                .code((code == null) ? (null) : (code.toUpperCase()))
+                .code(code.toUpperCase())
                 .state(state)
                 .build();
 
