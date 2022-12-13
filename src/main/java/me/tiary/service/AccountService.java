@@ -12,9 +12,16 @@ import me.tiary.repository.AccountRepository;
 import me.tiary.repository.ProfileRepository;
 import me.tiary.repository.VerificationRepository;
 import org.modelmapper.ModelMapper;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.thymeleaf.context.Context;
+import org.thymeleaf.spring5.SpringTemplateEngine;
+
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
 
 @Service
 @Transactional(readOnly = true)
@@ -26,9 +33,13 @@ public class AccountService {
 
     private final VerificationRepository verificationRepository;
 
+    private final SpringTemplateEngine templateEngine;
+
     private final ModelMapper modelMapper;
 
     private final PasswordEncoder passwordEncoder;
+
+    private final JavaMailSender mailSender;
 
     public boolean checkEmailDuplication(final String email) {
         return accountRepository.findByEmail(email).isPresent();
@@ -63,5 +74,39 @@ public class AccountService {
         final Account result = accountRepository.save(account);
 
         return modelMapper.map(result, AccountCreationResponseDto.class);
+    }
+
+    @Transactional
+    public void sendVerificationMail(final String email) throws MessagingException {
+        final Verification verification = verificationRepository.findByEmail(email)
+                .orElseGet(() -> createUnverifiedVerification(email));
+
+        try {
+            verification.refreshCode();
+        } catch (final IllegalStateException ex) {
+            throw new AccountException(AccountStatus.VERIFIED_EMAIL);
+        }
+
+        final Context context = new Context();
+
+        context.setVariable("code", verification.getCode());
+
+        final MimeMessage mimeMessage = mailSender.createMimeMessage();
+        final MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, true);
+
+        mimeMessageHelper.setSubject("[TIARY] Verify your email address");
+        mimeMessageHelper.setTo(email);
+        mimeMessageHelper.setText(templateEngine.process("/mail/verification", context), true);
+
+        mailSender.send(mimeMessage);
+    }
+
+    private Verification createUnverifiedVerification(final String email) {
+        final Verification verification = Verification.builder()
+                .email(email)
+                .state(false)
+                .build();
+
+        return verificationRepository.save(verification);
     }
 }
