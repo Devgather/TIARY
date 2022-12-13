@@ -35,6 +35,14 @@ public class Verification extends Timestamp {
     private Boolean state;
 
     @PrePersist
+    private void prePersist() {
+        createUuid();
+
+        if (code == null && !state) {
+            refreshCode();
+        }
+    }
+
     public void createUuid() {
         this.uuid = UUID.randomUUID().toString();
     }
