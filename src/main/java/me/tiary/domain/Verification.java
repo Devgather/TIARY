@@ -54,4 +54,12 @@ public class Verification extends Timestamp {
 
         this.code = StringUtility.generateRandomString(CODE_MAX_LENGTH).toUpperCase();
     }
+
+    public void verify() {
+        this.state = true;
+    }
+
+    public void cancelVerification() {
+        this.state = false;
+    }
 }
