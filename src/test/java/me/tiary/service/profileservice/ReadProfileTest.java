@@ -1,5 +1,8 @@
 package me.tiary.service.profileservice;
 
+import annotation.service.ServiceTest;
+import config.factory.FactoryPreset;
+import factory.domain.ProfileFactory;
 import me.tiary.domain.Profile;
 import me.tiary.dto.profile.ProfileReadResponseDto;
 import me.tiary.exception.ProfileException;
@@ -9,21 +12,20 @@ import me.tiary.service.ProfileService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.ModelMapper;
 
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doReturn;
 
-@ExtendWith(MockitoExtension.class)
+@ServiceTest
 @DisplayName("[ProfileService] readProfile")
 class ReadProfileTest {
     @InjectMocks
@@ -48,12 +50,11 @@ class ReadProfileTest {
         // Given
         doReturn(Optional.empty())
                 .when(profileRepository)
-                .findByNickname(eq("Test"));
+                .findByNickname(any(String.class));
 
-        // When
-        final ProfileException result = assertThrows(ProfileException.class, () -> profileService.readProfile("Test"));
+        // When, Then
+        final ProfileException result = assertThrows(ProfileException.class, () -> profileService.readProfile(FactoryPreset.NICKNAME));
 
-        // Then
         assertThat(result.getStatus()).isEqualTo(ProfileStatus.NOT_EXISTING_PROFILE);
     }
 
@@ -61,18 +62,14 @@ class ReadProfileTest {
     @DisplayName("[Success] profile does exist")
     void successIfProfileDoesExist() {
         // Given
-        final Profile profile = Profile.builder()
-                .id(1L)
-                .nickname("Test")
-                .picture("https://example.com/")
-                .build();
+        final Profile profile = ProfileFactory.createDefaultProfile();
 
         doReturn(Optional.ofNullable(profile))
                 .when(profileRepository)
-                .findByNickname(eq("Test"));
+                .findByNickname(eq(profile.getNickname()));
 
         // When
-        final ProfileReadResponseDto result = profileService.readProfile("Test");
+        final ProfileReadResponseDto result = profileService.readProfile(FactoryPreset.NICKNAME);
 
         // Then
         assertThat(result.getNickname()).isEqualTo(profile.getNickname());
