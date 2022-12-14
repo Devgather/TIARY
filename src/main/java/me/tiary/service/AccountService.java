@@ -62,6 +62,8 @@ public class AccountService {
 
         final Account result = accountRepository.save(account);
 
+        verificationRepository.delete(verification);
+
         return modelMapper.map(result, AccountCreationResponseDto.class);
     }
 }
