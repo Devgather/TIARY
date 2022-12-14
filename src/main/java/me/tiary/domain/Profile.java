@@ -4,13 +4,17 @@ import lombok.*;
 import me.tiary.domain.common.Timestamp;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
+@Table(name = "profile")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Getter
 @Builder
+@EqualsAndHashCode(callSuper = false, onlyExplicitlyIncluded = true)
 public class Profile extends Timestamp {
     public static final int NICKNAME_MAX_LENGTH = 20;
 
@@ -21,6 +25,7 @@ public class Profile extends Timestamp {
     private Long id;
 
     @Column(columnDefinition = "char(36)", nullable = false, unique = true)
+    @EqualsAndHashCode.Include
     private String uuid;
 
     @Column(length = NICKNAME_MAX_LENGTH, nullable = false, unique = true)
@@ -32,7 +37,19 @@ public class Profile extends Timestamp {
     @OneToOne(mappedBy = "profile", fetch = FetchType.LAZY)
     private Account account;
 
+    @OneToMany(mappedBy = "profile", fetch = FetchType.LAZY)
+    @Builder.Default
+    private List<OAuth> oAuths = new ArrayList<>();
+
+    @OneToMany(mappedBy = "profile", fetch = FetchType.LAZY)
+    @Builder.Default
+    private List<Til> tils = new ArrayList<>();
+
     @PrePersist
+    private void prePersist() {
+        createUuid();
+    }
+
     public void createUuid() {
         this.uuid = UUID.randomUUID().toString();
     }

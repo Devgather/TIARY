@@ -19,6 +19,7 @@ repositories {
 }
 
 dependencies {
+    implementation 'io.awspring.cloud:spring-cloud-starter-aws:2.4.0'
     implementation 'com.google.code.gson:gson:2.8.9'
     implementation 'org.modelmapper:modelmapper:2.4.5'
     implementation 'com.auth0:java-jwt:3.19.3'

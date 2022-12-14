@@ -1,5 +1,8 @@
 package me.tiary.service.profileservice;
 
+import annotation.service.ServiceTest;
+import factory.domain.ProfileFactory;
+import factory.dto.profile.ProfileCreationRequestDtoFactory;
 import me.tiary.domain.Profile;
 import me.tiary.dto.profile.ProfileCreationRequestDto;
 import me.tiary.dto.profile.ProfileCreationResponseDto;
@@ -10,15 +13,12 @@ import me.tiary.service.ProfileService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.ModelMapper;
 
 import java.util.Optional;
-import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -26,7 +26,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doReturn;
 
-@ExtendWith(MockitoExtension.class)
+@ServiceTest
 @DisplayName("[ProfileService] createProfile")
 class CreateProfileTest {
     @InjectMocks
@@ -49,18 +49,17 @@ class CreateProfileTest {
     @DisplayName("[Fail] nickname does exist")
     void failIfNicknameDoesExist() {
         // Given
-        final ProfileCreationRequestDto requestDto = ProfileCreationRequestDto.builder()
-                .nickname("Test")
-                .build();
+        final Profile profile = ProfileFactory.createDefaultProfile();
 
-        doReturn(Optional.ofNullable(Profile.builder().build()))
+        doReturn(Optional.ofNullable(profile))
                 .when(profileRepository)
-                .findByNickname(eq(requestDto.getNickname()));
+                .findByNickname(eq(profile.getNickname()));
 
-        // When
+        final ProfileCreationRequestDto requestDto = ProfileCreationRequestDtoFactory.createDefaultProfileCreationRequestDto();
+
+        // When, Then
         final ProfileException result = assertThrows(ProfileException.class, () -> profileService.createProfile(requestDto));
 
-        // Then
         assertThat(result.getStatus()).isEqualTo(ProfileStatus.EXISTING_NICKNAME);
     }
 
@@ -68,26 +67,15 @@ class CreateProfileTest {
     @DisplayName("[Success] profile is acceptable")
     void successIfProfileIsAcceptable() {
         // Given
-        final String uuid = UUID.randomUUID().toString();
-
-        final ProfileCreationRequestDto requestDto = ProfileCreationRequestDto.builder()
-                .nickname("Test")
-                .build();
-
         doReturn(Optional.empty())
                 .when(profileRepository)
-                .findByNickname(eq(requestDto.getNickname()));
+                .findByNickname(any(String.class));
 
-        final Profile savedProfile = Profile.builder()
-                .id(1L)
-                .uuid(uuid)
-                .nickname("Test")
-                .picture("https://example.com/")
-                .build();
-
-        doReturn(savedProfile)
+        doReturn(ProfileFactory.createDefaultProfile())
                 .when(profileRepository)
                 .save(any(Profile.class));
+
+        final ProfileCreationRequestDto requestDto = ProfileCreationRequestDtoFactory.createDefaultProfileCreationRequestDto();
 
         // When
         final ProfileCreationResponseDto result = profileService.createProfile(requestDto);

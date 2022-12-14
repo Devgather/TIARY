@@ -1,17 +1,16 @@
 package me.tiary.domain;
 
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import me.tiary.domain.common.Timestamp;
 
 import javax.persistence.*;
 import java.util.UUID;
 
 @Entity
+@Table(name = "account")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
+@EqualsAndHashCode(callSuper = false, onlyExplicitlyIncluded = true)
 public class Account extends Timestamp {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,6 +21,7 @@ public class Account extends Timestamp {
     private Profile profile;
 
     @Column(columnDefinition = "char(36)", nullable = false, unique = true)
+    @EqualsAndHashCode.Include
     private String uuid;
 
     @Column(nullable = false, unique = true)
@@ -41,6 +41,10 @@ public class Account extends Timestamp {
     }
 
     @PrePersist
+    private void prePersist() {
+        createUuid();
+    }
+
     public void createUuid() {
         this.uuid = UUID.randomUUID().toString();
     }

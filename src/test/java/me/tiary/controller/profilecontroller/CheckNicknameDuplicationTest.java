@@ -1,14 +1,15 @@
 package me.tiary.controller.profilecontroller;
 
+import annotation.controller.ControllerTest;
+import config.factory.FactoryPreset;
+import config.url.ProfileApiUrl;
 import me.tiary.controller.ProfileController;
 import me.tiary.service.ProfileService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -19,7 +20,7 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doReturn;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@ExtendWith(MockitoExtension.class)
+@ControllerTest
 @DisplayName("[ProfileController] checkNicknameDuplication")
 class CheckNicknameDuplicationTest {
     @InjectMocks
@@ -41,7 +42,7 @@ class CheckNicknameDuplicationTest {
     @DisplayName("[Success] nickname does not exist")
     void successIfNicknameDoesNotExist() throws Exception {
         // Given
-        final String url = "/api/profile/nickname/Test";
+        final String url = ProfileApiUrl.NICKNAME_DUPLICATION_CHECK.getEntireUrl() + FactoryPreset.NICKNAME;
 
         doReturn(false)
                 .when(profileService)
@@ -60,11 +61,11 @@ class CheckNicknameDuplicationTest {
     @DisplayName("[Success] nickname does exist")
     void successIfNicknameDoesExist() throws Exception {
         // Given
-        final String url = "/api/profile/nickname/Test";
+        final String url = ProfileApiUrl.NICKNAME_DUPLICATION_CHECK.getEntireUrl() + FactoryPreset.NICKNAME;
 
         doReturn(true)
                 .when(profileService)
-                .checkNicknameDuplication(eq("Test"));
+                .checkNicknameDuplication(eq(FactoryPreset.NICKNAME));
 
         // When
         final ResultActions resultActions = mockMvc.perform(

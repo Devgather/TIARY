@@ -1,25 +1,20 @@
 package me.tiary.controller.accountcontroller;
 
-import me.tiary.config.WebSecurityConfig;
+import annotation.controller.ControllerIntegrationTest;
+import config.url.AccountApiUrl;
 import me.tiary.controller.AccountController;
 import me.tiary.service.AccountService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.h2.H2ConsoleProperties;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.Import;
-import org.springframework.data.jpa.mapping.JpaMetamodelMappingContext;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(AccountController.class)
-@Import({WebSecurityConfig.class, H2ConsoleProperties.class})
-@MockBean(JpaMetamodelMappingContext.class)
+@ControllerIntegrationTest(AccountController.class)
 @DisplayName("[AccountController - Integration] checkEmailDuplication")
 class CheckEmailDuplicationIntegrationTest {
     @Autowired
@@ -32,7 +27,7 @@ class CheckEmailDuplicationIntegrationTest {
     @DisplayName("[Fail] email is blank")
     void failIfEmailIsBlank() throws Exception {
         // Given
-        final String url = "/api/account/email/ ";
+        final String url = AccountApiUrl.EMAIL_DUPLICATION_CHECK.getEntireUrl() + " ";
 
         // When
         final ResultActions resultActions = mockMvc.perform(
@@ -47,7 +42,7 @@ class CheckEmailDuplicationIntegrationTest {
     @DisplayName("[Fail] email does not satisfy format")
     void failIfEmailDoesNotSatisfyFormat() throws Exception {
         // Given
-        final String url = "/api/account/email/test";
+        final String url = AccountApiUrl.EMAIL_DUPLICATION_CHECK.getEntireUrl() + "test";
 
         // When
         final ResultActions resultActions = mockMvc.perform(

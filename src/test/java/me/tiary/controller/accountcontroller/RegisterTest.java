@@ -1,6 +1,9 @@
 package me.tiary.controller.accountcontroller;
 
+import annotation.controller.ControllerTest;
 import com.google.gson.Gson;
+import config.factory.FactoryPreset;
+import config.url.AccountApiUrl;
 import factory.dto.account.AccountCreationRequestDtoFactory;
 import factory.dto.account.AccountCreationResponseDtoFactory;
 import me.tiary.controller.AccountController;
@@ -14,10 +17,8 @@ import me.tiary.service.AccountService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
@@ -33,11 +34,9 @@ import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.doThrow;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@ExtendWith(MockitoExtension.class)
+@ControllerTest
 @DisplayName("[AccountController] register")
 class RegisterTest {
-    public static final String URL = "/api/account";
-
     @InjectMocks
     private AccountController accountController;
 
@@ -62,12 +61,12 @@ class RegisterTest {
     void failIfProfileUuidIsNull() throws Exception {
         // Given
         final AccountCreationRequestDto requestDto = AccountCreationRequestDtoFactory.create(
-                null, "test@example.com", "test"
+                null, FactoryPreset.EMAIL, FactoryPreset.PASSWORD
         );
 
         // When
         final ResultActions resultActions = mockMvc.perform(
-                MockMvcRequestBuilders.post(URL)
+                MockMvcRequestBuilders.post(AccountApiUrl.REGISTER.getEntireUrl())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(gson.toJson(requestDto))
         );
@@ -81,12 +80,12 @@ class RegisterTest {
     void failIfProfileUuidIsEmpty() throws Exception {
         // Given
         final AccountCreationRequestDto requestDto = AccountCreationRequestDtoFactory.create(
-                "", "test@example.com", "test"
+                "", FactoryPreset.EMAIL, FactoryPreset.PASSWORD
         );
 
         // When
         final ResultActions resultActions = mockMvc.perform(
-                MockMvcRequestBuilders.post(URL)
+                MockMvcRequestBuilders.post(AccountApiUrl.REGISTER.getEntireUrl())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(gson.toJson(requestDto))
         );
@@ -100,12 +99,12 @@ class RegisterTest {
     void failIfProfileUuidIsBlank() throws Exception {
         // Given
         final AccountCreationRequestDto requestDto = AccountCreationRequestDtoFactory.create(
-                " ", "test@example.com", "test"
+                " ", FactoryPreset.EMAIL, FactoryPreset.PASSWORD
         );
 
         // When
         final ResultActions resultActions = mockMvc.perform(
-                MockMvcRequestBuilders.post(URL)
+                MockMvcRequestBuilders.post(AccountApiUrl.REGISTER.getEntireUrl())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(gson.toJson(requestDto))
         );
@@ -119,12 +118,12 @@ class RegisterTest {
     void failIfEmailIsNull() throws Exception {
         // Given
         final AccountCreationRequestDto requestDto = AccountCreationRequestDtoFactory.create(
-                UUID.randomUUID().toString(), null, "test"
+                UUID.randomUUID().toString(), null, FactoryPreset.PASSWORD
         );
 
         // When
         final ResultActions resultActions = mockMvc.perform(
-                MockMvcRequestBuilders.post(URL)
+                MockMvcRequestBuilders.post(AccountApiUrl.REGISTER.getEntireUrl())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(gson.toJson(requestDto))
         );
@@ -138,12 +137,12 @@ class RegisterTest {
     void failIfEmailIsEmpty() throws Exception {
         // Given
         final AccountCreationRequestDto requestDto = AccountCreationRequestDtoFactory.create(
-                UUID.randomUUID().toString(), "", "test"
+                UUID.randomUUID().toString(), "", FactoryPreset.PASSWORD
         );
 
         // When
         final ResultActions resultActions = mockMvc.perform(
-                MockMvcRequestBuilders.post(URL)
+                MockMvcRequestBuilders.post(AccountApiUrl.REGISTER.getEntireUrl())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(gson.toJson(requestDto))
         );
@@ -157,12 +156,12 @@ class RegisterTest {
     void failIfEmailIsBlank() throws Exception {
         // Given
         final AccountCreationRequestDto requestDto = AccountCreationRequestDtoFactory.create(
-                UUID.randomUUID().toString(), " ", "test"
+                UUID.randomUUID().toString(), " ", FactoryPreset.PASSWORD
         );
 
         // When
         final ResultActions resultActions = mockMvc.perform(
-                MockMvcRequestBuilders.post(URL)
+                MockMvcRequestBuilders.post(AccountApiUrl.REGISTER.getEntireUrl())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(gson.toJson(requestDto))
         );
@@ -176,12 +175,12 @@ class RegisterTest {
     void failIfEmailIsInvalidFormat() throws Exception {
         // Given
         final AccountCreationRequestDto requestDto = AccountCreationRequestDtoFactory.create(
-                UUID.randomUUID().toString(), "test", "test"
+                UUID.randomUUID().toString(), "test", FactoryPreset.PASSWORD
         );
 
         // When
         final ResultActions resultActions = mockMvc.perform(
-                MockMvcRequestBuilders.post(URL)
+                MockMvcRequestBuilders.post(AccountApiUrl.REGISTER.getEntireUrl())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(gson.toJson(requestDto))
         );
@@ -195,12 +194,12 @@ class RegisterTest {
     void failIfPasswordIsNull() throws Exception {
         // Given
         final AccountCreationRequestDto requestDto = AccountCreationRequestDtoFactory.create(
-                UUID.randomUUID().toString(), "test@example.com", null
+                UUID.randomUUID().toString(), FactoryPreset.EMAIL, null
         );
 
         // When
         final ResultActions resultActions = mockMvc.perform(
-                MockMvcRequestBuilders.post(URL)
+                MockMvcRequestBuilders.post(AccountApiUrl.REGISTER.getEntireUrl())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(gson.toJson(requestDto))
         );
@@ -214,12 +213,12 @@ class RegisterTest {
     void failIfPasswordIsEmpty() throws Exception {
         // Given
         final AccountCreationRequestDto requestDto = AccountCreationRequestDtoFactory.create(
-                UUID.randomUUID().toString(), "test@example.com", ""
+                UUID.randomUUID().toString(), FactoryPreset.EMAIL, ""
         );
 
         // When
         final ResultActions resultActions = mockMvc.perform(
-                MockMvcRequestBuilders.post(URL)
+                MockMvcRequestBuilders.post(AccountApiUrl.REGISTER.getEntireUrl())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(gson.toJson(requestDto))
         );
@@ -233,12 +232,12 @@ class RegisterTest {
     void failIfPasswordIsBlank() throws Exception {
         // Given
         final AccountCreationRequestDto requestDto = AccountCreationRequestDtoFactory.create(
-                UUID.randomUUID().toString(), "test@example.com", " "
+                UUID.randomUUID().toString(), FactoryPreset.EMAIL, " "
         );
 
         // When
         final ResultActions resultActions = mockMvc.perform(
-                MockMvcRequestBuilders.post(URL)
+                MockMvcRequestBuilders.post(AccountApiUrl.REGISTER.getEntireUrl())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(gson.toJson(requestDto))
         );
@@ -261,7 +260,7 @@ class RegisterTest {
 
         // When
         final ResultActions resultActions = mockMvc.perform(
-                MockMvcRequestBuilders.post(URL)
+                MockMvcRequestBuilders.post(AccountApiUrl.REGISTER.getEntireUrl())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(gson.toJson(requestDto))
         );
@@ -292,7 +291,7 @@ class RegisterTest {
 
         // When
         final ResultActions resultActions = mockMvc.perform(
-                MockMvcRequestBuilders.post(URL)
+                MockMvcRequestBuilders.post(AccountApiUrl.REGISTER.getEntireUrl())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(gson.toJson(requestDto))
         );
@@ -323,7 +322,7 @@ class RegisterTest {
 
         // When
         final ResultActions resultActions = mockMvc.perform(
-                MockMvcRequestBuilders.post(URL)
+                MockMvcRequestBuilders.post(AccountApiUrl.REGISTER.getEntireUrl())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(gson.toJson(requestDto))
         );
@@ -354,7 +353,7 @@ class RegisterTest {
 
         // When
         final ResultActions resultActions = mockMvc.perform(
-                MockMvcRequestBuilders.post(URL)
+                MockMvcRequestBuilders.post(AccountApiUrl.REGISTER.getEntireUrl())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(gson.toJson(requestDto))
         );
@@ -385,7 +384,7 @@ class RegisterTest {
 
         // When
         final ResultActions resultActions = mockMvc.perform(
-                MockMvcRequestBuilders.post(URL)
+                MockMvcRequestBuilders.post(AccountApiUrl.REGISTER.getEntireUrl())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(gson.toJson(requestDto))
         );
@@ -418,7 +417,7 @@ class RegisterTest {
 
         // When
         final ResultActions resultActions = mockMvc.perform(
-                MockMvcRequestBuilders.post(URL)
+                MockMvcRequestBuilders.post(AccountApiUrl.REGISTER.getEntireUrl())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(gson.toJson(requestDto))
         );
