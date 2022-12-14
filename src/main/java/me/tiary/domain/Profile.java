@@ -14,7 +14,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @Getter
 @Builder
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@EqualsAndHashCode(callSuper = false, onlyExplicitlyIncluded = true)
 public class Profile extends Timestamp {
     public static final int NICKNAME_MAX_LENGTH = 20;
 
@@ -38,12 +38,18 @@ public class Profile extends Timestamp {
     private Account account;
 
     @OneToMany(mappedBy = "profile", fetch = FetchType.LAZY)
+    @Builder.Default
     private List<OAuth> oAuths = new ArrayList<>();
 
     @OneToMany(mappedBy = "profile", fetch = FetchType.LAZY)
+    @Builder.Default
     private List<Til> tils = new ArrayList<>();
 
     @PrePersist
+    private void prePersist() {
+        createUuid();
+    }
+
     public void createUuid() {
         this.uuid = UUID.randomUUID().toString();
     }
