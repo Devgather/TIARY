@@ -13,7 +13,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @Builder
 @Getter
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@EqualsAndHashCode(callSuper = false, onlyExplicitlyIncluded = true)
 public class TilTag extends Timestamp {
     @EmbeddedId
     private TilTagId id;
@@ -33,6 +33,10 @@ public class TilTag extends Timestamp {
     private String uuid;
 
     @PrePersist
+    private void prePersist() {
+        createUuid();
+    }
+
     public void createUuid() {
         this.uuid = UUID.randomUUID().toString();
     }

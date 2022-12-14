@@ -10,7 +10,7 @@ import java.util.UUID;
 @Table(name = "oauth")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@EqualsAndHashCode(callSuper = false, onlyExplicitlyIncluded = true)
 public class OAuth extends Timestamp {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -41,6 +41,10 @@ public class OAuth extends Timestamp {
     }
 
     @PrePersist
+    private void prePersist() {
+        createUuid();
+    }
+
     public void createUuid() {
         this.uuid = UUID.randomUUID().toString();
     }

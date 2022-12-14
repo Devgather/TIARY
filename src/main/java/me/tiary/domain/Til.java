@@ -10,7 +10,7 @@ import java.util.UUID;
 @Table(name = "til")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@EqualsAndHashCode(callSuper = false, onlyExplicitlyIncluded = true)
 public class Til extends Timestamp {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -42,6 +42,10 @@ public class Til extends Timestamp {
     }
 
     @PrePersist
+    private void prePersist() {
+        createUuid();
+    }
+
     public void createUuid() {
         this.uuid = UUID.randomUUID().toString();
     }
