@@ -1,5 +1,7 @@
 package me.tiary;
 
+import me.tiary.properties.aws.AwsProperties;
+import me.tiary.properties.aws.AwsS3Properties;
 import me.tiary.properties.jwt.AccessTokenProperties;
 import me.tiary.properties.jwt.RefreshTokenProperties;
 import me.tiary.properties.security.SecurityCorsProperties;
@@ -9,7 +11,13 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
 @SpringBootApplication
-@EnableConfigurationProperties({AccessTokenProperties.class, RefreshTokenProperties.class, SecurityCorsProperties.class})
+@EnableConfigurationProperties({
+        AccessTokenProperties.class,
+        RefreshTokenProperties.class,
+        SecurityCorsProperties.class,
+        AwsProperties.class,
+        AwsS3Properties.class
+})
 @EnableJpaAuditing
 public class TiaryApplication {
     public static void main(final String[] args) {

@@ -7,10 +7,12 @@ import javax.persistence.*;
 import java.util.UUID;
 
 @Entity
+@Table(name = "verification")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Builder
 @Getter
+@EqualsAndHashCode(callSuper = false, onlyExplicitlyIncluded = true)
 public class Verification extends Timestamp {
     public static final int CODE_MAX_LENGTH = 6;
 
@@ -19,6 +21,7 @@ public class Verification extends Timestamp {
     private Long id;
 
     @Column(columnDefinition = "char(36)", nullable = false, unique = true)
+    @EqualsAndHashCode.Include
     private String uuid;
 
     @Column(nullable = false, unique = true)

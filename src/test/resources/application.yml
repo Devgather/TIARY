@@ -1,8 +1,9 @@
 spring:
   config:
     import:
-      - classpath:config/properties/jwt.yml
-      - classpath:config/properties/security.yml
+      - classpath:properties/jwt.yml
+      - classpath:properties/security.yml
+      - classpath:properties/aws.yml
 
   datasource:
     driver-class-name: org.h2.Driver
@@ -14,5 +15,7 @@ spring:
       schema-locations: classpath*:database/schema.sql
 
   jpa:
+    show-sql: true
+
     hibernate:
       ddl-auto: none

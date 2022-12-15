@@ -1,5 +1,6 @@
 package me.tiary.service.accountservice;
 
+import annotation.service.ServiceTest;
 import factory.domain.AccountFactory;
 import factory.domain.ProfileFactory;
 import factory.domain.VerificationFactory;
@@ -18,11 +19,9 @@ import me.tiary.service.AccountService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.config.Configuration;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -36,7 +35,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doReturn;
 
-@ExtendWith(MockitoExtension.class)
+@ServiceTest
 @DisplayName("[AccountService] register")
 class RegisterTest {
     @InjectMocks
@@ -78,10 +77,9 @@ class RegisterTest {
                 UUID.randomUUID().toString()
         );
 
-        // When
+        // When, Then
         final AccountException result = assertThrows(AccountException.class, () -> accountService.register(requestDto));
 
-        // Then
         assertThat(result.getStatus()).isEqualTo(AccountStatus.EXISTING_EMAIL);
     }
 
@@ -101,10 +99,9 @@ class RegisterTest {
                 UUID.randomUUID().toString()
         );
 
-        // When
+        // When, Then
         final AccountException result = assertThrows(AccountException.class, () -> accountService.register(requestDto));
 
-        // Then
         assertThat(result.getStatus()).isEqualTo(AccountStatus.UNREQUESTED_EMAIL_VERIFICATION);
     }
 
@@ -126,10 +123,9 @@ class RegisterTest {
                 UUID.randomUUID().toString()
         );
 
-        // When
+        // When, Then
         final AccountException result = assertThrows(AccountException.class, () -> accountService.register(requestDto));
 
-        // Then
         assertThat(result.getStatus()).isEqualTo(AccountStatus.UNVERIFIED_EMAIL);
     }
 
@@ -155,10 +151,9 @@ class RegisterTest {
                 UUID.randomUUID().toString()
         );
 
-        // When
+        // When, Then
         final AccountException result = assertThrows(AccountException.class, () -> accountService.register(requestDto));
 
-        // Then
         assertThat(result.getStatus()).isEqualTo(AccountStatus.NOT_EXISTING_PROFILE_UUID);
     }
 
@@ -188,10 +183,9 @@ class RegisterTest {
                 profile.getUuid()
         );
 
-        // When
+        // When, Then
         final AccountException result = assertThrows(AccountException.class, () -> accountService.register(requestDto));
 
-        // Then
         assertThat(result.getStatus()).isEqualTo(AccountStatus.EXISTING_ANOTHER_ACCOUNT_ON_PROFILE);
     }
 
