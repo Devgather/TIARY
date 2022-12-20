@@ -78,14 +78,15 @@ public class AccountService {
 
     @Transactional
     public void sendVerificationMail(final String email) throws MessagingException {
+        if (checkEmailDuplication(email)) {
+            throw new AccountException(AccountStatus.EXISTING_EMAIL);
+        }
+
         final Verification verification = verificationRepository.findByEmail(email)
                 .orElseGet(() -> createUnverifiedVerification(email));
 
-        try {
-            verification.refreshCode();
-        } catch (final IllegalStateException ex) {
-            throw new AccountException(AccountStatus.VERIFIED_EMAIL);
-        }
+        verification.cancelVerification();
+        verification.refreshCode();
 
         final Context context = new Context();
 
