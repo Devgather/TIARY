@@ -120,6 +120,40 @@ class SecurityFilterChainIntegrationTest {
     }
 
     @Test
+    @DisplayName("[Fail] member requests verification mail delivery api")
+    void failIfMemberRequestsVerificationMailDeliveryApi() throws Exception {
+        // Given
+        final String url = AccountApiUrl.VERIFICATION_MAIL_DELIVERY.getEntireUrl() + FactoryPreset.EMAIL;
+
+        // Algorithm = HMAC256, Payload = { "uuid": "cbf0f220-97b8-4312-82ce-f98266c428d4" }, Secret Key = jwt-access-token-secret-key
+        final String accessToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiY2JmMGYyMjAtOTdiOC00MzEyLTgyY2UtZjk4MjY2YzQyOGQ0In0.rftGC07wvthl89A-lHN4NzeP2gcVv9UxTTnST3Nhqz8";
+
+        // When
+        final ResultActions resultActions = mockMvc.perform(
+                MockMvcRequestBuilders.post(url)
+                        .cookie(new Cookie(AccessTokenProperties.COOKIE_NAME, accessToken))
+        );
+
+        // Then
+        resultActions.andExpect(status().isForbidden());
+    }
+
+    @Test
+    @DisplayName("[Success] anonymous requests verification mail delivery api")
+    void successIfAnonymousRequestsVerificationMailDeliveryApi() throws Exception {
+        // Given
+        final String url = AccountApiUrl.VERIFICATION_MAIL_DELIVERY.getEntireUrl() + FactoryPreset.EMAIL;
+
+        // When
+        final ResultActions resultActions = mockMvc.perform(
+                MockMvcRequestBuilders.post(url)
+        );
+
+        // Then
+        resultActions.andExpect(status().is(not(HttpStatus.FORBIDDEN.value())));
+    }
+
+    @Test
     @DisplayName("[Fail] member requests nickname duplication check api")
     void failIfMemberRequestsNicknameDuplicationCheckApi() throws Exception {
         // Given

@@ -2,7 +2,8 @@ package config.url;
 
 public enum AccountApiUrl {
     EMAIL_DUPLICATION_CHECK("/email/"),
-    REGISTER("");
+    REGISTER(""),
+    VERIFICATION_MAIL_DELIVERY("/verification/");
 
     public static final String COMMON_URL = "/api/account";
 
