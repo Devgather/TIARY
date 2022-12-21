@@ -171,23 +171,6 @@ class LoginTest {
     }
 
     @Test
-    @DisplayName("[Fail] password is blank")
-    void failIfPasswordIsBlank() throws Exception {
-        // Given
-        final AccountLoginRequestDto requestDto = AccountLoginRequestDtoFactory.create(FactoryPreset.EMAIL, " ");
-
-        // When
-        final ResultActions resultActions = mockMvc.perform(
-                MockMvcRequestBuilders.post(AccountApiUrl.LOGIN.getEntireUrl())
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(gson.toJson(requestDto))
-        );
-
-        // Then
-        resultActions.andExpect(status().isBadRequest());
-    }
-
-    @Test
     @DisplayName("[Fail] email does not exist")
     void failIfEmailDoesNotExist() throws Exception {
         // Given

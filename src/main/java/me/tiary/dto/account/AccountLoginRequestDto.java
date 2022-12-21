@@ -4,6 +4,7 @@ import lombok.*;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
 
 @Getter
 @Builder
@@ -15,6 +16,6 @@ public class AccountLoginRequestDto {
     @Email
     private final String email;
 
-    @NotBlank
+    @NotEmpty
     private final String password;
 }
