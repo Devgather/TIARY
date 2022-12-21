@@ -74,7 +74,7 @@ class RegisterTest {
                 .findByEmail(eq(account.getEmail()));
 
         final AccountCreationRequestDto requestDto = AccountCreationRequestDtoFactory.createDefaultAccountCreationRequestDto(
-                UUID.randomUUID().toString()
+                UUID.randomUUID().toString(), UUID.randomUUID().toString()
         );
 
         // When, Then
@@ -93,10 +93,10 @@ class RegisterTest {
 
         doReturn(Optional.empty())
                 .when(verificationRepository)
-                .findByEmail(any(String.class));
+                .findByUuidAndEmail(any(String.class), any(String.class));
 
         final AccountCreationRequestDto requestDto = AccountCreationRequestDtoFactory.createDefaultAccountCreationRequestDto(
-                UUID.randomUUID().toString()
+                UUID.randomUUID().toString(), UUID.randomUUID().toString()
         );
 
         // When, Then
@@ -117,10 +117,10 @@ class RegisterTest {
 
         doReturn(Optional.ofNullable(unverifiedVerification))
                 .when(verificationRepository)
-                .findByEmail(eq(unverifiedVerification.getEmail()));
+                .findByUuidAndEmail(eq(unverifiedVerification.getUuid()), eq(unverifiedVerification.getEmail()));
 
         final AccountCreationRequestDto requestDto = AccountCreationRequestDtoFactory.createDefaultAccountCreationRequestDto(
-                UUID.randomUUID().toString()
+                unverifiedVerification.getUuid(), UUID.randomUUID().toString()
         );
 
         // When, Then
@@ -141,14 +141,14 @@ class RegisterTest {
 
         doReturn(Optional.ofNullable(verifiedVerification))
                 .when(verificationRepository)
-                .findByEmail(eq(verifiedVerification.getEmail()));
+                .findByUuidAndEmail(eq(verifiedVerification.getUuid()), eq(verifiedVerification.getEmail()));
 
         doReturn(Optional.empty())
                 .when(profileRepository)
                 .findByUuidLeftJoinFetchAccount(any(String.class));
 
         final AccountCreationRequestDto requestDto = AccountCreationRequestDtoFactory.createDefaultAccountCreationRequestDto(
-                UUID.randomUUID().toString()
+                verifiedVerification.getUuid(), UUID.randomUUID().toString()
         );
 
         // When, Then
@@ -169,7 +169,7 @@ class RegisterTest {
 
         doReturn(Optional.ofNullable(verifiedVerification))
                 .when(verificationRepository)
-                .findByEmail(eq(verifiedVerification.getEmail()));
+                .findByUuidAndEmail(eq(verifiedVerification.getUuid()), eq(verifiedVerification.getEmail()));
 
         final Profile profile = ProfileFactory.createDefaultProfile();
 
@@ -180,7 +180,7 @@ class RegisterTest {
                 .findByUuidLeftJoinFetchAccount(eq(profile.getUuid()));
 
         final AccountCreationRequestDto requestDto = AccountCreationRequestDtoFactory.createDefaultAccountCreationRequestDto(
-                profile.getUuid()
+                verifiedVerification.getUuid(), profile.getUuid()
         );
 
         // When, Then
@@ -201,7 +201,7 @@ class RegisterTest {
 
         doReturn(Optional.ofNullable(verifiedVerification))
                 .when(verificationRepository)
-                .findByEmail(eq(verifiedVerification.getEmail()));
+                .findByUuidAndEmail(eq(verifiedVerification.getUuid()), eq(verifiedVerification.getEmail()));
 
         final Profile profile = ProfileFactory.createDefaultProfile();
 
@@ -214,7 +214,7 @@ class RegisterTest {
                 .save(any(Account.class));
 
         final AccountCreationRequestDto requestDto = AccountCreationRequestDtoFactory.createDefaultAccountCreationRequestDto(
-                profile.getUuid()
+                verifiedVerification.getUuid(), profile.getUuid()
         );
 
         // When
