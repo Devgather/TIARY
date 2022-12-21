@@ -1,0 +1,4 @@
+scheduler:
+  verification-cleaner:
+    enable: false
+    interval: 3600000
