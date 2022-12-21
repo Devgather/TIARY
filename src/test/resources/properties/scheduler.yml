@@ -1,4 +1,4 @@
 scheduler:
   verification-cleaner:
     enable: false
-    interval: 3600000
+    interval-milliseconds: 3600000

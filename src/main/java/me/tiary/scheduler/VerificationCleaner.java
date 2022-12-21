@@ -18,7 +18,7 @@ import java.time.LocalDateTime;
 public class VerificationCleaner {
     private final VerificationRepository verificationRepository;
 
-    @Scheduled(fixedRateString = "${scheduler.verification-cleaner.interval}")
+    @Scheduled(fixedRateString = "${scheduler.verification-cleaner.interval-milliseconds}")
     @Transactional
     public void clean() {
         final LocalDateTime dateTime = LocalDateTime.now().minusHours(1);
