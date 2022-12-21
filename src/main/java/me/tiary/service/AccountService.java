@@ -80,7 +80,7 @@ public class AccountService {
     }
 
     public AccountLoginResultDto login(final AccountLoginRequestDto requestDto) {
-        final Account account = accountRepository.findByEmail(requestDto.getEmail())
+        final Account account = accountRepository.findByEmailJoinFetchProfile(requestDto.getEmail())
                 .orElseThrow(() -> new AccountException(AccountStatus.NOT_EXISTING_EMAIL));
 
         if (!passwordEncoder.matches(requestDto.getPassword(), account.getPassword())) {
