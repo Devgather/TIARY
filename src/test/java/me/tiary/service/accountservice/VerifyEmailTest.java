@@ -103,7 +103,7 @@ class VerifyEmailTest {
         // When, Then
         final AccountException result = assertThrows(AccountException.class, () -> accountService.verifyEmail(requestDto));
 
-        assertThat(result.getStatus()).isEqualTo(AccountStatus.NOT_MATCHING_CODE);
+        assertThat(result.getStatus()).isEqualTo(AccountStatus.INCORRECT_CODE);
     }
 
     @Test

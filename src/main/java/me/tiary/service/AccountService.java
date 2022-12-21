@@ -114,7 +114,7 @@ public class AccountService {
         }
 
         if (!verification.getCode().equals(requestDto.getCode())) {
-            throw new AccountException(AccountStatus.NOT_MATCHING_CODE);
+            throw new AccountException(AccountStatus.INCORRECT_CODE);
         }
 
         verification.verify();
