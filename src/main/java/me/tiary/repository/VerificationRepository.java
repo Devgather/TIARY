@@ -14,6 +14,8 @@ import java.util.Optional;
 public interface VerificationRepository extends JpaRepository<Verification, Long> {
     Optional<Verification> findByEmail(final String email);
 
+    Optional<Verification> findByUuidAndEmail(final String uuid, final String email);
+
     @Query("delete from Verification v where v.lastModifiedDate <= :dateTime")
     @Modifying(flushAutomatically = true, clearAutomatically = true)
     void deleteByLastModifiedDateLessThanEqual(@Param("dateTime") final LocalDateTime dateTime);

@@ -53,7 +53,7 @@ public class AccountService {
             throw new AccountException(AccountStatus.EXISTING_EMAIL);
         }
 
-        final Verification verification = verificationRepository.findByEmail(requestDto.getEmail())
+        final Verification verification = verificationRepository.findByUuidAndEmail(requestDto.getVerificationUuid(), requestDto.getEmail())
                 .orElseThrow(() -> new AccountException(AccountStatus.UNREQUESTED_EMAIL_VERIFICATION));
 
         if (!verification.getState()) {
@@ -87,6 +87,7 @@ public class AccountService {
         final Verification verification = verificationRepository.findByEmail(email)
                 .orElseGet(() -> createUnverifiedVerification(email));
 
+        verification.createUuid();
         verification.cancelVerification();
         verification.refreshCode();
 

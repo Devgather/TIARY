@@ -83,6 +83,7 @@ class SecurityFilterChainIntegrationTest {
         final String accessToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiY2JmMGYyMjAtOTdiOC00MzEyLTgyY2UtZjk4MjY2YzQyOGQ0In0.rftGC07wvthl89A-lHN4NzeP2gcVv9UxTTnST3Nhqz8";
 
         final AccountCreationRequestDto requestDto = AccountCreationRequestDtoFactory.createDefaultAccountCreationRequestDto(
+                UUID.randomUUID().toString(),
                 UUID.randomUUID().toString()
         );
 
@@ -105,6 +106,7 @@ class SecurityFilterChainIntegrationTest {
         final String url = AccountApiUrl.REGISTER.getEntireUrl();
 
         final AccountCreationRequestDto requestDto = AccountCreationRequestDtoFactory.createDefaultAccountCreationRequestDto(
+                UUID.randomUUID().toString(),
                 UUID.randomUUID().toString()
         );
 

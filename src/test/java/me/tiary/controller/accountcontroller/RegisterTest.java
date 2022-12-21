@@ -57,11 +57,68 @@ class RegisterTest {
     }
 
     @Test
+    @DisplayName("[Fail] verification uuid is null")
+    void failIfVerificationUuidIsNull() throws Exception {
+        // Given
+        final AccountCreationRequestDto requestDto = AccountCreationRequestDtoFactory.create(
+                null, UUID.randomUUID().toString(), FactoryPreset.EMAIL, FactoryPreset.PASSWORD
+        );
+
+        // When
+        final ResultActions resultActions = mockMvc.perform(
+                MockMvcRequestBuilders.post(AccountApiUrl.REGISTER.getEntireUrl())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(gson.toJson(requestDto))
+        );
+
+        // Then
+        resultActions.andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @DisplayName("[Fail] verification uuid is empty")
+    void failIfVerificationUuidIsEmpty() throws Exception {
+        // Given
+        final AccountCreationRequestDto requestDto = AccountCreationRequestDtoFactory.create(
+                "", UUID.randomUUID().toString(), FactoryPreset.EMAIL, FactoryPreset.PASSWORD
+        );
+
+        // When
+        final ResultActions resultActions = mockMvc.perform(
+                MockMvcRequestBuilders.post(AccountApiUrl.REGISTER.getEntireUrl())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(gson.toJson(requestDto))
+        );
+
+        // Then
+        resultActions.andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @DisplayName("[Fail] verification uuid is blank")
+    void failIfVerificationUuidIsBlank() throws Exception {
+        // Given
+        final AccountCreationRequestDto requestDto = AccountCreationRequestDtoFactory.create(
+                " ", UUID.randomUUID().toString(), FactoryPreset.EMAIL, FactoryPreset.PASSWORD
+        );
+
+        // When
+        final ResultActions resultActions = mockMvc.perform(
+                MockMvcRequestBuilders.post(AccountApiUrl.REGISTER.getEntireUrl())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(gson.toJson(requestDto))
+        );
+
+        // Then
+        resultActions.andExpect(status().isBadRequest());
+    }
+
+    @Test
     @DisplayName("[Fail] profile uuid is null")
     void failIfProfileUuidIsNull() throws Exception {
         // Given
         final AccountCreationRequestDto requestDto = AccountCreationRequestDtoFactory.create(
-                null, FactoryPreset.EMAIL, FactoryPreset.PASSWORD
+                UUID.randomUUID().toString(), null, FactoryPreset.EMAIL, FactoryPreset.PASSWORD
         );
 
         // When
@@ -80,7 +137,7 @@ class RegisterTest {
     void failIfProfileUuidIsEmpty() throws Exception {
         // Given
         final AccountCreationRequestDto requestDto = AccountCreationRequestDtoFactory.create(
-                "", FactoryPreset.EMAIL, FactoryPreset.PASSWORD
+                UUID.randomUUID().toString(), "", FactoryPreset.EMAIL, FactoryPreset.PASSWORD
         );
 
         // When
@@ -99,7 +156,7 @@ class RegisterTest {
     void failIfProfileUuidIsBlank() throws Exception {
         // Given
         final AccountCreationRequestDto requestDto = AccountCreationRequestDtoFactory.create(
-                " ", FactoryPreset.EMAIL, FactoryPreset.PASSWORD
+                UUID.randomUUID().toString(), " ", FactoryPreset.EMAIL, FactoryPreset.PASSWORD
         );
 
         // When
@@ -118,7 +175,7 @@ class RegisterTest {
     void failIfEmailIsNull() throws Exception {
         // Given
         final AccountCreationRequestDto requestDto = AccountCreationRequestDtoFactory.create(
-                UUID.randomUUID().toString(), null, FactoryPreset.PASSWORD
+                UUID.randomUUID().toString(), UUID.randomUUID().toString(), null, FactoryPreset.PASSWORD
         );
 
         // When
@@ -137,7 +194,7 @@ class RegisterTest {
     void failIfEmailIsEmpty() throws Exception {
         // Given
         final AccountCreationRequestDto requestDto = AccountCreationRequestDtoFactory.create(
-                UUID.randomUUID().toString(), "", FactoryPreset.PASSWORD
+                UUID.randomUUID().toString(), UUID.randomUUID().toString(), "", FactoryPreset.PASSWORD
         );
 
         // When
@@ -156,7 +213,7 @@ class RegisterTest {
     void failIfEmailIsBlank() throws Exception {
         // Given
         final AccountCreationRequestDto requestDto = AccountCreationRequestDtoFactory.create(
-                UUID.randomUUID().toString(), " ", FactoryPreset.PASSWORD
+                UUID.randomUUID().toString(), UUID.randomUUID().toString(), " ", FactoryPreset.PASSWORD
         );
 
         // When
@@ -175,7 +232,7 @@ class RegisterTest {
     void failIfEmailIsInvalidFormat() throws Exception {
         // Given
         final AccountCreationRequestDto requestDto = AccountCreationRequestDtoFactory.create(
-                UUID.randomUUID().toString(), "test", FactoryPreset.PASSWORD
+                UUID.randomUUID().toString(), UUID.randomUUID().toString(), "test", FactoryPreset.PASSWORD
         );
 
         // When
@@ -194,7 +251,7 @@ class RegisterTest {
     void failIfPasswordIsNull() throws Exception {
         // Given
         final AccountCreationRequestDto requestDto = AccountCreationRequestDtoFactory.create(
-                UUID.randomUUID().toString(), FactoryPreset.EMAIL, null
+                UUID.randomUUID().toString(), UUID.randomUUID().toString(), FactoryPreset.EMAIL, null
         );
 
         // When
@@ -213,7 +270,7 @@ class RegisterTest {
     void failIfPasswordIsEmpty() throws Exception {
         // Given
         final AccountCreationRequestDto requestDto = AccountCreationRequestDtoFactory.create(
-                UUID.randomUUID().toString(), FactoryPreset.EMAIL, ""
+                UUID.randomUUID().toString(), UUID.randomUUID().toString(), FactoryPreset.EMAIL, ""
         );
 
         // When
@@ -232,7 +289,7 @@ class RegisterTest {
     void failIfPasswordIsBlank() throws Exception {
         // Given
         final AccountCreationRequestDto requestDto = AccountCreationRequestDtoFactory.create(
-                UUID.randomUUID().toString(), FactoryPreset.EMAIL, " "
+                UUID.randomUUID().toString(), UUID.randomUUID().toString(), FactoryPreset.EMAIL, " "
         );
 
         // When
@@ -251,7 +308,7 @@ class RegisterTest {
     void failIfEmailDoesExist() throws Exception {
         // Given
         final AccountCreationRequestDto requestDto = AccountCreationRequestDtoFactory.createDefaultAccountCreationRequestDto(
-                UUID.randomUUID().toString()
+                UUID.randomUUID().toString(), UUID.randomUUID().toString()
         );
 
         doThrow(new AccountException(AccountStatus.EXISTING_EMAIL))
@@ -282,7 +339,7 @@ class RegisterTest {
     void failEmailVerificationIsNotRequested() throws Exception {
         // Given
         final AccountCreationRequestDto requestDto = AccountCreationRequestDtoFactory.createDefaultAccountCreationRequestDto(
-                UUID.randomUUID().toString()
+                UUID.randomUUID().toString(), UUID.randomUUID().toString()
         );
 
         doThrow(new AccountException(AccountStatus.UNREQUESTED_EMAIL_VERIFICATION))
@@ -313,7 +370,7 @@ class RegisterTest {
     void failIfEmailIsNotVerified() throws Exception {
         // Given
         final AccountCreationRequestDto requestDto = AccountCreationRequestDtoFactory.createDefaultAccountCreationRequestDto(
-                UUID.randomUUID().toString()
+                UUID.randomUUID().toString(), UUID.randomUUID().toString()
         );
 
         doThrow(new AccountException(AccountStatus.UNVERIFIED_EMAIL))
@@ -344,7 +401,7 @@ class RegisterTest {
     void failProfileUuidDoesNotExist() throws Exception {
         // Given
         final AccountCreationRequestDto requestDto = AccountCreationRequestDtoFactory.createDefaultAccountCreationRequestDto(
-                UUID.randomUUID().toString()
+                UUID.randomUUID().toString(), UUID.randomUUID().toString()
         );
 
         doThrow(new AccountException(AccountStatus.NOT_EXISTING_PROFILE_UUID))
@@ -375,7 +432,7 @@ class RegisterTest {
     void failIfProfileAlreadyHasAccount() throws Exception {
         // Given
         final AccountCreationRequestDto requestDto = AccountCreationRequestDtoFactory.createDefaultAccountCreationRequestDto(
-                UUID.randomUUID().toString()
+                UUID.randomUUID().toString(), UUID.randomUUID().toString()
         );
 
         doThrow(new AccountException(AccountStatus.EXISTING_ANOTHER_ACCOUNT_ON_PROFILE))
@@ -406,7 +463,7 @@ class RegisterTest {
     void successIfAccountIsCreatable() throws Exception {
         // Given
         final AccountCreationRequestDto requestDto = AccountCreationRequestDtoFactory.createDefaultAccountCreationRequestDto(
-                UUID.randomUUID().toString()
+                UUID.randomUUID().toString(), UUID.randomUUID().toString()
         );
 
         final AccountCreationResponseDto responseDto = AccountCreationResponseDtoFactory.createDefaultAccountCreationResponseDto();
