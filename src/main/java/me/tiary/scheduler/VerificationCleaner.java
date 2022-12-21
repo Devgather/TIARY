@@ -16,15 +16,17 @@ import java.time.LocalDateTime;
 @RequiredArgsConstructor
 @Slf4j
 public class VerificationCleaner {
+    public static final long VERIFICATION_DURATION_HOURS = 1;
+
     private final VerificationRepository verificationRepository;
 
     @Scheduled(fixedRateString = "${scheduler.verification-cleaner.interval-milliseconds}")
     @Transactional
     public void clean() {
-        final LocalDateTime dateTime = LocalDateTime.now().minusHours(1);
+        final LocalDateTime dateTime = LocalDateTime.now().minusHours(VERIFICATION_DURATION_HOURS);
 
         verificationRepository.deleteByLastModifiedDateLessThanEqual(dateTime);
 
-        log.info("Verifications that was last modified 1 hour ago are deleted");
+        log.info("Verifications that was last modified {} hours ago are deleted", VERIFICATION_DURATION_HOURS);
     }
 }
