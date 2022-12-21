@@ -6,6 +6,8 @@ import me.tiary.domain.Profile;
 import me.tiary.domain.Verification;
 import me.tiary.dto.account.AccountCreationRequestDto;
 import me.tiary.dto.account.AccountCreationResponseDto;
+import me.tiary.dto.account.AccountVerificationRequestDto;
+import me.tiary.dto.account.AccountVerificationResponseDto;
 import me.tiary.exception.AccountException;
 import me.tiary.exception.status.AccountStatus;
 import me.tiary.repository.AccountRepository;
@@ -100,6 +102,24 @@ public class AccountService {
         mimeMessageHelper.setText(templateEngine.process("/mail/verification", context), true);
 
         mailSender.send(mimeMessage);
+    }
+
+    @Transactional
+    public AccountVerificationResponseDto verifyEmail(final AccountVerificationRequestDto requestDto) {
+        final Verification verification = verificationRepository.findByEmail(requestDto.getEmail())
+                .orElseThrow(() -> new AccountException(AccountStatus.UNREQUESTED_EMAIL_VERIFICATION));
+
+        if (verification.getState()) {
+            throw new AccountException(AccountStatus.VERIFIED_EMAIL);
+        }
+
+        if (!verification.getCode().equals(requestDto.getCode())) {
+            throw new AccountException(AccountStatus.INCORRECT_CODE);
+        }
+
+        verification.verify();
+
+        return modelMapper.map(verification, AccountVerificationResponseDto.class);
     }
 
     private Verification createUnverifiedVerification(final String email) {
