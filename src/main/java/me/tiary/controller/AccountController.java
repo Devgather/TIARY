@@ -3,6 +3,8 @@ package me.tiary.controller;
 import lombok.RequiredArgsConstructor;
 import me.tiary.dto.account.AccountCreationRequestDto;
 import me.tiary.dto.account.AccountCreationResponseDto;
+import me.tiary.dto.account.AccountVerificationRequestDto;
+import me.tiary.dto.account.AccountVerificationResponseDto;
 import me.tiary.service.AccountService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -38,5 +40,12 @@ public class AccountController {
         accountService.sendVerificationMail(email);
 
         return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
+
+    @PatchMapping("/verification")
+    public ResponseEntity<AccountVerificationResponseDto> verifyEmail(@RequestBody @Valid final AccountVerificationRequestDto requestDto) {
+        final AccountVerificationResponseDto result = accountService.verifyEmail(requestDto);
+
+        return ResponseEntity.ok(result);
     }
 }
