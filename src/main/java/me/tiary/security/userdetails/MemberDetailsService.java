@@ -30,7 +30,7 @@ public class MemberDetailsService implements AuthenticationUserDetailsService<Pr
             return MemberDetails.builder()
                     .profileUuid(profileUuid)
                     .build();
-        } catch (JWTVerificationException ex) {
+        } catch (final JWTVerificationException ex) {
             throw new BadCredentialsException(ex.getMessage());
         }
     }

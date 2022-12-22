@@ -6,18 +6,12 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 
-@NoArgsConstructor(access = AccessLevel.PROTECTED, force = true)
-@RequiredArgsConstructor
-@Builder
 @Getter
+@Builder
+@RequiredArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED, force = true)
 @EqualsAndHashCode
-public class AccountCreationRequestDto {
-    @NotBlank
-    private final String verificationUuid;
-
-    @NotBlank
-    private final String profileUuid;
-
+public class AccountLoginRequestDto {
     @NotBlank
     @Email
     private final String email;

@@ -13,7 +13,9 @@ public enum AccountStatus {
     INCORRECT_CODE(HttpStatus.BAD_REQUEST, "must provide a correct code"),
     NOT_EXISTING_PROFILE_UUID(HttpStatus.NOT_FOUND, "must be an existing profile uuid"),
     EXISTING_EMAIL(HttpStatus.CONFLICT, "must not be an existing email"),
-    EXISTING_ANOTHER_ACCOUNT_ON_PROFILE(HttpStatus.CONFLICT, "must register to profile that has not account");
+    EXISTING_ANOTHER_ACCOUNT_ON_PROFILE(HttpStatus.CONFLICT, "must register to profile that has not account"),
+    NOT_EXISTING_EMAIL(HttpStatus.NOT_FOUND, "must provide registered email"),
+    NOT_MATCHING_PASSWORD(HttpStatus.UNAUTHORIZED, "must provide matching email and password");
 
     private final HttpStatus httpStatus;
     private final String message;
