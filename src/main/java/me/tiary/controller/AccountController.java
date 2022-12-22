@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.mail.MessagingException;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
@@ -32,6 +33,20 @@ public class AccountController {
         final AccountCreationResponseDto result = accountService.register(requestDto);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(result);
+    }
+
+    @PostMapping("/verification/{email}")
+    public ResponseEntity<Void> sendVerificationMail(@PathVariable @NotBlank @Email final String email) throws MessagingException {
+        accountService.sendVerificationMail(email);
+
+        return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
+
+    @PatchMapping("/verification")
+    public ResponseEntity<AccountVerificationResponseDto> verifyEmail(@RequestBody @Valid final AccountVerificationRequestDto requestDto) {
+        final AccountVerificationResponseDto result = accountService.verifyEmail(requestDto);
+
+        return ResponseEntity.ok(result);
     }
 
     @PostMapping("/login")

@@ -4,6 +4,7 @@ spring:
       - classpath:properties/jwt.yml
       - classpath:properties/security.yml
       - classpath:properties/aws.yml
+      - classpath:properties/scheduler.yml
 
   servlet:
     multipart:
@@ -32,3 +33,18 @@ spring:
   h2:
     console:
       enabled: true
+
+  mail:
+    host: smtp.gmail.com
+    port: 587
+
+    username: ${SPRING_MAIL_USERNAME:test@gmail.com}
+    password: ${SPRING_MAIL_PASSWORD:test}
+
+    properties:
+      mail:
+        smtp:
+          auth: true
+
+          starttls:
+            enable: true
