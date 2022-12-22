@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import me.tiary.exception.handler.security.AccessDeniedExceptionHandler;
 import me.tiary.exception.handler.security.AuthenticationExceptionHandler;
 import me.tiary.properties.jwt.AccessTokenProperties;
+import me.tiary.properties.jwt.RefreshTokenProperties;
 import me.tiary.properties.security.SecurityCorsProperties;
 import me.tiary.security.authentication.MemberAuthenticationConverter;
 import me.tiary.security.authentication.MemberAuthenticationProvider;
@@ -47,6 +48,7 @@ public class WebSecurityConfig {
         http.authorizeRequests()
                 .antMatchers(HttpMethod.HEAD, "/api/account/email/**").anonymous()
                 .antMatchers(HttpMethod.POST, "/api/account").anonymous()
+                .antMatchers(HttpMethod.POST, "/api/account/login").anonymous()
                 .antMatchers(HttpMethod.HEAD, "/api/profile/nickname/**").anonymous()
                 .antMatchers(HttpMethod.POST, "/api/profile").anonymous()
                 .anyRequest().authenticated()
@@ -150,6 +152,11 @@ public class WebSecurityConfig {
 
     @Bean(name = "accessTokenProvider")
     public JwtProvider accessTokenProvider(final AccessTokenProperties properties) {
+        return new JwtProvider(properties);
+    }
+
+    @Bean(name = "refreshTokenProvider")
+    public JwtProvider refreshTokenProvider(final RefreshTokenProperties properties) {
         return new JwtProvider(properties);
     }
 
