@@ -1,10 +1,8 @@
 package me.tiary.controller;
 
 import lombok.RequiredArgsConstructor;
-import me.tiary.dto.account.AccountCreationRequestDto;
-import me.tiary.dto.account.AccountCreationResponseDto;
-import me.tiary.dto.account.AccountVerificationRequestDto;
-import me.tiary.dto.account.AccountVerificationResponseDto;
+import me.tiary.dto.account.*;
+import me.tiary.properties.jwt.AccessTokenProperties;
 import me.tiary.service.AccountService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,6 +10,8 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.mail.MessagingException;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
@@ -47,5 +47,21 @@ public class AccountController {
         final AccountVerificationResponseDto result = accountService.verifyEmail(requestDto);
 
         return ResponseEntity.ok(result);
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<AccountLoginResponseDto> login(@RequestBody @Valid final AccountLoginRequestDto requestDto, final HttpServletResponse response) {
+        final AccountLoginResultDto resultDto = accountService.login(requestDto);
+
+        final Cookie accessTokenCookie = new Cookie(AccessTokenProperties.COOKIE_NAME, resultDto.getAccessToken());
+
+        accessTokenCookie.setHttpOnly(true);
+        accessTokenCookie.setPath("/");
+
+        response.addCookie(accessTokenCookie);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(AccountLoginResponseDto.builder()
+                .refreshToken(resultDto.getRefreshToken())
+                .build());
     }
 }

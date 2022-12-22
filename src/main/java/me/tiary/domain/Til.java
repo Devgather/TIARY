@@ -7,11 +7,11 @@ import javax.persistence.*;
 import java.util.UUID;
 
 @Entity
-@Table(name = "oauth")
+@Table(name = "til")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @EqualsAndHashCode(callSuper = false, onlyExplicitlyIncluded = true)
-public class OAuth extends Timestamp {
+public class Til extends Timestamp {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -24,20 +24,21 @@ public class OAuth extends Timestamp {
     @EqualsAndHashCode.Include
     private String uuid;
 
-    @Column(nullable = false, unique = true)
-    private String identifier;
+    @Column(nullable = false)
+    private String title;
 
     @Column(nullable = false)
-    private String provider;
+    @Lob
+    private String content;
 
     @Builder
-    public OAuth(final Long id, final Profile profile, final String uuid, final String identifier, final String provider) {
+    public Til(final Long id, final Profile profile, final String uuid, final String title, final String content) {
         setProfile(profile);
 
         this.id = id;
         this.uuid = uuid;
-        this.identifier = identifier;
-        this.provider = provider;
+        this.title = title;
+        this.content = content;
     }
 
     @PrePersist
@@ -51,13 +52,13 @@ public class OAuth extends Timestamp {
 
     void setProfile(final Profile profile) {
         if (this.profile != null) {
-            this.profile.getOAuths().remove(this);
+            this.profile.getTils().remove(this);
         }
 
         this.profile = profile;
 
         if (profile != null) {
-            profile.getOAuths().add(this);
+            profile.getTils().add(this);
         }
     }
 }

@@ -45,12 +45,9 @@ public class ProfileService {
     }
 
     public ProfileReadResponseDto readProfile(final String nickname) {
-        final Optional<Profile> result = profileRepository.findByNickname(nickname);
+        final Profile result = profileRepository.findByNickname(nickname)
+                .orElseThrow(() -> new ProfileException(ProfileStatus.NOT_EXISTING_PROFILE));
 
-        if (result.isEmpty()) {
-            throw new ProfileException(ProfileStatus.NOT_EXISTING_PROFILE);
-        }
-
-        return modelMapper.map(result.get(), ProfileReadResponseDto.class);
+        return modelMapper.map(result, ProfileReadResponseDto.class);
     }
 }

@@ -13,7 +13,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @Builder
 @Getter
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@EqualsAndHashCode(callSuper = false, onlyExplicitlyIncluded = true)
 public class Verification extends Timestamp {
     public static final int CODE_MAX_LENGTH = 6;
 

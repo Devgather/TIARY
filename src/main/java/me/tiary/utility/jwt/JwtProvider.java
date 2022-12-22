@@ -23,7 +23,8 @@ public class JwtProvider {
     }
 
     public String generate(final Map<String, ?> payload) throws JWTCreationException {
-        Calendar calendar = Calendar.getInstance();
+        final Calendar calendar = Calendar.getInstance();
+
         calendar.setTime(new Date());
         calendar.add(Calendar.SECOND, validSeconds);
 
