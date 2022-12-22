@@ -48,6 +48,7 @@ public class WebSecurityConfig {
                 .antMatchers(HttpMethod.HEAD, "/api/account/email/**").anonymous()
                 .antMatchers(HttpMethod.POST, "/api/account").anonymous()
                 .antMatchers(HttpMethod.POST, "/api/account/verification/**").anonymous()
+                .antMatchers(HttpMethod.PATCH, "/api/account/verification").anonymous()
                 .antMatchers(HttpMethod.HEAD, "/api/profile/nickname/**").anonymous()
                 .antMatchers(HttpMethod.POST, "/api/profile").anonymous()
                 .anyRequest().authenticated()

@@ -11,6 +11,7 @@ import javax.validation.constraints.Size;
 @RequiredArgsConstructor
 @Builder
 @Getter
+@EqualsAndHashCode
 public class AccountVerificationRequestDto {
     @NotBlank
     @Email
