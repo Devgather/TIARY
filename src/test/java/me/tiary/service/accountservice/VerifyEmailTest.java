@@ -87,8 +87,8 @@ class VerifyEmailTest {
     }
 
     @Test
-    @DisplayName("[Fail] code does not match")
-    void failIfCodeDoesNotMatch() {
+    @DisplayName("[Fail] code is incorrect")
+    void failIfCodeIsIncorrect() {
         // Given
         final Verification unverifiedVerification = VerificationFactory.create(FactoryPreset.EMAIL, "000000", false);
 
