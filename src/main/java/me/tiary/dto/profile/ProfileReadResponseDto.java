@@ -4,6 +4,8 @@ import lombok.*;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED, force = true)
+@RequiredArgsConstructor
+@Builder
 public class ProfileReadResponseDto {
     private final String nickname;
 

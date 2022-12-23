@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import me.tiary.domain.Profile;
 import me.tiary.dto.profile.ProfileCreationRequestDto;
 import me.tiary.dto.profile.ProfileCreationResponseDto;
+import me.tiary.dto.profile.ProfileReadResponseDto;
 import me.tiary.service.ProfileService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,6 +30,13 @@ public class ProfileController {
     @PostMapping("")
     public ResponseEntity<ProfileCreationResponseDto> createProfile(@RequestBody @Valid final ProfileCreationRequestDto requestDto) {
         final ProfileCreationResponseDto responseDto = profileService.createProfile(requestDto);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(responseDto);
+    }
+
+    @GetMapping("/nickname/{nickname}")
+    public ResponseEntity<ProfileReadResponseDto> readProfile(@PathVariable final String nickname) {
+        final ProfileReadResponseDto responseDto = profileService.readProfile(nickname);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(responseDto);
     }
