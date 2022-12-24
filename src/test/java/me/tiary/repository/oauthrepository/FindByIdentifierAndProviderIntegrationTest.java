@@ -1,6 +1,7 @@
 package me.tiary.repository.oauthrepository;
 
 import annotation.repository.RepositoryIntegrationTest;
+import config.factory.FactoryPreset;
 import factory.domain.OAuthFactory;
 import factory.domain.ProfileFactory;
 import me.tiary.domain.OAuth;
@@ -46,7 +47,7 @@ class FindByIdentifierAndProviderIntegrationTest {
     void successIfIdentifierAndProviderDoNotExist() {
         // When
         final Optional<OAuth> result = oAuthRepository.findByIdentifierAndProvider(
-                StringUtility.generateRandomString(255), "google"
+                StringUtility.generateRandomString(255), FactoryPreset.OAUTH_PROVIDER
         );
 
         // Then
@@ -62,7 +63,9 @@ class FindByIdentifierAndProviderIntegrationTest {
         JpaUtility.flushAndClear(em);
 
         // When
-        final Optional<OAuth> result = oAuthRepository.findByIdentifierAndProvider(oAuth.getIdentifier(), "google");
+        final Optional<OAuth> result = oAuthRepository.findByIdentifierAndProvider(
+                oAuth.getIdentifier(), FactoryPreset.OAUTH_PROVIDER
+        );
 
         // Then
         assertThat(result).isPresent();
