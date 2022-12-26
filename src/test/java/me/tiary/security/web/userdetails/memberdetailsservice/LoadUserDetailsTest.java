@@ -1,8 +1,8 @@
-package me.tiary.security.userdetails.memberdetailsservice;
+package me.tiary.security.web.userdetails.memberdetailsservice;
 
 import factory.utility.jwt.JwtProviderFactory;
-import me.tiary.security.userdetails.MemberDetails;
-import me.tiary.security.userdetails.MemberDetailsService;
+import me.tiary.security.web.userdetails.MemberDetails;
+import me.tiary.security.web.userdetails.MemberDetailsService;
 import me.tiary.utility.jwt.JwtProvider;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

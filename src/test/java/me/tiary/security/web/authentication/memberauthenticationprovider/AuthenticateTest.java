@@ -1,8 +1,8 @@
-package me.tiary.security.authentication.memberauthenticationprovider;
+package me.tiary.security.web.authentication.memberauthenticationprovider;
 
 import factory.utility.jwt.JwtProviderFactory;
-import me.tiary.security.authentication.MemberAuthenticationProvider;
-import me.tiary.security.userdetails.MemberDetailsService;
+import me.tiary.security.web.authentication.MemberAuthenticationProvider;
+import me.tiary.security.web.userdetails.MemberDetailsService;
 import me.tiary.utility.jwt.JwtProvider;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
