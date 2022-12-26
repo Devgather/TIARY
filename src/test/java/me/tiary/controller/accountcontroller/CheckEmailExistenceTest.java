@@ -21,8 +21,8 @@ import static org.mockito.Mockito.doReturn;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ControllerTest
-@DisplayName("[AccountController] checkEmailDuplication")
-class CheckEmailDuplicationTest {
+@DisplayName("[AccountController] checkEmailExistence")
+class CheckEmailExistenceTest {
     @InjectMocks
     private AccountController accountController;
 
@@ -40,11 +40,11 @@ class CheckEmailDuplicationTest {
     @DisplayName("[Success] email does not exist")
     void successIfEmailDoesNotExist() throws Exception {
         // Given
-        final String url = AccountApiUrl.EMAIL_DUPLICATION_CHECK.getEntireUrl() + FactoryPreset.EMAIL;
+        final String url = AccountApiUrl.EMAIL_EXISTENCE_CHECK.getEntireUrl() + FactoryPreset.EMAIL;
 
         doReturn(false)
                 .when(accountService)
-                .checkEmailDuplication(any(String.class));
+                .checkEmailExistence(any(String.class));
 
         // When
         final ResultActions resultActions = mockMvc.perform(
@@ -59,11 +59,11 @@ class CheckEmailDuplicationTest {
     @DisplayName("[Success] email does exist")
     void successIfEmailDoesExist() throws Exception {
         // Given
-        final String url = AccountApiUrl.EMAIL_DUPLICATION_CHECK.getEntireUrl() + FactoryPreset.EMAIL;
+        final String url = AccountApiUrl.EMAIL_EXISTENCE_CHECK.getEntireUrl() + FactoryPreset.EMAIL;
 
         doReturn(true)
                 .when(accountService)
-                .checkEmailDuplication(eq(FactoryPreset.EMAIL));
+                .checkEmailExistence(eq(FactoryPreset.EMAIL));
 
         // When
         final ResultActions resultActions = mockMvc.perform(

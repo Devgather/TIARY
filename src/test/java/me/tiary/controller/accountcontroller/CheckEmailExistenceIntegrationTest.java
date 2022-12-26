@@ -15,8 +15,8 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ControllerIntegrationTest(AccountController.class)
-@DisplayName("[AccountController - Integration] checkEmailDuplication")
-class CheckEmailDuplicationIntegrationTest {
+@DisplayName("[AccountController - Integration] checkEmailExistence")
+class CheckEmailExistenceIntegrationTest {
     @Autowired
     private MockMvc mockMvc;
 
@@ -27,7 +27,7 @@ class CheckEmailDuplicationIntegrationTest {
     @DisplayName("[Fail] email is blank")
     void failIfEmailIsBlank() throws Exception {
         // Given
-        final String url = AccountApiUrl.EMAIL_DUPLICATION_CHECK.getEntireUrl() + " ";
+        final String url = AccountApiUrl.EMAIL_EXISTENCE_CHECK.getEntireUrl() + " ";
 
         // When
         final ResultActions resultActions = mockMvc.perform(
@@ -42,7 +42,7 @@ class CheckEmailDuplicationIntegrationTest {
     @DisplayName("[Fail] email does not satisfy format")
     void failIfEmailDoesNotSatisfyFormat() throws Exception {
         // Given
-        final String url = AccountApiUrl.EMAIL_DUPLICATION_CHECK.getEntireUrl() + "test";
+        final String url = AccountApiUrl.EMAIL_EXISTENCE_CHECK.getEntireUrl() + "test";
 
         // When
         final ResultActions resultActions = mockMvc.perform(

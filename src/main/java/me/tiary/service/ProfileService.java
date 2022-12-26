@@ -30,7 +30,7 @@ public class ProfileService {
 
     private final ModelMapper modelMapper;
 
-    public boolean checkNicknameDuplication(final String nickname) {
+    public boolean checkNicknameExistence(final String nickname) {
         return profileRepository.findByNickname(nickname).isPresent();
     }
 
@@ -38,7 +38,7 @@ public class ProfileService {
     public ProfileCreationResponseDto createProfile(final ProfileCreationRequestDto requestDto) {
         final String nickname = requestDto.getNickname();
 
-        if (checkNicknameDuplication(nickname)) {
+        if (checkNicknameExistence(nickname)) {
             throw new ProfileException(ProfileStatus.EXISTING_NICKNAME);
         }
 
