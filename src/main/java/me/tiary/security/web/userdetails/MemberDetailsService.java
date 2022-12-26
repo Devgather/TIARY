@@ -1,4 +1,4 @@
-package me.tiary.security.userdetails;
+package me.tiary.security.web.userdetails;
 
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;

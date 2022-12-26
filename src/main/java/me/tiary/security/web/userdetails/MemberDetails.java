@@ -1,4 +1,4 @@
-package me.tiary.security.userdetails;
+package me.tiary.security.web.userdetails;
 
 import lombok.Builder;
 import lombok.RequiredArgsConstructor;
