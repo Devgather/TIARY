@@ -1,7 +1,12 @@
 plugins {
     id 'org.springframework.boot' version '2.7.4'
     id 'io.spring.dependency-management' version '1.0.14.RELEASE'
+    id 'jacoco'
     id 'java'
+}
+
+jacoco {
+    toolVersion = '0.8.8'
 }
 
 group = 'me.tiary'
@@ -38,6 +43,29 @@ dependencies {
     testImplementation 'org.springframework.security:spring-security-test'
 }
 
-tasks.named('test') {
+test {
+    finalizedBy jacocoTestReport
+
     useJUnitPlatform()
+}
+
+jacocoTestReport {
+    dependsOn test
+    finalizedBy jacocoTestCoverageVerification
+
+    reports {
+        html.required = true
+        xml.required = true
+        csv.required = false
+    }
+}
+
+jacocoTestCoverageVerification {
+    violationRules {
+        rule {
+            limit {
+                minimum = 0.80
+            }
+        }
+    }
 }
