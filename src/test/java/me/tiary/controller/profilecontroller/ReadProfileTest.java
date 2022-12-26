@@ -111,7 +111,7 @@ class ReadProfileTest {
                 .getContentAsString(StandardCharsets.UTF_8), ProfileReadResponseDto.class);
 
         // Then
-        resultActions.andExpect(status().isCreated());
+        resultActions.andExpect(status().isOk());
         assertThat(response.getNickname()).isEqualTo(responseDto.getNickname());
     }
 }

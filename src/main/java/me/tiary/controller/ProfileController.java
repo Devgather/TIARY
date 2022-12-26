@@ -38,6 +38,6 @@ public class ProfileController {
     public ResponseEntity<ProfileReadResponseDto> readProfile(@PathVariable final String nickname) {
         final ProfileReadResponseDto responseDto = profileService.readProfile(nickname);
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(responseDto);
+        return ResponseEntity.status(HttpStatus.OK).body(responseDto);
     }
 }
