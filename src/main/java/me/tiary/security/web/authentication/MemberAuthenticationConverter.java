@@ -1,4 +1,4 @@
-package me.tiary.security.authentication;
+package me.tiary.security.web.authentication;
 
 import lombok.RequiredArgsConstructor;
 import me.tiary.properties.jwt.AccessTokenProperties;
