@@ -1,18 +1,18 @@
 plugins {
-    id 'org.springframework.boot' version '2.7.4'
-    id 'io.spring.dependency-management' version '1.0.14.RELEASE'
-    id 'org.sonarqube' version '3.5.0.2730'
-    id 'jacoco'
-    id 'java'
+    id "org.springframework.boot" version "2.7.4"
+    id "io.spring.dependency-management" version "1.0.14.RELEASE"
+    id "org.sonarqube" version "3.5.0.2730"
+    id "jacoco"
+    id "java"
 }
 
 jacoco {
-    toolVersion = '0.8.8'
+    toolVersion = "0.8.8"
 }
 
-group = 'me.tiary'
-version = '1.0.0'
-sourceCompatibility = '11'
+group = "me.tiary"
+version = "1.0.0"
+sourceCompatibility = "11"
 
 configurations {
     compileOnly {
@@ -25,23 +25,23 @@ repositories {
 }
 
 dependencies {
-    implementation 'com.auth0:java-jwt:3.19.3'
-    implementation 'com.google.code.gson:gson:2.8.9'
-    implementation 'io.awspring.cloud:spring-cloud-starter-aws:2.4.0'
-    implementation 'org.modelmapper:modelmapper:2.4.5'
-    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-    implementation 'org.springframework.boot:spring-boot-starter-mail'
-    implementation 'org.springframework.boot:spring-boot-starter-security'
-    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
-    implementation 'org.springframework.boot:spring-boot-starter-validation'
-    implementation 'org.springframework.boot:spring-boot-starter-web'
-    compileOnly 'org.projectlombok:lombok'
-    runtimeOnly 'com.h2database:h2'
-    runtimeOnly 'mysql:mysql-connector-java'
-    annotationProcessor 'org.projectlombok:lombok'
-    annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
-    testImplementation 'org.springframework.security:spring-security-test'
+    implementation "com.auth0:java-jwt:3.19.3"
+    implementation "com.google.code.gson:gson:2.8.9"
+    implementation "io.awspring.cloud:spring-cloud-starter-aws:2.4.0"
+    implementation "org.modelmapper:modelmapper:2.4.5"
+    implementation "org.springframework.boot:spring-boot-starter-data-jpa"
+    implementation "org.springframework.boot:spring-boot-starter-mail"
+    implementation "org.springframework.boot:spring-boot-starter-security"
+    implementation "org.springframework.boot:spring-boot-starter-thymeleaf"
+    implementation "org.springframework.boot:spring-boot-starter-validation"
+    implementation "org.springframework.boot:spring-boot-starter-web"
+    compileOnly "org.projectlombok:lombok"
+    runtimeOnly "com.h2database:h2"
+    runtimeOnly "mysql:mysql-connector-java"
+    annotationProcessor "org.projectlombok:lombok"
+    annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
+    testImplementation "org.springframework.boot:spring-boot-starter-test"
+    testImplementation "org.springframework.security:spring-security-test"
 }
 
 test {
@@ -52,9 +52,9 @@ test {
 
 sonarqube {
     properties {
-        property 'sonar.projectKey', 'Devgather_TIARY'
-        property 'sonar.organization', 'devgather'
-        property 'sonar.host.url', 'https://sonarcloud.io'
+        property "sonar.projectKey", "Devgather_TIARY"
+        property "sonar.organization", "devgather"
+        property "sonar.host.url", "https://sonarcloud.io"
     }
 }
 
