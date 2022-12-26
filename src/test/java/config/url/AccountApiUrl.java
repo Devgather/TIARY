@@ -1,7 +1,7 @@
 package config.url;
 
 public enum AccountApiUrl {
-    EMAIL_DUPLICATION_CHECK("/email/"),
+    EMAIL_EXISTENCE_CHECK("/email/"),
     REGISTER(""),
     VERIFICATION_MAIL_DELIVERY("/verification/"),
     EMAIL_VERIFICATION("/verification"),

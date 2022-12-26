@@ -19,8 +19,8 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doReturn;
 
 @ServiceTest
-@DisplayName("[ProfileService] checkNicknameDuplication")
-class CheckNicknameDuplicationTest {
+@DisplayName("[ProfileService] checkNicknameExistence")
+class CheckNicknameExistenceTest {
     @InjectMocks
     private ProfileService profileService;
 
@@ -36,7 +36,7 @@ class CheckNicknameDuplicationTest {
                 .findByNickname(any(String.class));
 
         // When
-        final boolean result = profileService.checkNicknameDuplication(FactoryPreset.NICKNAME);
+        final boolean result = profileService.checkNicknameExistence(FactoryPreset.NICKNAME);
 
         // Then
         assertThat(result).isFalse();
@@ -53,7 +53,7 @@ class CheckNicknameDuplicationTest {
                 .findByNickname(eq(profile.getNickname()));
 
         // When
-        final boolean result = profileService.checkNicknameDuplication(FactoryPreset.NICKNAME);
+        final boolean result = profileService.checkNicknameExistence(FactoryPreset.NICKNAME);
 
         // Then
         assertThat(result).isTrue();

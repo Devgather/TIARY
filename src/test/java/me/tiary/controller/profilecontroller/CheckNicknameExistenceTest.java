@@ -21,8 +21,8 @@ import static org.mockito.Mockito.doReturn;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ControllerTest
-@DisplayName("[ProfileController] checkNicknameDuplication")
-class CheckNicknameDuplicationTest {
+@DisplayName("[ProfileController] checkNicknameExistence")
+class CheckNicknameExistenceTest {
     @InjectMocks
     private ProfileController profileController;
 
@@ -42,11 +42,11 @@ class CheckNicknameDuplicationTest {
     @DisplayName("[Success] nickname does not exist")
     void successIfNicknameDoesNotExist() throws Exception {
         // Given
-        final String url = ProfileApiUrl.NICKNAME_DUPLICATION_CHECK.getEntireUrl() + FactoryPreset.NICKNAME;
+        final String url = ProfileApiUrl.NICKNAME_EXISTENCE_CHECK.getEntireUrl() + FactoryPreset.NICKNAME;
 
         doReturn(false)
                 .when(profileService)
-                .checkNicknameDuplication(any(String.class));
+                .checkNicknameExistence(any(String.class));
 
         // When
         final ResultActions resultActions = mockMvc.perform(
@@ -61,11 +61,11 @@ class CheckNicknameDuplicationTest {
     @DisplayName("[Success] nickname does exist")
     void successIfNicknameDoesExist() throws Exception {
         // Given
-        final String url = ProfileApiUrl.NICKNAME_DUPLICATION_CHECK.getEntireUrl() + FactoryPreset.NICKNAME;
+        final String url = ProfileApiUrl.NICKNAME_EXISTENCE_CHECK.getEntireUrl() + FactoryPreset.NICKNAME;
 
         doReturn(true)
                 .when(profileService)
-                .checkNicknameDuplication(eq(FactoryPreset.NICKNAME));
+                .checkNicknameExistence(eq(FactoryPreset.NICKNAME));
 
         // When
         final ResultActions resultActions = mockMvc.perform(
