@@ -34,7 +34,7 @@ public class ProfileController {
         return ResponseEntity.status(HttpStatus.CREATED).body(responseDto);
     }
 
-    @GetMapping("/nickname/{nickname}")
+    @GetMapping("/{nickname}")
     public ResponseEntity<ProfileReadResponseDto> readProfile(@PathVariable final String nickname) {
         final ProfileReadResponseDto responseDto = profileService.readProfile(nickname);
 
