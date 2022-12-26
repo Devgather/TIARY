@@ -240,8 +240,8 @@ class SecurityFilterChainIntegrationTest {
     }
 
     @Test
-    @DisplayName("[Fail] member requests profile read api")
-    void failIfMemberRequestsProfileReadApi() throws Exception {
+    @DisplayName("[Success] member requests profile read api")
+    void successIfMemberRequestsProfileReadApi() throws Exception {
         // Given
         final String url = ProfileApiUrl.PROFILE_READ.getEntireUrl() + FactoryPreset.NICKNAME;
 
@@ -258,7 +258,7 @@ class SecurityFilterChainIntegrationTest {
                 );
 
         // Then
-        resultActions.andExpect(status().isForbidden());
+        resultActions.andExpect(status().is(not(HttpStatus.FORBIDDEN.value())));
     }
 
     @Test
