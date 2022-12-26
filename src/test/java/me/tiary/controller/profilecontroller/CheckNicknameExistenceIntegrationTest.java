@@ -17,8 +17,8 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ControllerIntegrationTest(ProfileController.class)
-@DisplayName("[ProfileController - Integration] checkNicknameDuplication")
-class CheckNicknameDuplicationIntegrationTest {
+@DisplayName("[ProfileController - Integration] checkNicknameExistence")
+class CheckNicknameExistenceIntegrationTest {
     @Autowired
     private MockMvc mockMvc;
 
@@ -29,7 +29,7 @@ class CheckNicknameDuplicationIntegrationTest {
     @DisplayName("[Fail] nickname is blank")
     void failIfNicknameIsBlank() throws Exception {
         // Given
-        final String url = ProfileApiUrl.NICKNAME_DUPLICATION_CHECK.getEntireUrl() + " ";
+        final String url = ProfileApiUrl.NICKNAME_EXISTENCE_CHECK.getEntireUrl() + " ";
 
         // When
         final ResultActions resultActions = mockMvc.perform(
@@ -45,7 +45,7 @@ class CheckNicknameDuplicationIntegrationTest {
     void failIfNicknameExceedsMaxLength() throws Exception {
         // Given
         final String nickname = StringUtility.generateRandomString(Profile.NICKNAME_MAX_LENGTH + 1);
-        final String url = ProfileApiUrl.NICKNAME_DUPLICATION_CHECK.getEntireUrl() + nickname;
+        final String url = ProfileApiUrl.NICKNAME_EXISTENCE_CHECK.getEntireUrl() + nickname;
 
         // When
         final ResultActions resultActions = mockMvc.perform(

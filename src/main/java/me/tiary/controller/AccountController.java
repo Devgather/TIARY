@@ -24,8 +24,8 @@ public class AccountController {
     private final AccountService accountService;
 
     @RequestMapping(value = "/email/{email}", method = RequestMethod.HEAD)
-    public ResponseEntity<Void> checkEmailDuplication(@PathVariable @NotBlank @Email final String email) {
-        return (accountService.checkEmailDuplication(email)) ? (ResponseEntity.ok().build()) : (ResponseEntity.notFound().build());
+    public ResponseEntity<Void> checkEmailExistence(@PathVariable @NotBlank @Email final String email) {
+        return (accountService.checkEmailExistence(email)) ? (ResponseEntity.ok().build()) : (ResponseEntity.notFound().build());
     }
 
     @PostMapping("")

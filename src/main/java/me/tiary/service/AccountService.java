@@ -49,13 +49,13 @@ public class AccountService {
 
     private final JwtProvider refreshTokenProvider;
 
-    public boolean checkEmailDuplication(final String email) {
+    public boolean checkEmailExistence(final String email) {
         return accountRepository.findByEmail(email).isPresent();
     }
 
     @Transactional
     public AccountCreationResponseDto register(final AccountCreationRequestDto requestDto) {
-        if (checkEmailDuplication(requestDto.getEmail())) {
+        if (checkEmailExistence(requestDto.getEmail())) {
             throw new AccountException(AccountStatus.EXISTING_EMAIL);
         }
 
@@ -88,7 +88,7 @@ public class AccountService {
 
     @Transactional
     public void sendVerificationMail(final String email) throws MessagingException {
-        if (checkEmailDuplication(email)) {
+        if (checkEmailExistence(email)) {
             throw new AccountException(AccountStatus.EXISTING_EMAIL);
         }
 

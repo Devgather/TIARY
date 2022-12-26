@@ -20,8 +20,8 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doReturn;
 
 @ServiceTest
-@DisplayName("[AccountService] checkEmailDuplication")
-class CheckEmailDuplicationTest {
+@DisplayName("[AccountService] checkEmailExistence")
+class CheckEmailExistenceTest {
     @InjectMocks
     private AccountService accountService;
 
@@ -37,7 +37,7 @@ class CheckEmailDuplicationTest {
                 .findByEmail(any(String.class));
 
         // When
-        final boolean result = accountService.checkEmailDuplication(FactoryPreset.EMAIL);
+        final boolean result = accountService.checkEmailExistence(FactoryPreset.EMAIL);
 
         // Then
         assertThat(result).isFalse();
@@ -54,7 +54,7 @@ class CheckEmailDuplicationTest {
                 .findByEmail(eq(account.getEmail()));
 
         // When
-        final boolean result = accountService.checkEmailDuplication(FactoryPreset.EMAIL);
+        final boolean result = accountService.checkEmailExistence(FactoryPreset.EMAIL);
 
         // Then
         assertThat(result).isTrue();
