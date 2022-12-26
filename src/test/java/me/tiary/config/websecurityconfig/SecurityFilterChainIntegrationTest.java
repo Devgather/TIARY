@@ -238,4 +238,42 @@ class SecurityFilterChainIntegrationTest {
         // Then
         resultActions.andExpect(status().is(not(HttpStatus.FORBIDDEN.value())));
     }
+
+    @Test
+    @DisplayName("[Fail] member requests profile read api")
+    void failIfMemberRequestsProfileReadApi() throws Exception {
+        // Given
+        final String url = ProfileApiUrl.PROFILE_READ.getEntireUrl() + FactoryPreset.NICKNAME;
+
+        // Algorithm = HMAC256, Payload = { "uuid": "cbf0f220-97b8-4312-82ce-f98266c428d4" }, Secret Key = jwt-access-token-secret-key
+        final String accessToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiY2JmMGYyMjAtOTdiOC00MzEyLTgyY2UtZjk4MjY2YzQyOGQ0In0.rftGC07wvthl89A-lHN4NzeP2gcVv9UxTTnST3Nhqz8";
+
+        // When
+        final ResultActions resultActions = mockMvc.perform(
+                MockMvcRequestBuilders.get(url)
+                        .cookie(new Cookie(AccessTokenProperties.COOKIE_NAME, accessToken))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(gson.toJson(FactoryPreset.NICKNAME))
+
+                );
+
+        // Then
+        resultActions.andExpect(status().isForbidden());
+    }
+
+    @Test
+    @DisplayName("[Success] anonymous requests profile read api")
+    void successIfAnonymousRequestsProfileReadApi() throws Exception {
+        // Given
+        final String url = ProfileApiUrl.PROFILE_READ.getEntireUrl() + FactoryPreset.NICKNAME;
+
+        // When
+        final ResultActions resultActions = mockMvc.perform(
+                MockMvcRequestBuilders.get(url)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(gson.toJson(FactoryPreset.NICKNAME)));
+
+        // Then
+        resultActions.andExpect(status().is(not(HttpStatus.FORBIDDEN.value())));
+    }
 }
