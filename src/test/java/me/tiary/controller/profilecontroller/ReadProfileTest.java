@@ -26,6 +26,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import java.nio.charset.StandardCharsets;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.doThrow;
@@ -58,19 +59,15 @@ class ReadProfileTest {
     @DisplayName("[Fail] profile does not exist")
     void failIfProfileDoesNotExist() throws Exception {
         // Given
-        final String nickname = FactoryPreset.NICKNAME;
-
         final String url = ProfileApiUrl.PROFILE_READ.getEntireUrl() + FactoryPreset.NICKNAME;
 
         doThrow(new ProfileException(ProfileStatus.NOT_EXISTING_PROFILE))
                 .when(profileService)
-                .readProfile(nickname);
+                .readProfile(any(String.class));
 
         // When
         final ResultActions resultActions = mockMvc.perform(
                 MockMvcRequestBuilders.get(url)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(gson.toJson(nickname))
         );
 
         final ExceptionResponse response = gson.fromJson(
@@ -88,21 +85,17 @@ class ReadProfileTest {
     @DisplayName("[Success] profile does exist")
     void successIfProfileDoesExist() throws Exception {
         // Given
-        final String nickname = FactoryPreset.NICKNAME;
-
         final String url = ProfileApiUrl.PROFILE_READ.getEntireUrl() + FactoryPreset.NICKNAME;
 
         final ProfileReadResponseDto responseDto = ProfileReadResponseDtoFactory.createDefaultProfileReadResponseDto();
 
         doReturn(responseDto)
                 .when(profileService)
-                .readProfile(eq(nickname));
+                .readProfile(eq(FactoryPreset.NICKNAME));
 
         // When
         final ResultActions resultActions = mockMvc.perform(
                 MockMvcRequestBuilders.get(url)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(gson.toJson(nickname))
         );
 
         final ProfileReadResponseDto response = gson.fromJson(resultActions

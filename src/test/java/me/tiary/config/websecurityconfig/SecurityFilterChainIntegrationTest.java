@@ -252,10 +252,7 @@ class SecurityFilterChainIntegrationTest {
         final ResultActions resultActions = mockMvc.perform(
                 MockMvcRequestBuilders.get(url)
                         .cookie(new Cookie(AccessTokenProperties.COOKIE_NAME, accessToken))
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(gson.toJson(FactoryPreset.NICKNAME))
-
-                );
+        );
 
         // Then
         resultActions.andExpect(status().is(not(HttpStatus.FORBIDDEN.value())));
@@ -270,8 +267,7 @@ class SecurityFilterChainIntegrationTest {
         // When
         final ResultActions resultActions = mockMvc.perform(
                 MockMvcRequestBuilders.get(url)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(gson.toJson(FactoryPreset.NICKNAME)));
+        );
 
         // Then
         resultActions.andExpect(status().is(not(HttpStatus.FORBIDDEN.value())));
