@@ -1,7 +1,7 @@
 package me.tiary.service.profileservice;
 
-import annotation.service.ServiceTest;
-import factory.mock.web.MockMultipartFileFactory;
+import common.annotation.service.ServiceTest;
+import common.factory.mock.web.MockMultipartFileFactory;
 import me.tiary.exception.ProfileException;
 import me.tiary.exception.status.ProfileStatus;
 import me.tiary.service.ProfileService;

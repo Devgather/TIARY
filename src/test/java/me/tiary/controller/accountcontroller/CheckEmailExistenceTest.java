@@ -1,8 +1,8 @@
 package me.tiary.controller.accountcontroller;
 
-import annotation.controller.ControllerTest;
-import config.factory.FactoryPreset;
-import config.url.AccountApiUrl;
+import common.annotation.controller.ControllerTest;
+import common.config.factory.FactoryPreset;
+import common.config.url.AccountApiUrl;
 import me.tiary.controller.AccountController;
 import me.tiary.service.AccountService;
 import org.junit.jupiter.api.BeforeEach;

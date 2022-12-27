@@ -1,7 +1,7 @@
 package me.tiary.utility.jwt.jwtprovider;
 
 import com.auth0.jwt.interfaces.DecodedJWT;
-import factory.utility.jwt.JwtProviderFactory;
+import common.factory.utility.jwt.JwtProviderFactory;
 import me.tiary.properties.jwt.JwtProperties;
 import me.tiary.utility.jwt.JwtProvider;
 import org.junit.jupiter.api.BeforeEach;

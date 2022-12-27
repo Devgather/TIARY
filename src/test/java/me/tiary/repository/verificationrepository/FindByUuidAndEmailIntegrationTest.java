@@ -1,14 +1,14 @@
 package me.tiary.repository.verificationrepository;
 
-import annotation.repository.RepositoryIntegrationTest;
-import config.factory.FactoryPreset;
-import factory.domain.VerificationFactory;
+import common.annotation.repository.RepositoryIntegrationTest;
+import common.config.factory.FactoryPreset;
+import common.factory.domain.VerificationFactory;
+import common.utility.JpaUtility;
 import me.tiary.domain.Verification;
 import me.tiary.repository.VerificationRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import utility.JpaUtility;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;

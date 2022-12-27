@@ -1,8 +1,8 @@
 package me.tiary.service.accountservice;
 
-import factory.domain.AccountFactory;
-import factory.domain.ProfileFactory;
-import factory.dto.account.AccountLoginRequestDtoFactory;
+import common.factory.domain.AccountFactory;
+import common.factory.domain.ProfileFactory;
+import common.factory.dto.account.AccountLoginRequestDtoFactory;
 import me.tiary.domain.Account;
 import me.tiary.dto.account.AccountLoginRequestDto;
 import me.tiary.dto.account.AccountLoginResultDto;
