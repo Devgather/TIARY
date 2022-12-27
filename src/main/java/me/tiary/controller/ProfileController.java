@@ -23,8 +23,8 @@ public class ProfileController {
     private final ProfileService profileService;
 
     @RequestMapping(value = "/nickname/{nickname}", method = RequestMethod.HEAD)
-    public ResponseEntity<Void> checkNicknameDuplication(@PathVariable @NotBlank @Size(max = Profile.NICKNAME_MAX_LENGTH) final String nickname) {
-        return (profileService.checkNicknameDuplication(nickname)) ? (ResponseEntity.ok().build()) : (ResponseEntity.notFound().build());
+    public ResponseEntity<Void> checkNicknameExistence(@PathVariable @NotBlank @Size(max = Profile.NICKNAME_MAX_LENGTH) final String nickname) {
+        return (profileService.checkNicknameExistence(nickname)) ? (ResponseEntity.ok().build()) : (ResponseEntity.notFound().build());
     }
 
     @PostMapping("")

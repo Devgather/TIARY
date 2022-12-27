@@ -13,6 +13,9 @@ import javax.validation.constraints.NotEmpty;
 @EqualsAndHashCode
 public class AccountCreationRequestDto {
     @NotBlank
+    private final String verificationUuid;
+
+    @NotBlank
     private final String profileUuid;
 
     @NotBlank

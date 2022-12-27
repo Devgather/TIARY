@@ -1,7 +1,7 @@
 package config.url;
 
 public enum ProfileApiUrl {
-    NICKNAME_DUPLICATION_CHECK("/nickname/"),
+    NICKNAME_EXISTENCE_CHECK("/nickname/"),
     PROFILE_CREATION(""),
     PROFILE_READ("/");
 
