@@ -41,10 +41,10 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 public class WebSecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(final HttpSecurity http,
-                                                   final AuthenticationEntryPoint authenticationEntryPoint,
-                                                   final AccessDeniedHandler accessDeniedHandler,
                                                    final CorsConfigurationSource corsConfigurationSource,
-                                                   final AuthenticationFilter authenticationFilter) throws Exception {
+                                                   final AuthenticationFilter authenticationFilter,
+                                                   final AuthenticationEntryPoint authenticationEntryPoint,
+                                                   final AccessDeniedHandler accessDeniedHandler) throws Exception {
         http.authorizeRequests()
                 .antMatchers(HttpMethod.HEAD, "/api/account/email/**").anonymous()
                 .antMatchers(HttpMethod.POST, "/api/account").anonymous()
@@ -54,23 +54,23 @@ public class WebSecurityConfig {
                 .antMatchers(HttpMethod.HEAD, "/api/profile/nickname/**").anonymous()
                 .antMatchers(HttpMethod.POST, "/api/profile").anonymous()
                 .antMatchers(HttpMethod.GET, "/api/profile/**").permitAll()
-                .anyRequest().authenticated()
-                .and()
-                .exceptionHandling()
-                .authenticationEntryPoint(authenticationEntryPoint)
-                .accessDeniedHandler(accessDeniedHandler)
-                .and()
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and()
-                .httpBasic().disable()
+                .anyRequest().authenticated();
+
+        http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+
+        http.httpBasic().disable()
                 .formLogin().disable()
                 .logout().disable()
                 .rememberMe().disable()
                 .headers().disable()
                 .csrf().disable()
-                .cors().configurationSource(corsConfigurationSource)
-                .and()
-                .addFilterBefore(authenticationFilter, UsernamePasswordAuthenticationFilter.class);
+                .cors().configurationSource(corsConfigurationSource);
+
+        http.addFilterBefore(authenticationFilter, UsernamePasswordAuthenticationFilter.class);
+
+        http.exceptionHandling()
+                .authenticationEntryPoint(authenticationEntryPoint)
+                .accessDeniedHandler(accessDeniedHandler);
 
         return http.build();
     }
@@ -81,16 +81,6 @@ public class WebSecurityConfig {
                 .requestMatchers(CorsUtils::isPreFlightRequest)
                 .requestMatchers(PathRequest.toStaticResources().atCommonLocations())
                 .requestMatchers(PathRequest.toH2Console());
-    }
-
-    @Bean
-    public AuthenticationEntryPoint authenticationEntryPoint(final ObjectMapper objectMapper) {
-        return new AuthenticationExceptionHandler(objectMapper);
-    }
-
-    @Bean
-    public AccessDeniedHandler accessDeniedHandler(final ObjectMapper objectMapper) {
-        return new AccessDeniedExceptionHandler(objectMapper);
     }
 
     @Bean
@@ -151,6 +141,16 @@ public class WebSecurityConfig {
     @Bean
     public AuthenticationUserDetailsService<PreAuthenticatedAuthenticationToken> authenticationUserDetailsService(final @Qualifier("accessTokenProvider") JwtProvider accessTokenProvider) {
         return new MemberDetailsService(accessTokenProvider);
+    }
+
+    @Bean
+    public AuthenticationEntryPoint authenticationEntryPoint(final ObjectMapper objectMapper) {
+        return new AuthenticationExceptionHandler(objectMapper);
+    }
+
+    @Bean
+    public AccessDeniedHandler accessDeniedHandler(final ObjectMapper objectMapper) {
+        return new AccessDeniedExceptionHandler(objectMapper);
     }
 
     @Bean(name = "accessTokenProvider")
