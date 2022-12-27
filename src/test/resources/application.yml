@@ -1,8 +1,10 @@
 spring:
   config:
     import:
-      - classpath:properties/jwt.yml
       - classpath:properties/security.yml
+      - classpath:properties/jwt.yml
+      - classpath:properties/mail.yml
+      - classpath:properties/scheduler.yml
       - classpath:properties/aws.yml
 
   datasource:

@@ -7,11 +7,15 @@ import config.url.AccountApiUrl;
 import config.url.ProfileApiUrl;
 import factory.dto.account.AccountCreationRequestDtoFactory;
 import factory.dto.account.AccountLoginRequestDtoFactory;
+import factory.dto.account.AccountVerificationRequestDtoFactory;
 import factory.dto.profile.ProfileCreationRequestDtoFactory;
+import me.tiary.domain.Verification;
 import me.tiary.dto.account.AccountCreationRequestDto;
 import me.tiary.dto.account.AccountLoginRequestDto;
+import me.tiary.dto.account.AccountVerificationRequestDto;
 import me.tiary.dto.profile.ProfileCreationRequestDto;
 import me.tiary.properties.jwt.AccessTokenProperties;
+import me.tiary.utility.common.StringUtility;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -42,10 +46,10 @@ class SecurityFilterChainIntegrationTest {
     }
 
     @Test
-    @DisplayName("[Fail] member requests email duplication check api")
-    void failIfMemberRequestsEmailDuplicationCheckApi() throws Exception {
+    @DisplayName("[Fail] member requests email existence check api")
+    void failIfMemberRequestsEmailExistenceCheckApi() throws Exception {
         // Given
-        final String url = AccountApiUrl.EMAIL_DUPLICATION_CHECK.getEntireUrl() + FactoryPreset.EMAIL;
+        final String url = AccountApiUrl.EMAIL_EXISTENCE_CHECK.getEntireUrl() + FactoryPreset.EMAIL;
 
         // Algorithm = HMAC256, Payload = { "uuid": "cbf0f220-97b8-4312-82ce-f98266c428d4" }, Secret Key = jwt-access-token-secret-key
         final String accessToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiY2JmMGYyMjAtOTdiOC00MzEyLTgyY2UtZjk4MjY2YzQyOGQ0In0.rftGC07wvthl89A-lHN4NzeP2gcVv9UxTTnST3Nhqz8";
@@ -61,10 +65,10 @@ class SecurityFilterChainIntegrationTest {
     }
 
     @Test
-    @DisplayName("[Success] anonymous requests email duplication check api")
-    void successIfAnonymousRequestsEmailDuplicationCheckApi() throws Exception {
+    @DisplayName("[Success] anonymous requests email existence check api")
+    void successIfAnonymousRequestsEmailExistenceCheckApi() throws Exception {
         // Given
-        final String url = AccountApiUrl.EMAIL_DUPLICATION_CHECK.getEntireUrl() + FactoryPreset.EMAIL;
+        final String url = AccountApiUrl.EMAIL_EXISTENCE_CHECK.getEntireUrl() + FactoryPreset.EMAIL;
 
         // When
         final ResultActions resultActions = mockMvc.perform(
@@ -85,6 +89,7 @@ class SecurityFilterChainIntegrationTest {
         final String accessToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiY2JmMGYyMjAtOTdiOC00MzEyLTgyY2UtZjk4MjY2YzQyOGQ0In0.rftGC07wvthl89A-lHN4NzeP2gcVv9UxTTnST3Nhqz8";
 
         final AccountCreationRequestDto requestDto = AccountCreationRequestDtoFactory.createDefaultAccountCreationRequestDto(
+                UUID.randomUUID().toString(),
                 UUID.randomUUID().toString()
         );
 
@@ -107,12 +112,93 @@ class SecurityFilterChainIntegrationTest {
         final String url = AccountApiUrl.REGISTER.getEntireUrl();
 
         final AccountCreationRequestDto requestDto = AccountCreationRequestDtoFactory.createDefaultAccountCreationRequestDto(
+                UUID.randomUUID().toString(),
                 UUID.randomUUID().toString()
         );
 
         // When
         final ResultActions resultActions = mockMvc.perform(
                 MockMvcRequestBuilders.post(url)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(gson.toJson(requestDto))
+        );
+
+        // Then
+        resultActions.andExpect(status().is(not(HttpStatus.FORBIDDEN.value())));
+    }
+
+    @Test
+    @DisplayName("[Fail] member requests verification mail delivery api")
+    void failIfMemberRequestsVerificationMailDeliveryApi() throws Exception {
+        // Given
+        final String url = AccountApiUrl.VERIFICATION_MAIL_DELIVERY.getEntireUrl() + FactoryPreset.EMAIL;
+
+        // Algorithm = HMAC256, Payload = { "uuid": "cbf0f220-97b8-4312-82ce-f98266c428d4" }, Secret Key = jwt-access-token-secret-key
+        final String accessToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiY2JmMGYyMjAtOTdiOC00MzEyLTgyY2UtZjk4MjY2YzQyOGQ0In0.rftGC07wvthl89A-lHN4NzeP2gcVv9UxTTnST3Nhqz8";
+
+        // When
+        final ResultActions resultActions = mockMvc.perform(
+                MockMvcRequestBuilders.post(url)
+                        .cookie(new Cookie(AccessTokenProperties.COOKIE_NAME, accessToken))
+        );
+
+        // Then
+        resultActions.andExpect(status().isForbidden());
+    }
+
+    @Test
+    @DisplayName("[Success] anonymous requests verification mail delivery api")
+    void successIfAnonymousRequestsVerificationMailDeliveryApi() throws Exception {
+        // Given
+        final String url = AccountApiUrl.VERIFICATION_MAIL_DELIVERY.getEntireUrl() + FactoryPreset.EMAIL;
+
+        // When
+        final ResultActions resultActions = mockMvc.perform(
+                MockMvcRequestBuilders.post(url)
+        );
+
+        // Then
+        resultActions.andExpect(status().is(not(HttpStatus.FORBIDDEN.value())));
+    }
+
+    @Test
+    @DisplayName("[Fail] member requests email verification api")
+    void failIfMemberRequestsEmailVerificationApi() throws Exception {
+        // Given
+        final String url = AccountApiUrl.EMAIL_VERIFICATION.getEntireUrl();
+
+        // Algorithm = HMAC256, Payload = { "uuid": "cbf0f220-97b8-4312-82ce-f98266c428d4" }, Secret Key = jwt-access-token-secret-key
+        final String accessToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiY2JmMGYyMjAtOTdiOC00MzEyLTgyY2UtZjk4MjY2YzQyOGQ0In0.rftGC07wvthl89A-lHN4NzeP2gcVv9UxTTnST3Nhqz8";
+
+        final AccountVerificationRequestDto requestDto = AccountVerificationRequestDtoFactory.createDefaultAccountVerificationRequestDto(
+                StringUtility.generateRandomString(Verification.CODE_MAX_LENGTH)
+        );
+
+        // When
+        final ResultActions resultActions = mockMvc.perform(
+                MockMvcRequestBuilders.patch(url)
+                        .cookie(new Cookie(AccessTokenProperties.COOKIE_NAME, accessToken))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(gson.toJson(requestDto))
+        );
+
+        // Then
+        resultActions.andExpect(status().isForbidden());
+    }
+
+    @Test
+    @DisplayName("[Success] anonymous requests email verification api")
+    void successIfAnonymousRequestsEmailVerificationApi() throws Exception {
+        // Given
+        final String url = AccountApiUrl.EMAIL_VERIFICATION.getEntireUrl();
+
+        final AccountVerificationRequestDto requestDto = AccountVerificationRequestDtoFactory.createDefaultAccountVerificationRequestDto(
+                StringUtility.generateRandomString(Verification.CODE_MAX_LENGTH)
+        );
+
+        // When
+        final ResultActions resultActions = mockMvc.perform(
+                MockMvcRequestBuilders.patch(url)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(gson.toJson(requestDto))
         );
@@ -164,10 +250,10 @@ class SecurityFilterChainIntegrationTest {
     }
 
     @Test
-    @DisplayName("[Fail] member requests nickname duplication check api")
-    void failIfMemberRequestsNicknameDuplicationCheckApi() throws Exception {
+    @DisplayName("[Fail] member requests nickname existence check api")
+    void failIfMemberRequestsNicknameExistenceCheckApi() throws Exception {
         // Given
-        final String url = ProfileApiUrl.NICKNAME_DUPLICATION_CHECK.getEntireUrl() + FactoryPreset.NICKNAME;
+        final String url = ProfileApiUrl.NICKNAME_EXISTENCE_CHECK.getEntireUrl() + FactoryPreset.NICKNAME;
 
         // Algorithm = HMAC256, Payload = { "uuid": "cbf0f220-97b8-4312-82ce-f98266c428d4" }, Secret Key = jwt-access-token-secret-key
         final String accessToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiY2JmMGYyMjAtOTdiOC00MzEyLTgyY2UtZjk4MjY2YzQyOGQ0In0.rftGC07wvthl89A-lHN4NzeP2gcVv9UxTTnST3Nhqz8";
@@ -183,10 +269,10 @@ class SecurityFilterChainIntegrationTest {
     }
 
     @Test
-    @DisplayName("[Success] anonymous requests nickname duplication check api")
-    void successIfAnonymousRequestsNicknameDuplicationCheckApi() throws Exception {
+    @DisplayName("[Success] anonymous requests nickname existence check api")
+    void successIfAnonymousRequestsNicknameExistenceCheckApi() throws Exception {
         // Given
-        final String url = ProfileApiUrl.NICKNAME_DUPLICATION_CHECK.getEntireUrl() + FactoryPreset.NICKNAME;
+        final String url = ProfileApiUrl.NICKNAME_EXISTENCE_CHECK.getEntireUrl() + FactoryPreset.NICKNAME;
 
         // When
         final ResultActions resultActions = mockMvc.perform(

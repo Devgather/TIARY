@@ -6,9 +6,9 @@ import me.tiary.exception.handler.security.AuthenticationExceptionHandler;
 import me.tiary.properties.jwt.AccessTokenProperties;
 import me.tiary.properties.jwt.RefreshTokenProperties;
 import me.tiary.properties.security.SecurityCorsProperties;
-import me.tiary.security.authentication.MemberAuthenticationConverter;
-import me.tiary.security.authentication.MemberAuthenticationProvider;
-import me.tiary.security.userdetails.MemberDetailsService;
+import me.tiary.security.web.authentication.MemberAuthenticationConverter;
+import me.tiary.security.web.authentication.MemberAuthenticationProvider;
+import me.tiary.security.web.userdetails.MemberDetailsService;
 import me.tiary.utility.jwt.JwtProvider;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
@@ -48,6 +48,8 @@ public class WebSecurityConfig {
         http.authorizeRequests()
                 .antMatchers(HttpMethod.HEAD, "/api/account/email/**").anonymous()
                 .antMatchers(HttpMethod.POST, "/api/account").anonymous()
+                .antMatchers(HttpMethod.POST, "/api/account/verification/**").anonymous()
+                .antMatchers(HttpMethod.PATCH, "/api/account/verification").anonymous()
                 .antMatchers(HttpMethod.POST, "/api/account/login").anonymous()
                 .antMatchers(HttpMethod.HEAD, "/api/profile/nickname/**").anonymous()
                 .antMatchers(HttpMethod.POST, "/api/profile").anonymous()

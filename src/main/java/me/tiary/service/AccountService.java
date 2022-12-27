@@ -4,10 +4,7 @@ import lombok.RequiredArgsConstructor;
 import me.tiary.domain.Account;
 import me.tiary.domain.Profile;
 import me.tiary.domain.Verification;
-import me.tiary.dto.account.AccountCreationRequestDto;
-import me.tiary.dto.account.AccountCreationResponseDto;
-import me.tiary.dto.account.AccountLoginRequestDto;
-import me.tiary.dto.account.AccountLoginResultDto;
+import me.tiary.dto.account.*;
 import me.tiary.exception.AccountException;
 import me.tiary.exception.status.AccountStatus;
 import me.tiary.properties.jwt.AccessTokenProperties;
@@ -17,10 +14,16 @@ import me.tiary.repository.ProfileRepository;
 import me.tiary.repository.VerificationRepository;
 import me.tiary.utility.jwt.JwtProvider;
 import org.modelmapper.ModelMapper;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.thymeleaf.context.Context;
+import org.thymeleaf.spring5.SpringTemplateEngine;
 
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -34,25 +37,29 @@ public class AccountService {
 
     private final VerificationRepository verificationRepository;
 
+    private final SpringTemplateEngine templateEngine;
+
     private final ModelMapper modelMapper;
 
     private final PasswordEncoder passwordEncoder;
+
+    private final JavaMailSender mailSender;
 
     private final JwtProvider accessTokenProvider;
 
     private final JwtProvider refreshTokenProvider;
 
-    public boolean checkEmailDuplication(final String email) {
+    public boolean checkEmailExistence(final String email) {
         return accountRepository.findByEmail(email).isPresent();
     }
 
     @Transactional
     public AccountCreationResponseDto register(final AccountCreationRequestDto requestDto) {
-        if (checkEmailDuplication(requestDto.getEmail())) {
+        if (checkEmailExistence(requestDto.getEmail())) {
             throw new AccountException(AccountStatus.EXISTING_EMAIL);
         }
 
-        final Verification verification = verificationRepository.findByEmail(requestDto.getEmail())
+        final Verification verification = verificationRepository.findByUuidAndEmail(requestDto.getVerificationUuid(), requestDto.getEmail())
                 .orElseThrow(() -> new AccountException(AccountStatus.UNREQUESTED_EMAIL_VERIFICATION));
 
         if (!verification.getState()) {
@@ -77,6 +84,51 @@ public class AccountService {
         verificationRepository.delete(verification);
 
         return modelMapper.map(result, AccountCreationResponseDto.class);
+    }
+
+    @Transactional
+    public void sendVerificationMail(final String email) throws MessagingException {
+        if (checkEmailExistence(email)) {
+            throw new AccountException(AccountStatus.EXISTING_EMAIL);
+        }
+
+        final Verification verification = verificationRepository.findByEmail(email)
+                .orElseGet(() -> createUnverifiedVerification(email));
+
+        verification.createUuid();
+        verification.cancelVerification();
+        verification.refreshCode();
+
+        final Context context = new Context();
+
+        context.setVariable("code", verification.getCode());
+
+        final MimeMessage mimeMessage = mailSender.createMimeMessage();
+        final MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, true);
+
+        mimeMessageHelper.setSubject("[TIARY] Verify your email address");
+        mimeMessageHelper.setTo(email);
+        mimeMessageHelper.setText(templateEngine.process("/mail/verification", context), true);
+
+        mailSender.send(mimeMessage);
+    }
+
+    @Transactional
+    public AccountVerificationResponseDto verifyEmail(final AccountVerificationRequestDto requestDto) {
+        final Verification verification = verificationRepository.findByEmail(requestDto.getEmail())
+                .orElseThrow(() -> new AccountException(AccountStatus.UNREQUESTED_EMAIL_VERIFICATION));
+
+        if (verification.getState()) {
+            throw new AccountException(AccountStatus.VERIFIED_EMAIL);
+        }
+
+        if (!verification.getCode().equals(requestDto.getCode())) {
+            throw new AccountException(AccountStatus.INCORRECT_CODE);
+        }
+
+        verification.verify();
+
+        return modelMapper.map(verification, AccountVerificationResponseDto.class);
     }
 
     public AccountLoginResultDto login(final AccountLoginRequestDto requestDto) {
@@ -105,5 +157,14 @@ public class AccountService {
                 .build();
 
         return result;
+    }
+
+    private Verification createUnverifiedVerification(final String email) {
+        final Verification verification = Verification.builder()
+                .email(email)
+                .state(false)
+                .build();
+
+        return verificationRepository.save(verification);
     }
 }
