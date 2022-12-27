@@ -1,10 +1,10 @@
 package me.tiary.controller.profilecontroller;
 
-import annotation.controller.ControllerTest;
 import com.google.gson.Gson;
-import config.factory.FactoryPreset;
-import config.url.ProfileApiUrl;
-import factory.dto.profile.ProfileReadResponseDtoFactory;
+import common.annotation.controller.ControllerTest;
+import common.config.factory.FactoryPreset;
+import common.config.url.ProfileApiUrl;
+import common.factory.dto.profile.ProfileReadResponseDtoFactory;
 import me.tiary.controller.ProfileController;
 import me.tiary.dto.profile.ProfileReadResponseDto;
 import me.tiary.exception.ProfileException;
@@ -17,7 +17,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;

@@ -1,10 +1,10 @@
 package me.tiary.controller.accountcontroller;
 
-import annotation.controller.ControllerTest;
 import com.google.gson.Gson;
-import config.url.AccountApiUrl;
-import factory.dto.account.AccountVerificationRequestDtoFactory;
-import factory.dto.account.AccountVerificationResponseDtoFactory;
+import common.annotation.controller.ControllerTest;
+import common.config.url.AccountApiUrl;
+import common.factory.dto.account.AccountVerificationRequestDtoFactory;
+import common.factory.dto.account.AccountVerificationResponseDtoFactory;
 import me.tiary.controller.AccountController;
 import me.tiary.domain.Verification;
 import me.tiary.dto.account.AccountVerificationRequestDto;

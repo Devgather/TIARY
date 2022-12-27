@@ -1,14 +1,14 @@
 package me.tiary.config.websecurityconfig;
 
-import annotation.application.ApplicationIntegrationTest;
 import com.google.gson.Gson;
-import config.factory.FactoryPreset;
-import config.url.AccountApiUrl;
-import config.url.ProfileApiUrl;
-import factory.dto.account.AccountCreationRequestDtoFactory;
-import factory.dto.account.AccountLoginRequestDtoFactory;
-import factory.dto.account.AccountVerificationRequestDtoFactory;
-import factory.dto.profile.ProfileCreationRequestDtoFactory;
+import common.annotation.application.ApplicationIntegrationTest;
+import common.config.factory.FactoryPreset;
+import common.config.url.AccountApiUrl;
+import common.config.url.ProfileApiUrl;
+import common.factory.dto.account.AccountCreationRequestDtoFactory;
+import common.factory.dto.account.AccountLoginRequestDtoFactory;
+import common.factory.dto.account.AccountVerificationRequestDtoFactory;
+import common.factory.dto.profile.ProfileCreationRequestDtoFactory;
 import me.tiary.domain.Verification;
 import me.tiary.dto.account.AccountCreationRequestDto;
 import me.tiary.dto.account.AccountLoginRequestDto;

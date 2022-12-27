@@ -1,7 +1,7 @@
 package me.tiary.controller.accountcontroller;
 
-import annotation.controller.ControllerIntegrationTest;
-import config.url.AccountApiUrl;
+import common.annotation.controller.ControllerIntegrationTest;
+import common.config.url.AccountApiUrl;
 import me.tiary.controller.AccountController;
 import me.tiary.service.AccountService;
 import org.junit.jupiter.api.DisplayName;

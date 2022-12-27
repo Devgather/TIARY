@@ -1,9 +1,9 @@
 package me.tiary.service.accountservice;
 
-import annotation.service.ServiceTest;
-import config.factory.FactoryPreset;
-import factory.domain.AccountFactory;
-import factory.domain.ProfileFactory;
+import common.annotation.service.ServiceTest;
+import common.config.factory.FactoryPreset;
+import common.factory.domain.AccountFactory;
+import common.factory.domain.ProfileFactory;
 import me.tiary.domain.Account;
 import me.tiary.repository.AccountRepository;
 import me.tiary.service.AccountService;

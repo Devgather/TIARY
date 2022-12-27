@@ -1,8 +1,8 @@
 package me.tiary.service.profileservice;
 
-import annotation.service.ServiceTest;
-import factory.domain.ProfileFactory;
-import factory.dto.profile.ProfileCreationRequestDtoFactory;
+import common.annotation.service.ServiceTest;
+import common.factory.domain.ProfileFactory;
+import common.factory.dto.profile.ProfileCreationRequestDtoFactory;
 import me.tiary.domain.Profile;
 import me.tiary.dto.profile.ProfileCreationRequestDto;
 import me.tiary.dto.profile.ProfileCreationResponseDto;

@@ -1,6 +1,6 @@
 package me.tiary.domain.verification;
 
-import factory.domain.VerificationFactory;
+import common.factory.domain.VerificationFactory;
 import me.tiary.domain.Verification;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

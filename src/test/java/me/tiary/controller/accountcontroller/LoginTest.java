@@ -1,12 +1,12 @@
 package me.tiary.controller.accountcontroller;
 
-import annotation.controller.ControllerTest;
 import com.google.gson.Gson;
-import config.factory.FactoryPreset;
-import config.url.AccountApiUrl;
-import factory.dto.account.AccountLoginRequestDtoFactory;
-import factory.dto.account.AccountLoginResultDtoFactory;
-import factory.utility.jwt.JwtProviderFactory;
+import common.annotation.controller.ControllerTest;
+import common.config.factory.FactoryPreset;
+import common.config.url.AccountApiUrl;
+import common.factory.dto.account.AccountLoginRequestDtoFactory;
+import common.factory.dto.account.AccountLoginResultDtoFactory;
+import common.factory.utility.jwt.JwtProviderFactory;
 import me.tiary.controller.AccountController;
 import me.tiary.dto.account.AccountLoginRequestDto;
 import me.tiary.dto.account.AccountLoginResponseDto;
