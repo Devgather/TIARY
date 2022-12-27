@@ -1,10 +1,10 @@
 package me.tiary.service.accountservice;
 
-import annotation.service.ServiceTest;
-import factory.domain.AccountFactory;
-import factory.domain.ProfileFactory;
-import factory.domain.VerificationFactory;
-import factory.dto.account.AccountCreationRequestDtoFactory;
+import common.annotation.service.ServiceTest;
+import common.factory.domain.AccountFactory;
+import common.factory.domain.ProfileFactory;
+import common.factory.domain.VerificationFactory;
+import common.factory.dto.account.AccountCreationRequestDtoFactory;
 import me.tiary.domain.Account;
 import me.tiary.domain.Profile;
 import me.tiary.domain.Verification;

@@ -1,10 +1,10 @@
 package me.tiary.controller.profilecontroller;
 
-import annotation.controller.ControllerTest;
 import com.google.gson.Gson;
-import config.url.ProfileApiUrl;
-import factory.dto.profile.ProfileCreationRequestDtoFactory;
-import factory.dto.profile.ProfileCreationResponseDtoFactory;
+import common.annotation.controller.ControllerTest;
+import common.config.url.ProfileApiUrl;
+import common.factory.dto.profile.ProfileCreationRequestDtoFactory;
+import common.factory.dto.profile.ProfileCreationResponseDtoFactory;
 import me.tiary.controller.ProfileController;
 import me.tiary.domain.Profile;
 import me.tiary.dto.profile.ProfileCreationRequestDto;

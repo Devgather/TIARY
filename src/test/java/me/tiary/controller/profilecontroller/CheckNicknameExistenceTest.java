@@ -1,8 +1,8 @@
 package me.tiary.controller.profilecontroller;
 
-import annotation.controller.ControllerTest;
-import config.factory.FactoryPreset;
-import config.url.ProfileApiUrl;
+import common.annotation.controller.ControllerTest;
+import common.config.factory.FactoryPreset;
+import common.config.url.ProfileApiUrl;
 import me.tiary.controller.ProfileController;
 import me.tiary.service.ProfileService;
 import org.junit.jupiter.api.BeforeEach;

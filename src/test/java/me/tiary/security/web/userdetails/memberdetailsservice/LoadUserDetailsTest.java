@@ -1,6 +1,6 @@
 package me.tiary.security.web.userdetails.memberdetailsservice;
 
-import factory.utility.jwt.JwtProviderFactory;
+import common.factory.utility.jwt.JwtProviderFactory;
 import me.tiary.security.web.userdetails.MemberDetails;
 import me.tiary.security.web.userdetails.MemberDetailsService;
 import me.tiary.utility.jwt.JwtProvider;

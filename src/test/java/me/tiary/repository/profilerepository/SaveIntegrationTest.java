@@ -1,8 +1,9 @@
 package me.tiary.repository.profilerepository;
 
-import annotation.repository.RepositoryIntegrationTest;
-import config.factory.FactoryPreset;
-import factory.domain.ProfileFactory;
+import common.annotation.repository.RepositoryIntegrationTest;
+import common.config.factory.FactoryPreset;
+import common.factory.domain.ProfileFactory;
+import common.utility.JpaUtility;
 import me.tiary.domain.Profile;
 import me.tiary.repository.ProfileRepository;
 import me.tiary.utility.common.StringUtility;
@@ -10,7 +11,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
-import utility.JpaUtility;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;

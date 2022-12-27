@@ -1,8 +1,8 @@
 package me.tiary.service.profileservice;
 
-import annotation.service.ServiceTest;
-import config.factory.FactoryPreset;
-import factory.domain.ProfileFactory;
+import common.annotation.service.ServiceTest;
+import common.config.factory.FactoryPreset;
+import common.factory.domain.ProfileFactory;
 import me.tiary.domain.Profile;
 import me.tiary.repository.ProfileRepository;
 import me.tiary.service.ProfileService;

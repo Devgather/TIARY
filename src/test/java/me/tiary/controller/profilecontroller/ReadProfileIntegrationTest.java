@@ -1,7 +1,7 @@
 package me.tiary.controller.profilecontroller;
 
-import annotation.controller.ControllerIntegrationTest;
-import config.url.ProfileApiUrl;
+import common.annotation.controller.ControllerIntegrationTest;
+import common.config.url.ProfileApiUrl;
 import me.tiary.controller.ProfileController;
 import me.tiary.domain.Profile;
 import me.tiary.service.ProfileService;
