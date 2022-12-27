@@ -36,8 +36,8 @@ public class ProfileController {
 
     @GetMapping("/{nickname}")
     public ResponseEntity<ProfileReadResponseDto> readProfile(@PathVariable @NotBlank @Size(max = Profile.NICKNAME_MAX_LENGTH) final String nickname) {
-        final ProfileReadResponseDto responseDto = profileService.readProfile(nickname);
+        final ProfileReadResponseDto result = profileService.readProfile(nickname);
 
-        return ResponseEntity.status(HttpStatus.OK).body(responseDto);
+        return ResponseEntity.status(HttpStatus.OK).body(result);
     }
 }
