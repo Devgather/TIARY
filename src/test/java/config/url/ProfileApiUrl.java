@@ -2,7 +2,8 @@ package config.url;
 
 public enum ProfileApiUrl {
     NICKNAME_DUPLICATION_CHECK("/nickname/"),
-    PROFILE_CREATION("");
+    PROFILE_CREATION(""),
+    PROFILE_READ("/");
 
     public static final String COMMON_URL = "/api/profile";
 
