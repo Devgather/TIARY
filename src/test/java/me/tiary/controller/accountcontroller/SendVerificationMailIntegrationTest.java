@@ -3,6 +3,8 @@ package me.tiary.controller.accountcontroller;
 import common.annotation.controller.ControllerIntegrationTest;
 import common.config.url.AccountApiUrl;
 import me.tiary.controller.AccountController;
+import me.tiary.repository.OAuthRepository;
+import me.tiary.repository.ProfileRepository;
 import me.tiary.service.AccountService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -22,6 +24,12 @@ class SendVerificationMailIntegrationTest {
 
     @MockBean
     private AccountService accountService;
+
+    @MockBean
+    private ProfileRepository profileRepository;
+
+    @MockBean
+    private OAuthRepository oAuthRepository;
 
     @Test
     @DisplayName("[Fail] email is blank")
