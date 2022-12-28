@@ -144,6 +144,7 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
         final Cookie accessTokenCookie = new Cookie(AccessTokenProperties.COOKIE_NAME, accessToken);
 
         accessTokenCookie.setHttpOnly(true);
+        accessTokenCookie.setSecure(true);
         accessTokenCookie.setPath("/");
 
         return accessTokenCookie;
@@ -155,6 +156,7 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
         final Cookie refreshTokenCookie = new Cookie(RefreshTokenProperties.COOKIE_NAME, refreshToken);
 
         refreshTokenCookie.setHttpOnly(true);
+        refreshTokenCookie.setSecure(true);
         refreshTokenCookie.setPath("/");
         refreshTokenCookie.setMaxAge(refreshTokenProvider.getValidSeconds());
 

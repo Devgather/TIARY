@@ -64,6 +64,7 @@ class CreateAccessTokenCookieTest {
 
         // Then
         assertThat(result.isHttpOnly()).isTrue();
+        assertThat(result.getSecure()).isTrue();
         assertThat(result.getPath()).isEqualTo("/");
         assertThat(result.getName()).isEqualTo(AccessTokenProperties.COOKIE_NAME);
         assertThat(result.getValue()).isNotNull();

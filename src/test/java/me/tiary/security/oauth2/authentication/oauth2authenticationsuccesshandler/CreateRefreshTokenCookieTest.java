@@ -66,6 +66,7 @@ class CreateRefreshTokenCookieTest {
 
         // Then
         assertThat(result.isHttpOnly()).isTrue();
+        assertThat(result.getSecure()).isTrue();
         assertThat(result.getPath()).isEqualTo("/");
         assertThat(result.getMaxAge()).isEqualTo(refreshTokenProvider.getValidSeconds());
         assertThat(result.getName()).isEqualTo(RefreshTokenProperties.COOKIE_NAME);
