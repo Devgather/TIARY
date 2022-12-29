@@ -2,11 +2,10 @@ package me.tiary.service;
 
 import lombok.RequiredArgsConstructor;
 import me.tiary.domain.Profile;
-import me.tiary.dto.profile.ProfileCreationRequestDto;
-import me.tiary.dto.profile.ProfileCreationResponseDto;
-import me.tiary.dto.profile.ProfileReadResponseDto;
+import me.tiary.dto.profile.*;
 import me.tiary.exception.ProfileException;
 import me.tiary.exception.status.ProfileStatus;
+import me.tiary.properties.aws.AwsStorageProperties;
 import me.tiary.repository.ProfileRepository;
 import me.tiary.utility.aws.AwsS3Manager;
 import me.tiary.utility.common.FileUtility;
@@ -27,6 +26,8 @@ public class ProfileService {
     private final ProfileRepository profileRepository;
 
     private final AwsS3Manager awsS3Manager;
+
+    private final AwsStorageProperties awsStorageProperties;
 
     private final ModelMapper modelMapper;
 
@@ -59,8 +60,14 @@ public class ProfileService {
         return modelMapper.map(result, ProfileReadResponseDto.class);
     }
 
-    public List<String> uploadPicture(final String profileUuid, final MultipartFile multipartFile) {
-        final String contentType = multipartFile.getContentType();
+    @Transactional
+    public ProfilePictureUploadResponseDto uploadPicture(final String profileUuid, final ProfilePictureUploadRequestDto requestDto) {
+        final Profile profile = profileRepository.findByUuid(profileUuid)
+                .orElseThrow(() -> new ProfileException(ProfileStatus.NOT_EXISTING_PROFILE));
+
+        final MultipartFile pictureFile = requestDto.getPictureFile();
+
+        final String contentType = pictureFile.getContentType();
 
         if (contentType == null) {
             throw new ProfileException(ProfileStatus.NOT_EXISTING_CONTENT_TYPE);
@@ -72,7 +79,17 @@ public class ProfileService {
 
         final Function<String, String> titleGenerator = createPictureTitleGenerator(profileUuid);
 
-        return awsS3Manager.uploadFiles(titleGenerator, List.of(multipartFile));
+        final String picturePath = awsS3Manager.uploadFiles(titleGenerator, List.of(pictureFile)).get(0);
+
+        String storageUrl = awsStorageProperties.getUrl();
+
+        if (!storageUrl.endsWith("/")) {
+            storageUrl += "/";
+        }
+
+        profile.updatePicture(storageUrl + picturePath);
+
+        return modelMapper.map(profile, ProfilePictureUploadResponseDto.class);
     }
 
     public static Function<String, String> createPictureTitleGenerator(final String profileUuid) {
