@@ -68,13 +68,3 @@ jacocoTestReport {
         csv.required = false
     }
 }
-
-jacocoTestCoverageVerification {
-    violationRules {
-        rule {
-            limit {
-                minimum = 0.80
-            }
-        }
-    }
-}
