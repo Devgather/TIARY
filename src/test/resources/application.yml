@@ -3,6 +3,7 @@ spring:
     import:
       - classpath:properties/security.yml
       - classpath:properties/jwt.yml
+      - classpath:properties/oauth.yml
       - classpath:properties/mail.yml
       - classpath:properties/scheduler.yml
       - classpath:properties/aws.yml

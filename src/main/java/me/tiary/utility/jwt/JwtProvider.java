@@ -39,4 +39,8 @@ public class JwtProvider {
 
         return verifier.verify(token);
     }
+
+    public int getValidSeconds() {
+        return validSeconds;
+    }
 }
