@@ -50,6 +50,10 @@ public class Profile extends Timestamp {
         createUuid();
     }
 
+    public void updatePicture(final String pictureUrl) {
+        this.picture = pictureUrl;
+    }
+
     public void createUuid() {
         this.uuid = UUID.randomUUID().toString();
     }
