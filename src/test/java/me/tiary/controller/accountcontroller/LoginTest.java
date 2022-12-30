@@ -267,6 +267,8 @@ class LoginTest {
         resultActions.andExpect(cookie().httpOnly(RefreshTokenProperties.COOKIE_NAME, true));
         resultActions.andExpect(cookie().path(AccessTokenProperties.COOKIE_NAME, "/"));
         resultActions.andExpect(cookie().path(RefreshTokenProperties.COOKIE_NAME, "/"));
+        resultActions.andExpect(cookie().secure(AccessTokenProperties.COOKIE_NAME, true));
+        resultActions.andExpect(cookie().secure(RefreshTokenProperties.COOKIE_NAME, true));
 
         assertDoesNotThrow(() -> accessTokenProvider.verify(accessTokenCookie.getValue()));
         assertDoesNotThrow(() -> refreshTokenProvider.verify(refreshTokenCookie.getValue()));

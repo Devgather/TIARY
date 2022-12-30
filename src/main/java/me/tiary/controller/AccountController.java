@@ -58,6 +58,7 @@ public class AccountController {
 
         accessTokenCookie.setHttpOnly(true);
         accessTokenCookie.setPath("/");
+        accessTokenCookie.setSecure(true);
 
         response.addCookie(accessTokenCookie);
 
@@ -65,6 +66,7 @@ public class AccountController {
 
         refreshTokenCookie.setHttpOnly(true);
         refreshTokenCookie.setPath("/");
+        refreshTokenCookie.setSecure(true);
 
         response.addCookie(refreshTokenCookie);
 
