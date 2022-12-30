@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<header th:fragment="header" class="m-4">
+    <div class="is-flex is-align-content-center is-justify-content-space-between">
+        <div class="is-flex is-align-content-center is-justify-content-center">
+            <h1 class="title">TIARY</h1>
+        </div>
+
+        <div class="is-flex is-align-content-center is-justify-content-center">
+            <div class="dropdown is-right is-active">
+                <div id="dropdown-trigger" class="dropdown-trigger">
+                    <button class="button">
+                        <span class="icon is-small">
+                            <i class="fa-solid fa-user"></i>
+                        </span>
+
+                        <span class="icon is-small">
+                            <i class="fas fa-angle-down"></i>
+                        </span>
+                    </button>
+                </div>
+
+                <div id="dropdown-menu" class="dropdown-menu is-hidden">
+                    <div th:if="${authentication}" class="dropdown-content">
+                        <a href="#" class="dropdown-item">마이 페이지</a>
+                        <a href="#" class="dropdown-item">로그아웃</a>
+                    </div>
+                    <div th:unless="${authentication}" class="dropdown-content">
+                        <a href="#" class="dropdown-item">로그인</a>
+                        <a href="#" class="dropdown-item">회원가입</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+</html>
