@@ -5,17 +5,17 @@ import common.annotation.controller.ControllerTest;
 import common.config.factory.FactoryPreset;
 import common.config.url.AccountApiUrl;
 import common.factory.dto.account.AccountLoginRequestDtoFactory;
-import common.factory.dto.account.AccountLoginResultDtoFactory;
+import common.factory.dto.account.AccountLoginResponseDtoFactory;
 import common.factory.utility.jwt.JwtProviderFactory;
 import me.tiary.controller.AccountController;
 import me.tiary.dto.account.AccountLoginRequestDto;
 import me.tiary.dto.account.AccountLoginResponseDto;
-import me.tiary.dto.account.AccountLoginResultDto;
 import me.tiary.exception.AccountException;
 import me.tiary.exception.handler.ExceptionResponse;
 import me.tiary.exception.handler.controller.GlobalExceptionHandler;
 import me.tiary.exception.status.AccountStatus;
 import me.tiary.properties.jwt.AccessTokenProperties;
+import me.tiary.properties.jwt.RefreshTokenProperties;
 import me.tiary.service.AccountService;
 import me.tiary.utility.jwt.JwtProvider;
 import org.junit.jupiter.api.BeforeEach;
@@ -234,13 +234,13 @@ class LoginTest {
         // Given
         final AccountLoginRequestDto requestDto = AccountLoginRequestDtoFactory.createDefaultAccountLoginRequestDto();
 
-        final AccountLoginResultDto resultDto = AccountLoginResultDtoFactory.createDefaultAccountLoginResultDto();
+        final AccountLoginResponseDto responseDto = AccountLoginResponseDtoFactory.createDefaultAccountLoginResponseDto();
 
         final JwtProvider accessTokenProvider = JwtProviderFactory.createAccessTokenProvider();
 
         final JwtProvider refreshTokenProvider = JwtProviderFactory.createRefreshTokenProvider();
 
-        doReturn(resultDto)
+        doReturn(responseDto)
                 .when(accountService)
                 .login(eq(requestDto));
 
@@ -251,22 +251,24 @@ class LoginTest {
                         .content(gson.toJson(requestDto))
         );
 
-        final Cookie cookie = resultActions.andReturn()
+        final Cookie accessTokenCookie = resultActions.andReturn()
                 .getResponse()
                 .getCookie(AccessTokenProperties.COOKIE_NAME);
 
-        final AccountLoginResponseDto responseDto = gson.fromJson(resultActions
-                .andReturn()
+        final Cookie refreshTokenCookie = resultActions.andReturn()
                 .getResponse()
-                .getContentAsString(StandardCharsets.UTF_8), AccountLoginResponseDto.class);
+                .getCookie(RefreshTokenProperties.COOKIE_NAME);
 
         // Then
         resultActions.andExpect(status().isCreated());
         resultActions.andExpect(cookie().exists(AccessTokenProperties.COOKIE_NAME));
+        resultActions.andExpect(cookie().exists(RefreshTokenProperties.COOKIE_NAME));
         resultActions.andExpect(cookie().httpOnly(AccessTokenProperties.COOKIE_NAME, true));
+        resultActions.andExpect(cookie().httpOnly(RefreshTokenProperties.COOKIE_NAME, true));
         resultActions.andExpect(cookie().path(AccessTokenProperties.COOKIE_NAME, "/"));
+        resultActions.andExpect(cookie().path(RefreshTokenProperties.COOKIE_NAME, "/"));
 
-        assertDoesNotThrow(() -> accessTokenProvider.verify(cookie.getValue()));
-        assertDoesNotThrow(() -> refreshTokenProvider.verify(responseDto.getRefreshToken()));
+        assertDoesNotThrow(() -> accessTokenProvider.verify(accessTokenCookie.getValue()));
+        assertDoesNotThrow(() -> refreshTokenProvider.verify(refreshTokenCookie.getValue()));
     }
 }

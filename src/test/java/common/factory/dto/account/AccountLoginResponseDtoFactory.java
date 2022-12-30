@@ -1,13 +1,13 @@
 package common.factory.dto.account;
 
 import common.factory.utility.jwt.JwtProviderFactory;
-import me.tiary.dto.account.AccountLoginResultDto;
+import me.tiary.dto.account.AccountLoginResponseDto;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public final class AccountLoginResultDtoFactory {
-    public static AccountLoginResultDto createDefaultAccountLoginResultDto() {
+public final class AccountLoginResponseDtoFactory {
+    public static AccountLoginResponseDto createDefaultAccountLoginResponseDto() {
         final Map<String, String> payload = new HashMap<>();
         payload.put("data", "Test");
 
@@ -18,8 +18,8 @@ public final class AccountLoginResultDtoFactory {
         return create(accessToken, refreshToken);
     }
 
-    public static AccountLoginResultDto create(final String accessToken, final String refreshToken) {
-        return AccountLoginResultDto.builder()
+    public static AccountLoginResponseDto create(final String accessToken, final String refreshToken) {
+        return AccountLoginResponseDto.builder()
                 .accessToken(accessToken)
                 .refreshToken(refreshToken)
                 .build();
