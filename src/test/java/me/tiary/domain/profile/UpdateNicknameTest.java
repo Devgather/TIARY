@@ -15,7 +15,7 @@ class UpdateNicknameTest {
         // Given
         final Profile profile = ProfileFactory.createDefaultProfile();
 
-        final String nickname = "updatedNickname";
+        final String nickname = "New";
 
         // When
         profile.updateNickname(nickname);
