@@ -2,12 +2,13 @@ package me.tiary.controller;
 
 import lombok.RequiredArgsConstructor;
 import me.tiary.domain.Profile;
-import me.tiary.dto.profile.ProfileCreationRequestDto;
-import me.tiary.dto.profile.ProfileCreationResponseDto;
-import me.tiary.dto.profile.ProfileReadResponseDto;
+import me.tiary.dto.profile.*;
+import me.tiary.security.web.userdetails.MemberDetails;
 import me.tiary.service.ProfileService;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -39,5 +40,14 @@ public class ProfileController {
         final ProfileReadResponseDto result = profileService.readProfile(nickname);
 
         return ResponseEntity.status(HttpStatus.OK).body(result);
+    }
+
+    @PatchMapping(value = "/picture", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<ProfilePictureUploadResponseDto> uploadPicture(@AuthenticationPrincipal final MemberDetails memberDetails, @ModelAttribute final ProfilePictureUploadRequestDto requestDto) {
+        final String profileUuid = memberDetails.getProfileUuid();
+
+        final ProfilePictureUploadResponseDto responseDto = profileService.uploadPicture(profileUuid, requestDto);
+
+        return ResponseEntity.ok().body(responseDto);
     }
 }
