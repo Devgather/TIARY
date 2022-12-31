@@ -131,7 +131,7 @@ public class AccountService {
         return modelMapper.map(verification, AccountVerificationResponseDto.class);
     }
 
-    public AccountLoginResultDto login(final AccountLoginRequestDto requestDto) {
+    public AccountLoginResponseDto login(final AccountLoginRequestDto requestDto) {
         final Account account = accountRepository.findByEmailJoinFetchProfile(requestDto.getEmail())
                 .orElseThrow(() -> new AccountException(AccountStatus.NOT_EXISTING_EMAIL));
 
@@ -151,7 +151,7 @@ public class AccountService {
 
         final String refreshToken = refreshTokenProvider.generate(refreshTokenPayload);
 
-        final AccountLoginResultDto result = AccountLoginResultDto.builder()
+        final AccountLoginResponseDto result = AccountLoginResponseDto.builder()
                 .accessToken(accessToken)
                 .refreshToken(refreshToken)
                 .build();

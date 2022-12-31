@@ -5,7 +5,7 @@ import common.factory.domain.ProfileFactory;
 import common.factory.dto.account.AccountLoginRequestDtoFactory;
 import me.tiary.domain.Account;
 import me.tiary.dto.account.AccountLoginRequestDto;
-import me.tiary.dto.account.AccountLoginResultDto;
+import me.tiary.dto.account.AccountLoginResponseDto;
 import me.tiary.exception.AccountException;
 import me.tiary.exception.status.AccountStatus;
 import me.tiary.properties.jwt.AccessTokenProperties;
@@ -124,7 +124,7 @@ public class LoginTest {
         final AccountLoginRequestDto requestDto = AccountLoginRequestDtoFactory.createDefaultAccountLoginRequestDto();
 
         // When
-        final AccountLoginResultDto result = accountService.login(requestDto);
+        final AccountLoginResponseDto result = accountService.login(requestDto);
 
         // Then
         assertDoesNotThrow(() -> accessTokenProvider.verify(result.getAccessToken()));

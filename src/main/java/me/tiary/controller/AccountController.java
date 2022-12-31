@@ -3,6 +3,7 @@ package me.tiary.controller;
 import lombok.RequiredArgsConstructor;
 import me.tiary.dto.account.*;
 import me.tiary.properties.jwt.AccessTokenProperties;
+import me.tiary.properties.jwt.RefreshTokenProperties;
 import me.tiary.service.AccountService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -50,18 +51,25 @@ public class AccountController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<AccountLoginResponseDto> login(@RequestBody @Valid final AccountLoginRequestDto requestDto, final HttpServletResponse response) {
-        final AccountLoginResultDto resultDto = accountService.login(requestDto);
+    public ResponseEntity<Void> login(@RequestBody @Valid final AccountLoginRequestDto requestDto, final HttpServletResponse response) {
+        final AccountLoginResponseDto responseDto = accountService.login(requestDto);
 
-        final Cookie accessTokenCookie = new Cookie(AccessTokenProperties.COOKIE_NAME, resultDto.getAccessToken());
+        final Cookie accessTokenCookie = new Cookie(AccessTokenProperties.COOKIE_NAME, responseDto.getAccessToken());
 
         accessTokenCookie.setHttpOnly(true);
         accessTokenCookie.setPath("/");
+        accessTokenCookie.setSecure(true);
 
         response.addCookie(accessTokenCookie);
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(AccountLoginResponseDto.builder()
-                .refreshToken(resultDto.getRefreshToken())
-                .build());
+        final Cookie refreshTokenCookie = new Cookie(RefreshTokenProperties.COOKIE_NAME, responseDto.getRefreshToken());
+
+        refreshTokenCookie.setHttpOnly(true);
+        refreshTokenCookie.setPath("/");
+        refreshTokenCookie.setSecure(true);
+
+        response.addCookie(refreshTokenCookie);
+
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 }
