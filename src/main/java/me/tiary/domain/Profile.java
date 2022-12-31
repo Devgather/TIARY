@@ -50,6 +50,10 @@ public class Profile extends Timestamp {
         createUuid();
     }
 
+    public void updateNickname(final String nickname) {
+        this.nickname = nickname;
+    }
+    
     public void updatePicture(final String pictureUrl) {
         this.picture = pictureUrl;
     }
