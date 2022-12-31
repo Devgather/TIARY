@@ -2,6 +2,7 @@ package me.tiary;
 
 import me.tiary.properties.aws.AwsProperties;
 import me.tiary.properties.aws.AwsS3Properties;
+import me.tiary.properties.aws.AwsStorageProperties;
 import me.tiary.properties.jwt.AccessTokenProperties;
 import me.tiary.properties.jwt.RefreshTokenProperties;
 import me.tiary.properties.security.SecurityCorsProperties;
@@ -17,7 +18,8 @@ import org.springframework.scheduling.annotation.EnableScheduling;
         RefreshTokenProperties.class,
         SecurityCorsProperties.class,
         AwsProperties.class,
-        AwsS3Properties.class
+        AwsS3Properties.class,
+        AwsStorageProperties.class
 })
 @EnableJpaAuditing
 @EnableScheduling

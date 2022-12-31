@@ -10,11 +10,13 @@ import common.factory.dto.account.AccountCreationRequestDtoFactory;
 import common.factory.dto.account.AccountLoginRequestDtoFactory;
 import common.factory.dto.account.AccountVerificationRequestDtoFactory;
 import common.factory.dto.profile.ProfileCreationRequestDtoFactory;
+import common.factory.dto.profile.ProfilePictureUploadRequestDtoFactory;
 import me.tiary.domain.Verification;
 import me.tiary.dto.account.AccountCreationRequestDto;
 import me.tiary.dto.account.AccountLoginRequestDto;
 import me.tiary.dto.account.AccountVerificationRequestDto;
 import me.tiary.dto.profile.ProfileCreationRequestDto;
+import me.tiary.dto.profile.ProfilePictureUploadRequestDto;
 import me.tiary.properties.jwt.AccessTokenProperties;
 import me.tiary.utility.common.StringUtility;
 import org.junit.jupiter.api.BeforeEach;
@@ -23,8 +25,10 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.test.web.servlet.request.MockMultipartHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import javax.servlet.http.Cookie;
@@ -392,5 +396,59 @@ class SecurityFilterChainIntegrationTest {
 
         // Then
         resultActions.andExpect(status().is(not(HttpStatus.FORBIDDEN.value())));
+    }
+
+    @Test
+    @DisplayName("[Success] member requests profile picture upload api")
+    void successIfMemberRequestsProfilePictureUploadApi() throws Exception {
+        // Given
+        final String url = ProfileApiUrl.PROFILE_PICTURE_UPLOAD.getEntireUrl();
+
+        // Algorithm = HMAC256, Payload = { "uuid": "cbf0f220-97b8-4312-82ce-f98266c428d4" }, Secret Key = jwt-access-token-secret-key
+        final String accessToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiY2JmMGYyMjAtOTdiOC00MzEyLTgyY2UtZjk4MjY2YzQyOGQ0In0.rftGC07wvthl89A-lHN4NzeP2gcVv9UxTTnST3Nhqz8";
+
+        final ProfilePictureUploadRequestDto requestDto = ProfilePictureUploadRequestDtoFactory.createDefaultProfilePictureUploadRequestDto();
+
+        // When
+        final MockMultipartHttpServletRequestBuilder builder = MockMvcRequestBuilders.multipart(url);
+
+        builder.with(request -> {
+            request.setMethod("PATCH");
+            request.setCookies(new Cookie(AccessTokenProperties.COOKIE_NAME, accessToken));
+
+            return request;
+        });
+
+        final ResultActions resultActions = mockMvc.perform(
+                builder.file((MockMultipartFile) requestDto.getPictureFile())
+        );
+
+        // Then
+        resultActions.andExpect(status().is(not(HttpStatus.FORBIDDEN.value())));
+    }
+
+    @Test
+    @DisplayName("[Fail] anonymous requests profile picture upload api")
+    void failIfAnonymousRequestsProfilePictureUploadApi() throws Exception {
+        // Given
+        final String url = ProfileApiUrl.PROFILE_PICTURE_UPLOAD.getEntireUrl();
+
+        final ProfilePictureUploadRequestDto requestDto = ProfilePictureUploadRequestDtoFactory.createDefaultProfilePictureUploadRequestDto();
+
+        // When
+        final MockMultipartHttpServletRequestBuilder builder = MockMvcRequestBuilders.multipart(url);
+
+        builder.with(request -> {
+            request.setMethod("PATCH");
+
+            return request;
+        });
+
+        final ResultActions resultActions = mockMvc.perform(
+                builder.file((MockMultipartFile) requestDto.getPictureFile())
+        );
+
+        // Then
+        resultActions.andExpect(status().isUnauthorized());
     }
 }
