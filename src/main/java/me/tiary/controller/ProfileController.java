@@ -42,6 +42,15 @@ public class ProfileController {
         return ResponseEntity.status(HttpStatus.OK).body(result);
     }
 
+    @PatchMapping(value = "")
+    public ResponseEntity<ProfileUpdateResponseDto> updateProfile(@AuthenticationPrincipal final MemberDetails memberDetails, @RequestBody @Valid final ProfileUpdateRequestDto requestDto) {
+        final String profileUuid = memberDetails.getProfileUuid();
+
+        final ProfileUpdateResponseDto result = profileService.updateProfile(profileUuid, requestDto);
+
+        return ResponseEntity.ok().body(result);
+    }
+
     @PatchMapping(value = "/picture", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<ProfilePictureUploadResponseDto> uploadPicture(@AuthenticationPrincipal final MemberDetails memberDetails, @ModelAttribute final ProfilePictureUploadRequestDto requestDto) {
         final String profileUuid = memberDetails.getProfileUuid();
