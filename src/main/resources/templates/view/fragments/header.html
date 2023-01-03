@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
-<header th:fragment="header" class="m-4">
+<header th:fragment="header" class="p-4">
     <div class="is-flex is-align-content-center is-justify-content-space-between">
         <div class="is-flex is-align-content-center is-justify-content-center">
             <h1 class="title">TIARY</h1>
@@ -26,7 +26,7 @@
                         <a href="#" class="dropdown-item">로그아웃</a>
                     </div>
                     <div th:unless="${authentication}" class="dropdown-content">
-                        <a href="#" class="dropdown-item">로그인</a>
+                        <a href="/login" class="dropdown-item">로그인</a>
                         <a href="#" class="dropdown-item">회원가입</a>
                     </div>
                 </div>

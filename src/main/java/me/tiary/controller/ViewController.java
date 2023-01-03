@@ -15,4 +15,9 @@ public class ViewController {
 
         return "view/index";
     }
+
+    @GetMapping("/login")
+    public String directLoginView() {
+        return "view/login";
+    }
 }

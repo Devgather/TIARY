@@ -1,7 +1,8 @@
 package common.config.url;
 
 public enum ViewUrl {
-    INDEX("/");
+    INDEX("/"),
+    LOGIN("/login");
 
     private final String url;
 
