@@ -57,6 +57,7 @@ public class WebSecurityConfig {
                                                    final AccessDeniedHandler accessDeniedHandler) throws Exception {
         http.authorizeRequests()
                 .antMatchers(HttpMethod.GET, "/").permitAll()
+                .antMatchers(HttpMethod.GET, "/login").anonymous()
                 .antMatchers(HttpMethod.HEAD, "/api/account/email/**").anonymous()
                 .antMatchers(HttpMethod.POST, "/api/account").anonymous()
                 .antMatchers(HttpMethod.POST, "/api/account/verification/**").anonymous()
