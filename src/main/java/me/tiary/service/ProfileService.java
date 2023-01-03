@@ -92,6 +92,22 @@ public class ProfileService {
         return modelMapper.map(profile, ProfilePictureUploadResponseDto.class);
     }
 
+    @Transactional
+    public ProfileUpdateResponseDto updateProfile(final String profileUuid, final ProfileUpdateRequestDto requestDto) {
+        final Profile profile = profileRepository.findByUuid(profileUuid)
+                .orElseThrow(() -> new ProfileException(ProfileStatus.NOT_EXISTING_PROFILE));
+
+        final String nickname = requestDto.getNickname();
+
+        if (checkNicknameExistence(nickname)) {
+            throw new ProfileException(ProfileStatus.EXISTING_NICKNAME);
+        }
+
+        profile.updateNickname(nickname);
+
+        return modelMapper.map(profile, ProfileUpdateResponseDto.class);
+    }
+
     public static Function<String, String> createPictureTitleGenerator(final String profileUuid) {
         return (originalFileName) -> profileUuid + PROFILE_PICTURE_PATH + FileUtility.getFileExtension(originalFileName);
     }
