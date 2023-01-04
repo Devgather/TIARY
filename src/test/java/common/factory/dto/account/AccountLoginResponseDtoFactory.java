@@ -15,13 +15,18 @@ public final class AccountLoginResponseDtoFactory {
 
         final String refreshToken = JwtProviderFactory.createRefreshTokenProvider().generate(payload);
 
-        return create(accessToken, refreshToken);
+        final int refreshTokenValidSeconds = JwtProviderFactory.createRefreshTokenProvider().getValidSeconds();
+
+        return create(accessToken, refreshToken, refreshTokenValidSeconds);
     }
 
-    public static AccountLoginResponseDto create(final String accessToken, final String refreshToken) {
+    public static AccountLoginResponseDto create(final String accessToken,
+                                                 final String refreshToken,
+                                                 final int refreshTokenValidSeconds) {
         return AccountLoginResponseDto.builder()
                 .accessToken(accessToken)
                 .refreshToken(refreshToken)
+                .refreshTokenValidSeconds(refreshTokenValidSeconds)
                 .build();
     }
 }
