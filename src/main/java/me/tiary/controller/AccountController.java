@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.mail.MessagingException;
 import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import javax.validation.constraints.Email;
@@ -69,6 +70,21 @@ public class AccountController {
         refreshTokenCookie.setSecure(true);
 
         response.addCookie(refreshTokenCookie);
+
+        return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<Void> logout(final HttpServletRequest request, final HttpServletResponse response) {
+        final Cookie[] cookies = request.getCookies();
+
+        if (cookies != null) {
+            for (int i = 0; i < cookies.length; i++) {
+                cookies[i].setMaxAge(0);
+                cookies[i].setPath("/");
+                response.addCookie(cookies[i]);
+            }
+        }
 
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }

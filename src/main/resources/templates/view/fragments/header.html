@@ -23,7 +23,7 @@
                 <div id="dropdown-menu" class="dropdown-menu is-hidden">
                     <div th:if="${authentication}" class="dropdown-content">
                         <a href="#" class="dropdown-item">마이 페이지</a>
-                        <a href="#" class="dropdown-item">로그아웃</a>
+                        <a class="dropdown-item" onclick="logout()">로그아웃</a>
                     </div>
                     <div th:unless="${authentication}" class="dropdown-content">
                         <a href="/login" class="dropdown-item">로그인</a>

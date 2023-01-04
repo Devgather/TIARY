@@ -5,3 +5,13 @@ $('#dropdown-trigger').click(function () {
         $('#dropdown-menu').addClass('is-hidden');
     }
 });
+
+function logout() {
+    $.ajax({
+        type: 'POST',
+        url: '/api/account/logout',
+        success: function (response) {
+            window.location.replace('/');
+        }
+    });
+}
