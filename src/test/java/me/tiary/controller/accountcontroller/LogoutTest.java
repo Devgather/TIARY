@@ -21,13 +21,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ControllerTest
 @DisplayName("[AccountController] logout")
 class LogoutTest {
-    @InjectMocks
-    private AccountController accountController;
-
     private MockMvc mockMvc;
 
     @BeforeEach
     void beforeEach() {
+        final AccountController accountController = new AccountController(null);
+
         mockMvc = MockMvcBuilders.standaloneSetup(accountController)
                 .setControllerAdvice(new GlobalExceptionHandler())
                 .build();
