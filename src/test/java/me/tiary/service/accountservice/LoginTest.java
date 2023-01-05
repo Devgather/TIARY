@@ -118,8 +118,6 @@ public class LoginTest {
         // Given
         final Account account = AccountFactory.createDefaultAccount(ProfileFactory.createDefaultProfile());
 
-        final JwtProvider refreshTokenProvider = JwtProviderFactory.createRefreshTokenProvider();
-
         doReturn(Optional.ofNullable(account))
                 .when(accountRepository)
                 .findByEmailJoinFetchProfile(eq(account.getEmail()));
@@ -133,6 +131,5 @@ public class LoginTest {
         assertDoesNotThrow(() -> accessTokenProvider.verify(result.getAccessToken()));
         assertDoesNotThrow(() -> refreshTokenProvider.verify(result.getRefreshToken()));
         assertThat(result.getRefreshTokenValidSeconds()).isEqualTo(refreshTokenProvider.getValidSeconds());
-
     }
 }
