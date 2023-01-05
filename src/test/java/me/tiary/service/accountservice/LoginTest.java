@@ -3,7 +3,7 @@ package me.tiary.service.accountservice;
 import common.factory.domain.AccountFactory;
 import common.factory.domain.ProfileFactory;
 import common.factory.dto.account.AccountLoginRequestDtoFactory;
-import common.factory.dto.account.AccountLoginResponseDtoFactory;
+import common.factory.utility.jwt.JwtProviderFactory;
 import me.tiary.domain.Account;
 import me.tiary.dto.account.AccountLoginRequestDto;
 import me.tiary.dto.account.AccountLoginResponseDto;
@@ -118,7 +118,7 @@ public class LoginTest {
         // Given
         final Account account = AccountFactory.createDefaultAccount(ProfileFactory.createDefaultProfile());
 
-        final AccountLoginResponseDto responseDto = AccountLoginResponseDtoFactory.createDefaultAccountLoginResponseDto();
+        final JwtProvider refreshTokenProvider = JwtProviderFactory.createRefreshTokenProvider();
 
         doReturn(Optional.ofNullable(account))
                 .when(accountRepository)
@@ -132,6 +132,7 @@ public class LoginTest {
         // Then
         assertDoesNotThrow(() -> accessTokenProvider.verify(result.getAccessToken()));
         assertDoesNotThrow(() -> refreshTokenProvider.verify(result.getRefreshToken()));
-        assertThat(result.getRefreshTokenValidSeconds()).isEqualTo(responseDto.getRefreshTokenValidSeconds());
+        assertThat(result.getRefreshTokenValidSeconds()).isEqualTo(refreshTokenProvider.getValidSeconds());
+
     }
 }
