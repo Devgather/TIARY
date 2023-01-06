@@ -67,6 +67,7 @@ public class AccountController {
         refreshTokenCookie.setHttpOnly(true);
         refreshTokenCookie.setPath("/");
         refreshTokenCookie.setSecure(true);
+        refreshTokenCookie.setMaxAge(responseDto.getRefreshTokenValidSeconds());
 
         response.addCookie(refreshTokenCookie);
 
