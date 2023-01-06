@@ -31,7 +31,7 @@ class CreateRefreshTokenCookieTest {
         refreshTokenProvider = JwtProviderFactory.createRefreshTokenProvider();
 
         oAuth2AuthenticationSuccessHandler = new OAuth2AuthenticationSuccessHandler(
-                null, null, null, refreshTokenProvider, null
+                null, null, null, refreshTokenProvider
         );
 
         createRefreshTokenCookieMethod = oAuth2AuthenticationSuccessHandler.getClass().getDeclaredMethod(

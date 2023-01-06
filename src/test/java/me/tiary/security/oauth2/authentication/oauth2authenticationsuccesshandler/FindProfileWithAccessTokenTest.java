@@ -40,7 +40,7 @@ class FindProfileWithAccessTokenTest {
         final JwtProvider accessTokenProvider = JwtProviderFactory.createAccessTokenProvider();
 
         oAuth2AuthenticationSuccessHandler = new OAuth2AuthenticationSuccessHandler(
-                null, profileRepository, accessTokenProvider, null, null
+                null, profileRepository, accessTokenProvider, null
         );
 
         findProfileWithAccessTokenMethod = oAuth2AuthenticationSuccessHandler.getClass().getDeclaredMethod(
