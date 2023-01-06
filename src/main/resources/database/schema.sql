@@ -1,3 +1,5 @@
+DROP TABLE IF EXISTS comment;
+
 DROP TABLE IF EXISTS til_tag;
 
 DROP TABLE IF EXISTS tag;
@@ -118,6 +120,27 @@ CREATE TABLE til_tag
         ON DELETE CASCADE,
     FOREIGN KEY (tag_id)
         REFERENCES tag (id)
+        ON UPDATE CASCADE
+        ON DELETE CASCADE,
+    UNIQUE INDEX (uuid)
+) ENGINE=InnoDB;
+
+CREATE TABLE comment
+(
+    id                 BIGINT       NOT NULL AUTO_INCREMENT,
+    profile_id         BIGINT       NOT NULL,
+    til_id             BIGINT       NOT NULL,
+    uuid               CHAR(36)     NOT NULL,
+    content            VARCHAR(255) NOT NULL,
+    created_date       DATETIME     NOT NULL,
+    last_modified_date DATETIME     NOT NULL,
+    PRIMARY KEY (id),
+    FOREIGN KEY (profile_id)
+        REFERENCES profile (id)
+        ON UPDATE CASCADE
+        ON DELETE CASCADE,
+    FOREIGN KEY (til_id)
+        REFERENCES til (id)
         ON UPDATE CASCADE
         ON DELETE CASCADE,
     UNIQUE INDEX (uuid)

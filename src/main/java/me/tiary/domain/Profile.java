@@ -45,6 +45,10 @@ public class Profile extends Timestamp {
     @Builder.Default
     private List<Til> tils = new ArrayList<>();
 
+    @OneToMany(mappedBy = "profile", fetch = FetchType.LAZY)
+    @Builder.Default
+    private List<Comment> comments = new ArrayList<>();
+
     @PrePersist
     private void prePersist() {
         createUuid();
@@ -53,7 +57,7 @@ public class Profile extends Timestamp {
     public void updateNickname(final String nickname) {
         this.nickname = nickname;
     }
-    
+
     public void updatePicture(final String pictureUrl) {
         this.picture = pictureUrl;
     }
