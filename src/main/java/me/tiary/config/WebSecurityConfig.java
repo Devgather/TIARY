@@ -177,10 +177,9 @@ public class WebSecurityConfig {
     public AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler(final OAuthRepository oAuthRepository,
                                                                            final ProfileRepository profileRepository,
                                                                            final JwtProvider accessTokenProvider,
-                                                                           final JwtProvider refreshTokenProvider,
-                                                                           final ObjectMapper objectMapper) {
+                                                                           final JwtProvider refreshTokenProvider) {
         return new OAuth2AuthenticationSuccessHandler(
-                oAuthRepository, profileRepository, accessTokenProvider, refreshTokenProvider, objectMapper
+                oAuthRepository, profileRepository, accessTokenProvider, refreshTokenProvider
         );
     }
 

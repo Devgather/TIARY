@@ -2,12 +2,10 @@ package me.tiary.security.oauth2.authentication;
 
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import me.tiary.domain.OAuth;
 import me.tiary.domain.Profile;
-import me.tiary.exception.handler.ExceptionResponse;
 import me.tiary.properties.jwt.AccessTokenProperties;
 import me.tiary.properties.jwt.RefreshTokenProperties;
 import me.tiary.repository.OAuthRepository;
@@ -16,7 +14,6 @@ import me.tiary.security.oauth2.user.OAuth2Member;
 import me.tiary.utility.common.StringUtility;
 import me.tiary.utility.jwt.JwtProvider;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.http.MediaType;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
@@ -27,8 +24,6 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -46,8 +41,6 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
 
     private final JwtProvider refreshTokenProvider;
 
-    private final ObjectMapper objectMapper;
-
     @Override
     @Transactional
     public void onAuthenticationSuccess(final HttpServletRequest request,
@@ -58,25 +51,15 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
 
         final OAuth2Member member = (OAuth2Member) authentication.getPrincipal();
 
-        final Profile profile = findProfileWithAccessToken(accessToken)
-                .orElseGet(this::createProfile);
+        final OAuth oAuth = oAuthRepository.findByIdentifierAndProvider(member.getName(), member.getRegistrationId())
+                .orElseGet(() -> {
+                    final Profile profile = findProfileWithAccessToken(accessToken)
+                            .orElseGet(this::createProfile);
 
-        try {
-            createOAuth(profile, member.getName(), member.getRegistrationId());
-        } catch (final IllegalArgumentException ex) {
-            final String responseBody = objectMapper.writeValueAsString(
-                    new ExceptionResponse(List.of(ex.getMessage()))
-            );
+                    return createOAuth(profile, member.getName(), member.getRegistrationId());
+                });
 
-            log.error("OAuth entity creation is failed");
-
-            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-            response.setCharacterEncoding(StandardCharsets.UTF_8.name());
-            response.getWriter().write(responseBody);
-        }
-
-        final String profileUuid = profile.getUuid();
+        final String profileUuid = oAuth.getProfile().getUuid();
 
         response.addCookie(
                 createAccessTokenCookie(Map.of(AccessTokenProperties.AccessTokenClaim.PROFILE_UUID.getClaim(), profileUuid))
