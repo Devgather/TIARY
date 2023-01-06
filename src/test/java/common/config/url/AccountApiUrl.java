@@ -5,7 +5,8 @@ public enum AccountApiUrl {
     REGISTER(""),
     VERIFICATION_MAIL_DELIVERY("/verification/"),
     EMAIL_VERIFICATION("/verification"),
-    LOGIN("/login");
+    LOGIN("/login"),
+    LOGOUT("/logout");
 
     public static final String COMMON_URL = "/api/account";
 
