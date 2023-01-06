@@ -9,7 +9,6 @@ import me.tiary.properties.jwt.RefreshTokenProperties;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -41,7 +40,7 @@ class LogoutTest {
         );
 
         // Then
-        resultActions.andExpect(status().isCreated());
+        resultActions.andExpect(status().isNoContent());
         resultActions.andExpect(cookie().exists(AccessTokenProperties.COOKIE_NAME));
         resultActions.andExpect(cookie().exists(RefreshTokenProperties.COOKIE_NAME));
         resultActions.andExpect(cookie().httpOnly(AccessTokenProperties.COOKIE_NAME, true));

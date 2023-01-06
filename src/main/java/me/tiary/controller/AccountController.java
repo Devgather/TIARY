@@ -94,6 +94,6 @@ public class AccountController {
 
         response.addCookie(refreshTokenCookie);
 
-        return ResponseEntity.status(HttpStatus.CREATED).build();
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }
