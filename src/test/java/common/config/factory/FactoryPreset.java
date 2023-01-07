@@ -12,4 +12,8 @@ public final class FactoryPreset {
     public static final String PICTURE = "https://example.com/";
 
     public static final String STORAGE = "https://example.com/";
+
+    public static final String TITLE = "Test";
+
+    public static final String CONTENT = "test";
 }
