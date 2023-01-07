@@ -4,11 +4,13 @@ import com.google.gson.Gson;
 import common.annotation.application.ApplicationIntegrationTest;
 import common.config.factory.FactoryPreset;
 import common.config.url.AccountApiUrl;
+import common.config.url.CommentApiUrl;
 import common.config.url.ProfileApiUrl;
 import common.config.url.ViewUrl;
 import common.factory.dto.account.AccountCreationRequestDtoFactory;
 import common.factory.dto.account.AccountLoginRequestDtoFactory;
 import common.factory.dto.account.AccountVerificationRequestDtoFactory;
+import common.factory.dto.comment.CommentWritingRequestDtoFactory;
 import common.factory.dto.profile.ProfileCreationRequestDtoFactory;
 import common.factory.dto.profile.ProfilePictureUploadRequestDtoFactory;
 import common.factory.dto.profile.ProfileUpdateRequestDtoFactory;
@@ -16,6 +18,7 @@ import me.tiary.domain.Verification;
 import me.tiary.dto.account.AccountCreationRequestDto;
 import me.tiary.dto.account.AccountLoginRequestDto;
 import me.tiary.dto.account.AccountVerificationRequestDto;
+import me.tiary.dto.comment.CommentWritingRequestDto;
 import me.tiary.dto.profile.ProfileCreationRequestDto;
 import me.tiary.dto.profile.ProfilePictureUploadRequestDto;
 import me.tiary.dto.profile.ProfileUpdateRequestDto;
@@ -524,6 +527,52 @@ class SecurityFilterChainIntegrationTest {
 
         final ResultActions resultActions = mockMvc.perform(
                 builder.file((MockMultipartFile) requestDto.getPictureFile())
+        );
+
+        // Then
+        resultActions.andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    @DisplayName("[Success] member requests comment writing api")
+    void successIfMemberRequestsCommentWritingApi() throws Exception {
+        // Given
+        final String url = CommentApiUrl.WRITE_COMMENT.getEntireUrl();
+
+        // Algorithm = HMAC256, Payload = { "uuid": "cbf0f220-97b8-4312-82ce-f98266c428d4" }, Secret Key = jwt-access-token-secret-key
+        final String accessToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiY2JmMGYyMjAtOTdiOC00MzEyLTgyY2UtZjk4MjY2YzQyOGQ0In0.rftGC07wvthl89A-lHN4NzeP2gcVv9UxTTnST3Nhqz8";
+
+        final String tilUuid = UUID.randomUUID().toString();
+
+        final CommentWritingRequestDto requestDto = CommentWritingRequestDtoFactory.createDefaultCommentWritingRequestDto(tilUuid);
+
+        // When
+        final ResultActions resultActions = mockMvc.perform(
+                MockMvcRequestBuilders.post(url)
+                        .cookie(new Cookie(AccessTokenProperties.COOKIE_NAME, accessToken))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(gson.toJson(requestDto))
+        );
+
+        // Then
+        resultActions.andExpect(status().is(not(HttpStatus.FORBIDDEN.value())));
+    }
+
+    @Test
+    @DisplayName("[Success] anonymous requests comment writing api")
+    void successIfAnonymousRequestsCommentWritingApi() throws Exception {
+        // Given
+        final String url = CommentApiUrl.WRITE_COMMENT.getEntireUrl();
+
+        final String tilUuid = UUID.randomUUID().toString();
+
+        final CommentWritingRequestDto requestDto = CommentWritingRequestDtoFactory.createDefaultCommentWritingRequestDto(tilUuid);
+
+        // When
+        final ResultActions resultActions = mockMvc.perform(
+                MockMvcRequestBuilders.post(url)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(gson.toJson(requestDto))
         );
 
         // Then

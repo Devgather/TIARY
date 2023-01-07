@@ -2,9 +2,11 @@ package me.tiary.exception.handler.controller;
 
 import lombok.extern.slf4j.Slf4j;
 import me.tiary.exception.AccountException;
+import me.tiary.exception.CommentException;
 import me.tiary.exception.ProfileException;
 import me.tiary.exception.handler.ExceptionResponse;
 import me.tiary.exception.status.AccountStatus;
+import me.tiary.exception.status.CommentStatus;
 import me.tiary.exception.status.ProfileStatus;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpHeaders;
@@ -71,6 +73,15 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         final ProfileStatus status = ex.getStatus();
 
         log.warn("Profile exception occurrence: {}", status.getMessage());
+
+        return ResponseEntity.status(status.getHttpStatus()).body(new ExceptionResponse(List.of(status.getMessage())));
+    }
+
+    @ExceptionHandler({CommentException.class})
+    public ResponseEntity<Object> handleProfileException(final CommentException ex) {
+        final CommentStatus status = ex.getStatus();
+
+        log.warn("Comment exception occurrence: {}", status.getMessage());
 
         return ResponseEntity.status(status.getHttpStatus()).body(new ExceptionResponse(List.of(status.getMessage())));
     }
