@@ -16,4 +16,6 @@ public final class FactoryPreset {
     public static final String TITLE = "Test";
 
     public static final String CONTENT = "test";
+
+    public static final String TAG = "test";
 }
