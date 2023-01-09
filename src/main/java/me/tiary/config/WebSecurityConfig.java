@@ -15,6 +15,7 @@ import me.tiary.security.web.authentication.MemberAuthenticationProvider;
 import me.tiary.security.web.userdetails.MemberDetailsService;
 import me.tiary.utility.jwt.JwtProvider;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -46,6 +47,12 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 @Configuration
 @EnableWebSecurity
 public class WebSecurityConfig {
+    private final String springDatasourceDriverClassName;
+
+    public WebSecurityConfig(@Value("${spring.datasource.driver-class-name}") final String springDatasourceDriverClassName) {
+        this.springDatasourceDriverClassName = springDatasourceDriverClassName;
+    }
+
     @Bean
     public SecurityFilterChain securityFilterChain(final HttpSecurity http,
                                                    final CorsConfigurationSource corsConfigurationSource,
@@ -102,10 +109,16 @@ public class WebSecurityConfig {
 
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
+        if (springDatasourceDriverClassName.equals("org.h2.Driver")) {
+            return web -> web.ignoring()
+                    .requestMatchers(CorsUtils::isPreFlightRequest)
+                    .requestMatchers(PathRequest.toStaticResources().atCommonLocations())
+                    .requestMatchers(PathRequest.toH2Console());
+        }
+
         return web -> web.ignoring()
                 .requestMatchers(CorsUtils::isPreFlightRequest)
-                .requestMatchers(PathRequest.toStaticResources().atCommonLocations())
-                .requestMatchers(PathRequest.toH2Console());
+                .requestMatchers(PathRequest.toStaticResources().atCommonLocations());
     }
 
     @Bean

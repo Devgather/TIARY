@@ -24,6 +24,10 @@
         {
           "value": "arn:aws:s3:::devtiaryenv/oauth.env",
           "type": "s3"
+        },
+        {
+          "value": "arn:aws:s3:::devtiaryenv/security.env",
+          "type": "s3"
         }
       ],
       "logConfiguration": {
@@ -85,7 +89,7 @@
     "EXTERNAL",
     "EC2"
   ],
-  "taskDefinitionArn": "arn:aws:ecs:ap-northeast-2:854304293969:task-definition/devtiary:15",
+  "taskDefinitionArn": "arn:aws:ecs:ap-northeast-2:854304293969:task-definition/devtiary:25",
   "family": "devtiary",
   "requiresAttributes": [
     {
@@ -132,7 +136,7 @@
   "networkMode": null,
   "runtimePlatform": null,
   "cpu": null,
-  "revision": 15,
+  "revision": 25,
   "status": "ACTIVE",
   "inferenceAccelerators": null,
   "proxyConfiguration": null,
