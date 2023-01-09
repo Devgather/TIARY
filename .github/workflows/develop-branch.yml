@@ -13,3 +13,23 @@ jobs:
   sonarcloud:
     name: SonarCloud
     uses: ./.github/workflows/sonarcloud.yml
+
+  amazon-ecs:
+    if: github.event_name == 'push'
+    needs: sonarcloud
+
+    name: Amazon ECS
+    uses: ./.github/workflows/amazon-ecs.yml
+    env:
+      AWS_ACCESS_KEY_ID: ${{ secrets.DEVELOP_AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.DEVELOP_AWS_SECRET_ACCESS_KEY }}
+      AWS_REGION: ${{ secrets.DEVELOP_AWS_REGION }}
+
+      AWS_ECR_REPOSITORY: ${{ secrets.DEVELOP_AWS_ECR_REPOSITORY }}
+      AWS_ECR_IMAGE_TAG: ${{ secrets.DEVELOP_AWS_ECR_IMAGE_TAG }}
+      DOCKERFILE: development.Dockerfile
+
+      AWS_ECS_TASK_DEFINITION: task-definition-development.json
+      AWS_ECS_CONTAINER_NAME: ${{ secrets.DEVELOP_AWS_ECS_CONTAINER_NAME }}
+      AWS_ECS_SERVICE: ${{ secrets.DEVELOP_AWS_ECS_SERVICE }}
+      AWS_ECS_CLUSTER: ${{ secrets.DEVELOP_AWS_ECS_CLUSTER }}
