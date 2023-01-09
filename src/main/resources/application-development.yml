@@ -15,7 +15,7 @@ spring:
 
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://${SPRING_DATASOURCE_URL_HOST}:${SPRING_DATASOURCE_URL_PORT}/${SPRING_DATASOURCE_URL_DATABASE}
+    url: jdbc:mysql://${SPRING_DATASOURCE_URL_HOST}:${SPRING_DATASOURCE_URL_PORT}/${SPRING_DATASOURCE_URL_DATABASE}?serverTimezone=Asia/Seoul
     username: ${SPRING_DATASOURCE_USERNAME}
     password: ${SPRING_DATASOURCE_PASSWORD}
 
