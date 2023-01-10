@@ -1,0 +1,88 @@
+name: Amazon ECS
+
+on:
+  workflow_call:
+    secrets:
+      aws-access-key-id:
+        required: true
+
+      aws-secret-access-key:
+        required: true
+
+      aws-region:
+        required: true
+
+      aws-ecr-repository:
+        required: true
+
+      aws-ecr-image-tag:
+        required: true
+
+      dockerfile:
+        required: true
+
+      aws-ecs-task-definition:
+        required: true
+
+      aws-ecs-container-name:
+        required: true
+
+      aws-ecs-service:
+        required: true
+
+      aws-ecs-cluster:
+        required: true
+
+jobs:
+  deploy:
+    name: Amazon ECS
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out GitHub repository
+        uses: actions/checkout@v3
+
+      - name: Set up JDK 11
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '11'
+
+      - name: Build with Gradle
+        run: ./gradlew clean bootJar
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.aws-access-key-id }}
+          aws-secret-access-key: ${{ secrets.aws-secret-access-key }}
+          aws-region: ${{ secrets.aws-region }}
+
+      - name: Login to Amazon ECR
+        id: ecr-login
+        uses: aws-actions/amazon-ecr-login@v1
+
+      - name: Build, tag, push Docker image to Amazon ECR
+        run: |
+          docker build -t ${{ steps.ecr-login.outputs.registry }}/${{ secrets.aws-ecr-repository }}:${{ secrets.aws-ecr-image-tag }} -f ${{ secrets.dockerfile }} .
+          docker push ${{ steps.ecr-login.outputs.registry }}/${{ secrets.aws-ecr-repository }}:${{ secrets.aws-ecr-image-tag }}
+
+      - name: Clean up Amazon ECR
+        run: ./script/amazon-ecr-cleaner.sh
+        env:
+          AWS_ECR_REPOSITORY: ${{ secrets.aws-ecr-repository }}
+
+      - name: Render Amazon ECS task definition
+        id: web-container-rendering
+        uses: aws-actions/amazon-ecs-render-task-definition@v1
+        with:
+          task-definition: ${{ secrets.aws-ecs-task-definition }}
+          container-name: ${{ secrets.aws-ecs-container-name }}
+          image: ${{ steps.ecr-login.outputs.registry }}/${{ secrets.aws-ecr-repository }}:${{ secrets.aws-ecr-image-tag }}
+
+      - name: Deploy to Amazon ECS service
+        uses: aws-actions/amazon-ecs-deploy-task-definition@v1
+        with:
+          task-definition: ${{ steps.web-container-rendering.outputs.task-definition }}
+          service: ${{ secrets.aws-ecs-service }}
+          cluster: ${{ secrets.aws-ecs-cluster }}
