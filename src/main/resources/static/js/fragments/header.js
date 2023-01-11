@@ -9,9 +9,8 @@ $('#dropdown-trigger').click(function () {
 function logout() {
     $.ajax({
         type: 'DELETE',
-        url: '/api/account/logout',
-        success: function () {
-            window.location.replace('/');
-        }
+        url: '/api/account/logout'
+    }).done(function () {
+        window.location.replace('/');
     });
 }
