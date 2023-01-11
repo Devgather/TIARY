@@ -9,9 +9,9 @@ public final class FactoryPreset {
 
     public static final String NICKNAME = "Test";
 
-    public static final String PICTURE = "https://example.com/";
+    public static final String PICTURE = "/common/profile/picture.png";
 
-    public static final String STORAGE = "https://example.com/";
+    public static final String STORAGE = "https://example.com";
 
     public static final String TITLE = "Test";
 

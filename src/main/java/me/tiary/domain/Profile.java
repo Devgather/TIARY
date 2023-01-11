@@ -18,7 +18,7 @@ import java.util.UUID;
 public class Profile extends Timestamp {
     public static final int NICKNAME_MAX_LENGTH = 20;
 
-    public static final String BASIC_PICTURE = "";
+    public static final String BASIC_PICTURE = "/common/profile/picture.png";
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -43,9 +43,15 @@ public class ProfileService {
             throw new ProfileException(ProfileStatus.EXISTING_NICKNAME);
         }
 
+        String storageUrl = awsStorageProperties.getUrl();
+
+        if (storageUrl.endsWith("/")) {
+            storageUrl = storageUrl.substring(0, storageUrl.length() - 1);
+        }
+
         final Profile profile = Profile.builder()
                 .nickname(nickname)
-                .picture(Profile.BASIC_PICTURE)
+                .picture(storageUrl + Profile.BASIC_PICTURE)
                 .build();
 
         final Profile result = profileRepository.save(profile);
@@ -83,8 +89,8 @@ public class ProfileService {
 
         String storageUrl = awsStorageProperties.getUrl();
 
-        if (!storageUrl.endsWith("/")) {
-            storageUrl += "/";
+        if (storageUrl.endsWith("/")) {
+            storageUrl = storageUrl.substring(0, storageUrl.length() - 1);
         }
 
         profile.updatePicture(storageUrl + picturePath);

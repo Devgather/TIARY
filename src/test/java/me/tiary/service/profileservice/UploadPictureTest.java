@@ -54,7 +54,7 @@ class UploadPictureTest {
                 .setFieldMatchingEnabled(true)
                 .setFieldAccessLevel(org.modelmapper.config.Configuration.AccessLevel.PRIVATE);
 
-        awsStorageProperties = new AwsStorageProperties(FactoryPreset.PICTURE);
+        awsStorageProperties = new AwsStorageProperties(FactoryPreset.STORAGE + FactoryPreset.PICTURE);
 
         profileService = new ProfileService(
                 profileRepository,

@@ -29,7 +29,7 @@ class CreateAccessTokenCookieTest {
         final JwtProvider accessTokenProvider = JwtProviderFactory.createAccessTokenProvider();
 
         oAuth2AuthenticationSuccessHandler = new OAuth2AuthenticationSuccessHandler(
-                null, null, accessTokenProvider, null
+                null, null, accessTokenProvider, null, null
         );
 
         createAccessTokenCookieMethod = oAuth2AuthenticationSuccessHandler.getClass().getDeclaredMethod(

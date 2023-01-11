@@ -16,7 +16,7 @@ class UpdatePictureTest {
         // Given
         final Profile profile = ProfileFactory.createDefaultProfile();
 
-        final String pictureUrl = FactoryPreset.PICTURE + "image.png";
+        final String pictureUrl = FactoryPreset.STORAGE + FactoryPreset.PICTURE;
 
         // When
         profile.updatePicture(pictureUrl);

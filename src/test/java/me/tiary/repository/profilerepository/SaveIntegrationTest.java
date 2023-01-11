@@ -31,7 +31,7 @@ class SaveIntegrationTest {
     @DisplayName("[Fail] nickname is null")
     void failIfNicknameIsNull() {
         // Given
-        final Profile profile = ProfileFactory.create(null, FactoryPreset.PICTURE);
+        final Profile profile = ProfileFactory.create(null, FactoryPreset.STORAGE + FactoryPreset.PICTURE);
 
         // When, Then
         assertThrows(DataIntegrityViolationException.class, () -> profileRepository.save(profile));
@@ -43,7 +43,7 @@ class SaveIntegrationTest {
         // Given
         final String nickname = StringUtility.generateRandomString(Profile.NICKNAME_MAX_LENGTH + 1);
 
-        final Profile profile = ProfileFactory.create(nickname, FactoryPreset.PICTURE);
+        final Profile profile = ProfileFactory.create(nickname, FactoryPreset.STORAGE + FactoryPreset.PICTURE);
 
         // When, Then
         assertThrows(DataIntegrityViolationException.class, () -> profileRepository.save(profile));

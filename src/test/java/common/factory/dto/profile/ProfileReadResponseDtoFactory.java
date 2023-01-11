@@ -5,7 +5,7 @@ import me.tiary.dto.profile.ProfileReadResponseDto;
 
 public final class ProfileReadResponseDtoFactory {
     public static ProfileReadResponseDto createDefaultProfileReadResponseDto() {
-        return create(FactoryPreset.NICKNAME, FactoryPreset.PICTURE);
+        return create(FactoryPreset.NICKNAME, FactoryPreset.STORAGE + FactoryPreset.PICTURE);
     }
 
     public static ProfileReadResponseDto create(final String nickname, final String picture) {
