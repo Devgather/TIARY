@@ -39,10 +39,10 @@ public class AuthenticationExceptionHandler implements AuthenticationEntryPoint 
     public void commence(final HttpServletRequest request,
                          final HttpServletResponse response,
                          final AuthenticationException authException) throws IOException {
-        try {
-            final Cookie accessTokenCookie = WebUtils.getCookie(request, AccessTokenProperties.COOKIE_NAME);
-            final String accessToken = (accessTokenCookie == null) ? (null) : (accessTokenCookie.getValue());
+        final Cookie accessTokenCookie = WebUtils.getCookie(request, AccessTokenProperties.COOKIE_NAME);
+        final String accessToken = (accessTokenCookie == null) ? (null) : (accessTokenCookie.getValue());
 
+        try {
             if (checkAccessTokenExpiration(accessToken)) {
                 final Cookie refreshTokenCookie = WebUtils.getCookie(request, RefreshTokenProperties.COOKIE_NAME);
                 final String refreshToken = (refreshTokenCookie == null) ? (null) : (refreshTokenCookie.getValue());
@@ -80,6 +80,8 @@ public class AuthenticationExceptionHandler implements AuthenticationEntryPoint 
                 response.setContentType(MediaType.APPLICATION_JSON_VALUE);
                 response.setCharacterEncoding(StandardCharsets.UTF_8.name());
                 response.getWriter().write(responseBody);
+            } else if (accessToken == null) {
+                response.sendRedirect("/");
             } else {
                 response.sendRedirect(request.getRequestURI());
             }
