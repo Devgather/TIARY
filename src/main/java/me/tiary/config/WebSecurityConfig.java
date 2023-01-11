@@ -197,8 +197,10 @@ public class WebSecurityConfig {
     }
 
     @Bean
-    public AuthenticationEntryPoint authenticationEntryPoint(final ObjectMapper objectMapper) {
-        return new AuthenticationExceptionHandler(objectMapper);
+    public AuthenticationEntryPoint authenticationEntryPoint(final JwtProvider accessTokenProvider,
+                                                             final JwtProvider refreshTokenProvider,
+                                                             final ObjectMapper objectMapper) {
+        return new AuthenticationExceptionHandler(accessTokenProvider, refreshTokenProvider, objectMapper);
     }
 
     @Bean
