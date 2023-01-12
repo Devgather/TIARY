@@ -1,6 +1,7 @@
 package me.tiary.service.profileservice;
 
 import common.annotation.service.ServiceTest;
+import common.config.factory.FactoryPreset;
 import common.factory.domain.ProfileFactory;
 import common.factory.dto.profile.ProfileCreationRequestDtoFactory;
 import me.tiary.domain.Profile;
@@ -8,12 +9,12 @@ import me.tiary.dto.profile.ProfileCreationRequestDto;
 import me.tiary.dto.profile.ProfileCreationResponseDto;
 import me.tiary.exception.ProfileException;
 import me.tiary.exception.status.ProfileStatus;
+import me.tiary.properties.aws.AwsStorageProperties;
 import me.tiary.repository.ProfileRepository;
 import me.tiary.service.ProfileService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
 import org.modelmapper.ModelMapper;
@@ -29,7 +30,6 @@ import static org.mockito.Mockito.doReturn;
 @ServiceTest
 @DisplayName("[ProfileService] createProfile")
 class CreateProfileTest {
-    @InjectMocks
     private ProfileService profileService;
 
     @Mock
@@ -43,6 +43,12 @@ class CreateProfileTest {
         modelMapper.getConfiguration()
                 .setFieldMatchingEnabled(true)
                 .setFieldAccessLevel(org.modelmapper.config.Configuration.AccessLevel.PRIVATE);
+
+        final AwsStorageProperties awsStorageProperties = new AwsStorageProperties(FactoryPreset.STORAGE);
+
+        profileService = new ProfileService(
+                profileRepository, null, awsStorageProperties, modelMapper
+        );
     }
 
     @Test

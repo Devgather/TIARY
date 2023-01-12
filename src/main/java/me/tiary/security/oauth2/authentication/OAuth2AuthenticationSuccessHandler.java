@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import me.tiary.domain.OAuth;
 import me.tiary.domain.Profile;
+import me.tiary.properties.aws.AwsStorageProperties;
 import me.tiary.properties.jwt.AccessTokenProperties;
 import me.tiary.properties.jwt.RefreshTokenProperties;
 import me.tiary.repository.OAuthRepository;
@@ -40,6 +41,8 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
     private final JwtProvider accessTokenProvider;
 
     private final JwtProvider refreshTokenProvider;
+
+    private final AwsStorageProperties awsStorageProperties;
 
     @Override
     @Transactional
@@ -113,9 +116,15 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
             nickname = StringUtility.generateRandomString(Profile.NICKNAME_MAX_LENGTH);
         }
 
+        String storageUrl = awsStorageProperties.getUrl();
+
+        if (storageUrl.endsWith("/")) {
+            storageUrl = storageUrl.substring(0, storageUrl.length() - 1);
+        }
+
         final Profile profile = Profile.builder()
                 .nickname(nickname)
-                .picture(Profile.BASIC_PICTURE)
+                .picture(storageUrl + Profile.BASIC_PICTURE)
                 .build();
 
         return profileRepository.save(profile);
