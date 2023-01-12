@@ -6,6 +6,7 @@ import lombok.*;
 @Builder
 @RequiredArgsConstructor
 @Getter
+@EqualsAndHashCode
 public class TilWritingResponseDto {
     private final String title;
 
