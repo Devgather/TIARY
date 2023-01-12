@@ -3,6 +3,7 @@ package me.tiary.config;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import me.tiary.exception.handler.security.AccessDeniedExceptionHandler;
 import me.tiary.exception.handler.security.AuthenticationExceptionHandler;
+import me.tiary.properties.aws.AwsStorageProperties;
 import me.tiary.properties.jwt.AccessTokenProperties;
 import me.tiary.properties.jwt.RefreshTokenProperties;
 import me.tiary.properties.security.SecurityCorsProperties;
@@ -63,7 +64,7 @@ public class WebSecurityConfig {
                                                    final AuthenticationEntryPoint authenticationEntryPoint,
                                                    final AccessDeniedHandler accessDeniedHandler) throws Exception {
         http.authorizeRequests()
-                .antMatchers(HttpMethod.GET, "/").permitAll()
+                .antMatchers(HttpMethod.GET, "/", "/profile/**").permitAll()
                 .antMatchers(HttpMethod.GET, "/login").anonymous()
                 .antMatchers(HttpMethod.HEAD, "/api/account/email/**").anonymous()
                 .antMatchers(HttpMethod.POST, "/api/account").anonymous()
@@ -190,9 +191,10 @@ public class WebSecurityConfig {
     public AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler(final OAuthRepository oAuthRepository,
                                                                            final ProfileRepository profileRepository,
                                                                            final JwtProvider accessTokenProvider,
-                                                                           final JwtProvider refreshTokenProvider) {
+                                                                           final JwtProvider refreshTokenProvider,
+                                                                           final AwsStorageProperties awsStorageProperties) {
         return new OAuth2AuthenticationSuccessHandler(
-                oAuthRepository, profileRepository, accessTokenProvider, refreshTokenProvider
+                oAuthRepository, profileRepository, accessTokenProvider, refreshTokenProvider, awsStorageProperties
         );
     }
 

@@ -7,4 +7,4 @@ aws:
     bucket: ${AWS_S3_BUCKET:aws-s3-bucket}
 
   storage:
-    url: ${AWS_STORAGE_URL:https://example.com/}
+    url: ${AWS_STORAGE_URL:https://example.com}
