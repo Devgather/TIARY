@@ -5,6 +5,7 @@ import common.config.url.ViewUrl;
 import me.tiary.controller.ViewController;
 import me.tiary.repository.OAuthRepository;
 import me.tiary.repository.ProfileRepository;
+import me.tiary.service.ProfileService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class DirectLoginViewIntegrationTest {
     @Autowired
     private MockMvc mockMvc;
+
+    @MockBean
+    private ProfileService profileService;
 
     @MockBean
     private ProfileRepository profileRepository;
