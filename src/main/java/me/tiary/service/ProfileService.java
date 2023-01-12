@@ -35,6 +35,13 @@ public class ProfileService {
         return profileRepository.findByNickname(nickname).isPresent();
     }
 
+    public String searchNicknameUsingUuid(final String uuid) {
+        final Profile profile = profileRepository.findByUuidLeftJoinFetchAccount(uuid)
+                .orElseThrow(() -> new ProfileException(ProfileStatus.NOT_EXISTING_PROFILE));
+
+        return profile.getNickname();
+    }
+
     @Transactional
     public ProfileCreationResponseDto createProfile(final ProfileCreationRequestDto requestDto) {
         final String nickname = requestDto.getNickname();
