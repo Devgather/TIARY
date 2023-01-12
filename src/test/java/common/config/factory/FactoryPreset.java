@@ -1,5 +1,7 @@
 package common.config.factory;
 
+import java.util.List;
+
 public final class FactoryPreset {
     public static final String EMAIL = "test@example.com";
 
@@ -16,6 +18,8 @@ public final class FactoryPreset {
     public static final String TITLE = "Test";
 
     public static final String CONTENT = "test";
+
+    public static final List<String> TAGS = List.of("test1", "test2");
 
     public static final String TAG = "test";
 }
