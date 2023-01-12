@@ -9,6 +9,7 @@ import java.util.List;
 @Getter
 @Builder
 @RequiredArgsConstructor
+@EqualsAndHashCode
 public class TilWritingRequestDto {
     @NotBlank
     private final String title;
