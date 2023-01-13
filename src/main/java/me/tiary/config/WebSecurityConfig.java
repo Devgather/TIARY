@@ -64,6 +64,7 @@ public class WebSecurityConfig {
                                                    final AuthenticationEntryPoint authenticationEntryPoint,
                                                    final AccessDeniedHandler accessDeniedHandler) throws Exception {
         http.authorizeRequests()
+                .antMatchers(HttpMethod.GET, "/profile/editor").authenticated()
                 .antMatchers(HttpMethod.GET, "/", "/profile/**").permitAll()
                 .antMatchers(HttpMethod.GET, "/login").anonymous()
                 .antMatchers(HttpMethod.HEAD, "/api/account/email/**").anonymous()
@@ -71,7 +72,7 @@ public class WebSecurityConfig {
                 .antMatchers(HttpMethod.POST, "/api/account/verification/**").anonymous()
                 .antMatchers(HttpMethod.PATCH, "/api/account/verification").anonymous()
                 .antMatchers(HttpMethod.POST, "/api/account/login").anonymous()
-                .antMatchers(HttpMethod.HEAD, "/api/profile/nickname/**").anonymous()
+                .antMatchers(HttpMethod.HEAD, "/api/profile/nickname/**").permitAll()
                 .antMatchers(HttpMethod.POST, "/api/profile").anonymous()
                 .antMatchers(HttpMethod.GET, "/api/profile/**").permitAll()
                 .anyRequest().authenticated();
