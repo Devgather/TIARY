@@ -64,6 +64,7 @@ public class WebSecurityConfig {
                                                    final AuthenticationEntryPoint authenticationEntryPoint,
                                                    final AccessDeniedHandler accessDeniedHandler) throws Exception {
         http.authorizeRequests()
+                .antMatchers(HttpMethod.GET, "/profile/editor").authenticated()
                 .antMatchers(HttpMethod.GET, "/", "/profile/**").permitAll()
                 .antMatchers(HttpMethod.GET, "/login").anonymous()
                 .antMatchers(HttpMethod.HEAD, "/api/account/email/**").anonymous()
