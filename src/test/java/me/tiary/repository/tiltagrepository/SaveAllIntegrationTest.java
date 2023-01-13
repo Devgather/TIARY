@@ -22,13 +22,14 @@ import org.springframework.orm.jpa.JpaSystemException;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import java.util.List;
 
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @RepositoryIntegrationTest
-@DisplayName("[TilTagRepository - Integration] save")
-class SaveIntegrationTest {
+@DisplayName("[TilTagRepository - Integration] saveAll")
+class SaveAllIntegrationTest {
     @Autowired
     private TilTagRepository tilTagRepository;
 
@@ -66,7 +67,7 @@ class SaveIntegrationTest {
         final TilTag tilTag = TilTagFactory.create(null, null);
 
         // When, Then
-        assertThrows(JpaSystemException.class, () -> tilTagRepository.save(tilTag));
+        assertThrows(JpaSystemException.class, () -> tilTagRepository.saveAll(List.of(tilTag)));
     }
 
     @Test
@@ -76,7 +77,7 @@ class SaveIntegrationTest {
         final TilTag tilTag = TilTagFactory.create(til, null);
 
         // When, Then
-        assertThrows(JpaSystemException.class, () -> tilTagRepository.save(tilTag));
+        assertThrows(JpaSystemException.class, () -> tilTagRepository.saveAll(List.of(tilTag)));
     }
 
     @Test
@@ -86,7 +87,7 @@ class SaveIntegrationTest {
         final TilTag tilTag = TilTagFactory.create(null, tag);
 
         // When, Then
-        assertThrows(JpaSystemException.class, () -> tilTagRepository.save(tilTag));
+        assertThrows(JpaSystemException.class, () -> tilTagRepository.saveAll(List.of(tilTag)));
     }
 
     @Test
@@ -96,12 +97,12 @@ class SaveIntegrationTest {
         final TilTag tilTag = TilTagFactory.create(til, tag);
 
         // When
-        final TilTag result = tilTagRepository.save(tilTag);
+        final List<TilTag> result = tilTagRepository.saveAll(List.of(tilTag));
 
         // Then
-        assertThat(result.getId()).isNotNull();
-        assertThat(result.getUuid().length()).isEqualTo(36);
-        assertThat(result.getTil()).isEqualTo(tilTag.getTil());
-        assertThat(result.getTag()).isEqualTo(tilTag.getTag());
+        assertThat(result.get(0).getId()).isNotNull();
+        assertThat(result.get(0).getUuid().length()).isEqualTo(36);
+        assertThat(result.get(0).getTil()).isEqualTo(tilTag.getTil());
+        assertThat(result.get(0).getTag()).isEqualTo(tilTag.getTag());
     }
 }
