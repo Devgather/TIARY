@@ -362,8 +362,8 @@ class SecurityFilterChainIntegrationTest {
     }
 
     @Test
-    @DisplayName("[Fail] member requests nickname existence check api")
-    void failIfMemberRequestsNicknameExistenceCheckApi() throws Exception {
+    @DisplayName("[Success] member requests nickname existence check api")
+    void successIfMemberRequestsNicknameExistenceCheckApi() throws Exception {
         // Given
         final String url = ProfileApiUrl.NICKNAME_EXISTENCE_CHECK.getEntireUrl() + FactoryPreset.NICKNAME;
 
@@ -377,7 +377,7 @@ class SecurityFilterChainIntegrationTest {
         );
 
         // Then
-        resultActions.andExpect(status().isForbidden());
+        resultActions.andExpect(status().is(not(HttpStatus.FORBIDDEN.value())));
     }
 
     @Test
