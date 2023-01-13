@@ -1,22 +1,19 @@
 package me.tiary.domain.composite;
 
-import lombok.*;
+import lombok.Getter;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import java.io.Serializable;
 
 @Embeddable
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor
-@Builder
 @Getter
 public class TilTagId implements Serializable {
     private static final long serialVersionUID = 9017788639195921594L;
 
-    @Column
+    @Column(nullable = false)
     private Long tilId;
 
-    @Column
+    @Column(nullable = false)
     private Long tagId;
 }
