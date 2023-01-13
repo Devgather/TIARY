@@ -93,31 +93,35 @@ class WriteTilTest {
 
         final Profile profile = ProfileFactory.createDefaultProfile();
 
-        final Til til = TilFactory.createDefaultTil(profile);
-
-        final List<String> tags = FactoryPreset.TAGS;
-
-        final Tag tag1 = TagFactory.create(tags.get(0));
-
-        final Tag tag2 = TagFactory.create(tags.get(1));
-
-        final List<TilTag> tilTags = List.of(TilTagFactory.create(til, tag1), TilTagFactory.create(til, tag2));
-
         doReturn(Optional.of(profile))
                 .when(profileRepository)
-                .findByUuid(any(String.class));
+                .findByUuid(eq(profileUuid));
+
+        final Til til = TilFactory.createDefaultTil(profile);
 
         doReturn(til)
                 .when(tilRepository)
                 .save(any(Til.class));
 
+        final List<String> tags = FactoryPreset.TAGS;
+
+        final Tag tag1 = TagFactory.create(tags.get(0));
+
         doReturn(Optional.of(tag1))
                 .when(tagRepository)
                 .findByName(tag1.getName());
 
+        final Tag tag2 = TagFactory.create(tags.get(1));
+
         doReturn(Optional.empty())
                 .when(tagRepository)
                 .findByName(tag2.getName());
+
+        doReturn(tag2)
+                .when(tagRepository)
+                .save(any(Tag.class));
+
+        final List<TilTag> tilTags = List.of(TilTagFactory.create(til, tag1), TilTagFactory.create(til, tag2));
 
         doReturn(tilTags)
                 .when(tilTagRepository)

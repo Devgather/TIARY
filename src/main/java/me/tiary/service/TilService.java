@@ -36,8 +36,6 @@ public class TilService {
 
     @Transactional
     public TilWritingResponseDto writeTil(final String profileUuid, final TilWritingRequestDto requestDto) {
-        final List<TilTag> tilTags = new ArrayList<>();
-
         final Profile profile = profileRepository.findByUuid(profileUuid)
                 .orElseThrow(() -> new TilException(TilStatus.NOT_EXISTING_PROFILE));
 
@@ -49,19 +47,22 @@ public class TilService {
                         .build()
         );
 
-        for (final String tagName : requestDto.getTags()) {
+        final List<TilTag> tilTags = new ArrayList<>();
 
+        for (final String tagName : requestDto.getTags()) {
             final Tag tag = tagRepository.findByName(tagName)
                     .orElseGet(() -> tagRepository.save(
-                            Tag.builder()
-                                    .name(tagName)
-                                    .build())
+                                    Tag.builder()
+                                            .name(tagName)
+                                            .build()
+                            )
                     );
 
             final TilTag tilTag = TilTag.builder()
-                    .tag(tag)
                     .til(til)
+                    .tag(tag)
                     .build();
+
             tilTags.add(tilTag);
         }
 
