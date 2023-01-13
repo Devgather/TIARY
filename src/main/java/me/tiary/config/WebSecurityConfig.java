@@ -71,7 +71,7 @@ public class WebSecurityConfig {
                 .antMatchers(HttpMethod.POST, "/api/account/verification/**").anonymous()
                 .antMatchers(HttpMethod.PATCH, "/api/account/verification").anonymous()
                 .antMatchers(HttpMethod.POST, "/api/account/login").anonymous()
-                .antMatchers(HttpMethod.HEAD, "/api/profile/nickname/**").anonymous()
+                .antMatchers(HttpMethod.HEAD, "/api/profile/nickname/**").permitAll()
                 .antMatchers(HttpMethod.POST, "/api/profile").anonymous()
                 .antMatchers(HttpMethod.GET, "/api/profile/**").permitAll()
                 .anyRequest().authenticated();
