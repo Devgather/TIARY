@@ -69,7 +69,7 @@ class FindByTilUuidTest {
 
     @Test
     @DisplayName("[Success] comment number does not meet request")
-    void successIfCommentCountIs3() {
+    void successIfCommentNumberDoesNotMeetRequest() {
         // Given
         final ArrayList<Comment> comments = new ArrayList<>();
 
@@ -93,7 +93,7 @@ class FindByTilUuidTest {
 
     @Test
     @DisplayName("[Success] comment number does meet request")
-    void successIfCommentCountIs13() {
+    void successIfCommentNumberDoesMeetRequest() {
         // Given
         final ArrayList<Comment> comments = new ArrayList<>();
 
