@@ -35,7 +35,9 @@ public class ViewController {
     }
 
     @GetMapping("/login")
-    public String directLoginView() {
+    public String directLoginView(final Model model) {
+        model.addAttribute("authentication", false);
+
         return "view/login";
     }
 
