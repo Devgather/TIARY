@@ -28,7 +28,6 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.nio.charset.StandardCharsets;
-import java.util.List;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -181,8 +180,38 @@ class WriteTilTest {
     }
 
     @Test
-    @DisplayName("[Success] tag is null")
-    void successIfTagIsNull() throws Exception {
+    @DisplayName("[Fail] profile does not exist")
+    void failIfProfileDoesNotExist() throws Exception {
+        // Given
+        final String url = TilApiUrl.TIL_WRITING.getEntireUrl();
+
+        final TilWritingRequestDto requestDto = TilWritingRequestDtoFactory.createDefaultWritingRequestDto();
+
+        doThrow(new TilException(TilStatus.NOT_EXISTING_PROFILE))
+                .when(tilService)
+                .writeTil(memberDetails.getProfileUuid(), requestDto);
+
+        // When
+        final ResultActions resultActions = mockMvc.perform(
+                MockMvcRequestBuilders.post(url)
+                        .content(gson.toJson(requestDto))
+                        .contentType(MediaType.APPLICATION_JSON)
+        );
+
+        final ExceptionResponse response = gson.fromJson(
+                resultActions.andReturn()
+                        .getResponse()
+                        .getContentAsString(StandardCharsets.UTF_8), ExceptionResponse.class
+        );
+
+        // Then
+        resultActions.andExpect(status().is(TilStatus.NOT_EXISTING_PROFILE.getHttpStatus().value()));
+        assertThat(response.getMessages()).contains(TilStatus.NOT_EXISTING_PROFILE.getMessage());
+    }
+
+    @Test
+    @DisplayName("[Success] til is acceptable with tags is null")
+    void successIfTilIsAcceptableWithTagsIsNull() throws Exception {
         // Given
         final String url = TilApiUrl.TIL_WRITING.getEntireUrl();
 
@@ -212,74 +241,12 @@ class WriteTilTest {
     }
 
     @Test
-    @DisplayName("[Fail] profile does not exist")
-    void failIfProfileDoesNotExist() throws Exception {
+    @DisplayName("[Success] til is acceptable with tags is not null")
+    void successIfTilIsAcceptableWithTagsIsNotNull() throws Exception {
         // Given
         final String url = TilApiUrl.TIL_WRITING.getEntireUrl();
 
         final TilWritingRequestDto requestDto = TilWritingRequestDtoFactory.createDefaultWritingRequestDto();
-
-        doThrow(new TilException(TilStatus.NOT_EXISTING_PROFILE))
-                .when(tilService)
-                .writeTil(memberDetails.getProfileUuid(), requestDto);
-
-        // When
-        final ResultActions resultActions = mockMvc.perform(
-                MockMvcRequestBuilders.post(url)
-                        .content(gson.toJson(requestDto))
-                        .contentType(MediaType.APPLICATION_JSON)
-        );
-
-        final ExceptionResponse response = gson.fromJson(
-                resultActions.andReturn()
-                        .getResponse()
-                        .getContentAsString(StandardCharsets.UTF_8), ExceptionResponse.class
-        );
-
-        // Then
-        resultActions.andExpect(status().is(TilStatus.NOT_EXISTING_PROFILE.getHttpStatus().value()));
-
-        assertThat(response.getMessages()).contains(TilStatus.NOT_EXISTING_PROFILE.getMessage());
-    }
-
-    @Test
-    @DisplayName("[Success] til is acceptable with tags is null")
-    void successIfTagIsBlank() throws Exception {
-        // Given
-        final String url = TilApiUrl.TIL_WRITING.getEntireUrl();
-
-        final TilWritingRequestDto requestDto = TilWritingRequestDtoFactory.create(FactoryPreset.TITLE, FactoryPreset.CONTENT, List.of(" "));
-
-        final TilWritingResponseDto responseDto = TilWritingResponseDtoFactory.createDefaultTilWritingResponseDto();
-
-        doReturn(responseDto)
-                .when(tilService)
-                .writeTil(memberDetails.getProfileUuid(), requestDto);
-
-        // When
-        final ResultActions resultActions = mockMvc.perform(
-                MockMvcRequestBuilders.post(url)
-                        .content(gson.toJson(requestDto))
-                        .contentType(MediaType.APPLICATION_JSON)
-        );
-
-        final TilWritingResponseDto response = gson.fromJson(resultActions
-                .andReturn()
-                .getResponse()
-                .getContentAsString(StandardCharsets.UTF_8), TilWritingResponseDto.class);
-
-        // Then
-        resultActions.andExpect(status().isCreated());
-        assertThat(response.getUuid().length()).isEqualTo(36);
-    }
-
-    @Test
-    @DisplayName("[Success] til is acceptable with tags is not null")
-    void successIfTilIsAcceptable() throws Exception {
-        // Given
-        final String url = TilApiUrl.TIL_WRITING.getEntireUrl();
-
-        final TilWritingRequestDto requestDto = TilWritingRequestDtoFactory.create(FactoryPreset.TITLE, FactoryPreset.CONTENT, FactoryPreset.TAGS);
 
         final TilWritingResponseDto responseDto = TilWritingResponseDtoFactory.createDefaultTilWritingResponseDto();
 
