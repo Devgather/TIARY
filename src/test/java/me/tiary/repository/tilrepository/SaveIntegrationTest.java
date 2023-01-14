@@ -1,4 +1,4 @@
-package me.tiary.repository.tilRepository;
+package me.tiary.repository.tilrepository;
 
 import common.annotation.repository.RepositoryIntegrationTest;
 import common.config.factory.FactoryPreset;
