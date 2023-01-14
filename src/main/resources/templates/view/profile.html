@@ -25,7 +25,7 @@
 
 <section class="section px-4">
     <div class="container is-max-desktop">
-        <div class="is-flex is-flex-direction-row">
+        <div class="is-flex is-flex-direction-row mb-6">
             <figure class="image is-96x96">
                 <img src="https://bulma.io/images/placeholders/96x96.png" id="picture">
             </figure>
@@ -36,6 +36,13 @@
                 <a th:if="${editPermission}" href="/profile/editor"
                    class="button has-background-primary-dark has-text-white is-size-7">수정</a>
             </div>
+        </div>
+
+        <div class="is-flex is-align-content-center is-justify-content-space-between">
+            <h4 class="title is-4">TIL</h4>
+
+            <a th:if="${editPermission}" href="/til/editor"
+               class="button has-background-primary-dark has-text-white is-size-7">작성</a>
         </div>
     </div>
 </section>

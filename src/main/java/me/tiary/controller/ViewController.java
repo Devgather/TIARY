@@ -82,4 +82,15 @@ public class ViewController {
 
         return "view/profile-editor";
     }
+
+    @GetMapping("/til/editor")
+    public String directTilEditorView(@AuthenticationPrincipal final MemberDetails memberDetails,
+                                      final Model model) {
+        final String memberNickname = profileService.searchNicknameUsingUuid(memberDetails.getProfileUuid());
+
+        model.addAttribute("authentication", true);
+        model.addAttribute("memberNickname", memberNickname);
+
+        return "view/til-editor";
+    }
 }
