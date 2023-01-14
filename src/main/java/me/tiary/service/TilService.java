@@ -5,6 +5,7 @@ import me.tiary.domain.Profile;
 import me.tiary.domain.Tag;
 import me.tiary.domain.Til;
 import me.tiary.domain.TilTag;
+import me.tiary.dto.til.TilListReadResponseDto;
 import me.tiary.dto.til.TilReadResponseDto;
 import me.tiary.dto.til.TilWritingRequestDto;
 import me.tiary.dto.til.TilWritingResponseDto;
@@ -14,10 +15,13 @@ import me.tiary.repository.ProfileRepository;
 import me.tiary.repository.TagRepository;
 import me.tiary.repository.TilRepository;
 import me.tiary.repository.TilTagRepository;
+import me.tiary.vo.til.TilVo;
 import org.commonmark.node.Node;
 import org.commonmark.parser.Parser;
 import org.commonmark.renderer.html.HtmlRenderer;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -88,6 +92,28 @@ public class TilService {
                 .content(htmlRenderer.render(document))
                 .author(til.getProfile().getNickname())
                 .createdDate(til.getCreatedDate())
+                .build();
+    }
+
+    public TilListReadResponseDto readTilList(final String nickname, final Pageable pageable) {
+        if (profileRepository.findByNickname(nickname).isEmpty()) {
+            throw new TilException(TilStatus.NOT_EXISTING_PROFILE);
+        }
+
+        final Page<Til> tilPage = tilRepository.findByProfileNickname(nickname, pageable);
+
+        final List<Til> tilContent = tilPage.getContent();
+
+        final List<TilVo> tils = new ArrayList<>();
+
+        for (final Til til : tilContent) {
+            final TilVo tilVo = modelMapper.map(til, TilVo.class);
+
+            tils.add(tilVo);
+        }
+
+        return TilListReadResponseDto.builder()
+                .tils(tils)
                 .build();
     }
 }
