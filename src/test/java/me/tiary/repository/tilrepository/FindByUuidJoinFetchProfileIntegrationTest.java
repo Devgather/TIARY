@@ -21,8 +21,8 @@ import java.util.UUID;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @RepositoryIntegrationTest
-@DisplayName("[TilRepository - Integration] findByUuid")
-class FindByUuidIntegrationTest {
+@DisplayName("[TilRepository - Integration] findByUuidJoinFetchProfile")
+class FindByUuidJoinFetchProfileIntegrationTest {
     @Autowired
     private TilRepository tilRepository;
 
@@ -45,7 +45,7 @@ class FindByUuidIntegrationTest {
     @DisplayName("[Success] uuid does not exist")
     void successIfUuidDoesNotExist() {
         // When
-        final Optional<Til> result = tilRepository.findByUuid(UUID.randomUUID().toString());
+        final Optional<Til> result = tilRepository.findByUuidJoinFetchProfile(UUID.randomUUID().toString());
 
         // Then
         assertThat(result).isEmpty();
@@ -62,7 +62,7 @@ class FindByUuidIntegrationTest {
         JpaUtility.flushAndClear(em);
 
         // When
-        final Optional<Til> result = tilRepository.findByUuid(til.getUuid());
+        final Optional<Til> result = tilRepository.findByUuidJoinFetchProfile(til.getUuid());
 
         // Then
         assertThat(result).isPresent();

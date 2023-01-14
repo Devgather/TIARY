@@ -5,6 +5,7 @@ import me.tiary.domain.Profile;
 import me.tiary.domain.Tag;
 import me.tiary.domain.Til;
 import me.tiary.domain.TilTag;
+import me.tiary.dto.til.TilReadResponseDto;
 import me.tiary.dto.til.TilWritingRequestDto;
 import me.tiary.dto.til.TilWritingResponseDto;
 import me.tiary.exception.TilException;
@@ -13,6 +14,9 @@ import me.tiary.repository.ProfileRepository;
 import me.tiary.repository.TagRepository;
 import me.tiary.repository.TilRepository;
 import me.tiary.repository.TilTagRepository;
+import org.commonmark.node.Node;
+import org.commonmark.parser.Parser;
+import org.commonmark.renderer.html.HtmlRenderer;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -69,5 +73,21 @@ public class TilService {
         tilTagRepository.saveAll(tilTags);
 
         return modelMapper.map(til, TilWritingResponseDto.class);
+    }
+
+    public TilReadResponseDto readTil(final String tilUuid) {
+        final Til til = tilRepository.findByUuidJoinFetchProfile(tilUuid)
+                .orElseThrow(() -> new TilException(TilStatus.NOT_EXISTING_TIL));
+
+        final Parser markdownParser = Parser.builder().build();
+        final HtmlRenderer htmlRenderer = HtmlRenderer.builder().escapeHtml(true).build();
+        final Node document = markdownParser.parse(til.getContent());
+
+        return TilReadResponseDto.builder()
+                .title(til.getTitle())
+                .content(htmlRenderer.render(document))
+                .author(til.getProfile().getNickname())
+                .createdDate(til.getCreatedDate())
+                .build();
     }
 }
