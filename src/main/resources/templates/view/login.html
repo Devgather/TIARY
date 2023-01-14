@@ -19,7 +19,7 @@
     <link rel="stylesheet" href="/css/login.css"/>
 </head>
 <body>
-<header th:replace="/view/fragments/header.html :: header"></header>
+<header th:replace="view/fragments/header.html :: header"></header>
 
 <section class="section px-4">
     <div class="container is-max-desktop">
@@ -28,9 +28,9 @@
                 <h4 class="title is-4">로그인</h4>
             </div>
 
-            <div class="field mb-5">
-                <label class="label">이메일</label>
+            <label class="label">이메일</label>
 
+            <div class="field mb-5">
                 <div class="control has-icons-left">
                     <input type="email" placeholder="이메일" id="email-input" class="input">
 
@@ -40,9 +40,9 @@
                 </div>
             </div>
 
-            <div class="field mb-6">
-                <label class="label">비밀번호</label>
+            <label class="label">비밀번호</label>
 
+            <div class="field mb-6">
                 <div class="control has-icons-left">
                     <input type="password" placeholder="비밀번호" id="password-input" class="input">
 

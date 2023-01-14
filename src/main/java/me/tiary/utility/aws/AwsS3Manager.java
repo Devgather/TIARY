@@ -1,7 +1,6 @@
 package me.tiary.utility.aws;
 
 import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import lombok.RequiredArgsConstructor;
@@ -31,8 +30,7 @@ public class AwsS3Manager {
             objectMetadata.setContentType(file.getContentType());
 
             try (final InputStream inputStream = file.getInputStream()) {
-                amazonS3.putObject(new PutObjectRequest(bucket, fileName, inputStream, objectMetadata)
-                        .withCannedAcl(CannedAccessControlList.PublicRead));
+                amazonS3.putObject(new PutObjectRequest(bucket, fileName, inputStream, objectMetadata));
             } catch (final IOException e) {
                 throw new IllegalArgumentException();
             }

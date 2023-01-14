@@ -66,9 +66,9 @@ class SaveIntegrationTest {
     @DisplayName("[Fail] email is duplicated")
     void failIfEmailIsDuplicated() {
         // Given
-        final Profile profile1 = profileRepository.save(ProfileFactory.create("Test1", FactoryPreset.PICTURE));
+        final Profile profile1 = profileRepository.save(ProfileFactory.create("Test1", FactoryPreset.STORAGE + FactoryPreset.PICTURE));
 
-        final Profile profile2 = profileRepository.save(ProfileFactory.create("Test2", FactoryPreset.PICTURE));
+        final Profile profile2 = profileRepository.save(ProfileFactory.create("Test2", FactoryPreset.STORAGE + FactoryPreset.PICTURE));
 
         final Account account1 = AccountFactory.createDefaultAccount(profile1);
 
