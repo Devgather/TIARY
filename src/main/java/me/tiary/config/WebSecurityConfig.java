@@ -76,6 +76,7 @@ public class WebSecurityConfig {
                 .antMatchers(HttpMethod.POST, "/api/profile").anonymous()
                 .antMatchers(HttpMethod.GET, "/api/profile/**").permitAll()
                 .antMatchers(HttpMethod.GET, "/api/til/**").permitAll()
+                .antMatchers(HttpMethod.GET, "/api/til/list/**").permitAll()
                 .anyRequest().authenticated();
 
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
