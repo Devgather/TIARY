@@ -2,7 +2,8 @@ package common.config.url;
 
 public enum TilApiUrl {
     TIL_WRITING(""),
-    TIL_READ("/");
+    TIL_READ("/"),
+    TIL_LIST_READ("/list/");
 
     public static final String COMMON_URL = "/api/til";
 
