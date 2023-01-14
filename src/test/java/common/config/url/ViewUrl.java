@@ -3,6 +3,7 @@ package common.config.url;
 public enum ViewUrl {
     INDEX("/"),
     LOGIN("/login"),
+    REGISTER("/register"),
     PROFILE("/profile/"),
     PROFILE_EDITOR("/profile/editor");
 
