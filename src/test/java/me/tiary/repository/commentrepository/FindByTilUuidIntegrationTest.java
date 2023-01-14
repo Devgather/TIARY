@@ -27,8 +27,8 @@ import java.util.ArrayList;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @RepositoryIntegrationTest
-@DisplayName("[CommentRepository] findByTilUuid")
-class FindByTilUuidTest {
+@DisplayName("[CommentRepository - Integration] findByTilUuid")
+class FindByTilUuidIntegrationTest {
     @Autowired
     private CommentRepository commentRepository;
 
