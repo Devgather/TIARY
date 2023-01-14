@@ -28,6 +28,7 @@ dependencies {
     implementation 'com.auth0:java-jwt:3.19.3'
     implementation 'com.google.code.gson:gson:2.8.9'
     implementation 'io.awspring.cloud:spring-cloud-starter-aws:2.4.0'
+    implementation 'org.commonmark:commonmark:0.21.0'
     implementation 'org.modelmapper:modelmapper:2.4.5'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-mail'
