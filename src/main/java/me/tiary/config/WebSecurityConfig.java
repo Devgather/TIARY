@@ -3,6 +3,7 @@ package me.tiary.config;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import me.tiary.exception.handler.security.AccessDeniedExceptionHandler;
 import me.tiary.exception.handler.security.AuthenticationExceptionHandler;
+import me.tiary.properties.aws.AwsStorageProperties;
 import me.tiary.properties.jwt.AccessTokenProperties;
 import me.tiary.properties.jwt.RefreshTokenProperties;
 import me.tiary.properties.security.SecurityCorsProperties;
@@ -15,6 +16,7 @@ import me.tiary.security.web.authentication.MemberAuthenticationProvider;
 import me.tiary.security.web.userdetails.MemberDetailsService;
 import me.tiary.utility.jwt.JwtProvider;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -46,6 +48,12 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 @Configuration
 @EnableWebSecurity
 public class WebSecurityConfig {
+    private final String springDatasourceDriverClassName;
+
+    public WebSecurityConfig(@Value("${spring.datasource.driver-class-name}") final String springDatasourceDriverClassName) {
+        this.springDatasourceDriverClassName = springDatasourceDriverClassName;
+    }
+
     @Bean
     public SecurityFilterChain securityFilterChain(final HttpSecurity http,
                                                    final CorsConfigurationSource corsConfigurationSource,
@@ -56,14 +64,15 @@ public class WebSecurityConfig {
                                                    final AuthenticationEntryPoint authenticationEntryPoint,
                                                    final AccessDeniedHandler accessDeniedHandler) throws Exception {
         http.authorizeRequests()
-                .antMatchers(HttpMethod.GET, "/").permitAll()
+                .antMatchers(HttpMethod.GET, "/profile/editor").authenticated()
+                .antMatchers(HttpMethod.GET, "/", "/profile/**").permitAll()
                 .antMatchers(HttpMethod.GET, "/login").anonymous()
                 .antMatchers(HttpMethod.HEAD, "/api/account/email/**").anonymous()
                 .antMatchers(HttpMethod.POST, "/api/account").anonymous()
                 .antMatchers(HttpMethod.POST, "/api/account/verification/**").anonymous()
                 .antMatchers(HttpMethod.PATCH, "/api/account/verification").anonymous()
                 .antMatchers(HttpMethod.POST, "/api/account/login").anonymous()
-                .antMatchers(HttpMethod.HEAD, "/api/profile/nickname/**").anonymous()
+                .antMatchers(HttpMethod.HEAD, "/api/profile/nickname/**").permitAll()
                 .antMatchers(HttpMethod.POST, "/api/profile").anonymous()
                 .antMatchers(HttpMethod.GET, "/api/profile/**").permitAll()
                 .anyRequest().authenticated();
@@ -102,10 +111,16 @@ public class WebSecurityConfig {
 
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
+        if (springDatasourceDriverClassName.equals("org.h2.Driver")) {
+            return web -> web.ignoring()
+                    .requestMatchers(CorsUtils::isPreFlightRequest)
+                    .requestMatchers(PathRequest.toStaticResources().atCommonLocations())
+                    .requestMatchers(PathRequest.toH2Console());
+        }
+
         return web -> web.ignoring()
                 .requestMatchers(CorsUtils::isPreFlightRequest)
-                .requestMatchers(PathRequest.toStaticResources().atCommonLocations())
-                .requestMatchers(PathRequest.toH2Console());
+                .requestMatchers(PathRequest.toStaticResources().atCommonLocations());
     }
 
     @Bean
@@ -177,15 +192,18 @@ public class WebSecurityConfig {
     public AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler(final OAuthRepository oAuthRepository,
                                                                            final ProfileRepository profileRepository,
                                                                            final JwtProvider accessTokenProvider,
-                                                                           final JwtProvider refreshTokenProvider) {
+                                                                           final JwtProvider refreshTokenProvider,
+                                                                           final AwsStorageProperties awsStorageProperties) {
         return new OAuth2AuthenticationSuccessHandler(
-                oAuthRepository, profileRepository, accessTokenProvider, refreshTokenProvider
+                oAuthRepository, profileRepository, accessTokenProvider, refreshTokenProvider, awsStorageProperties
         );
     }
 
     @Bean
-    public AuthenticationEntryPoint authenticationEntryPoint(final ObjectMapper objectMapper) {
-        return new AuthenticationExceptionHandler(objectMapper);
+    public AuthenticationEntryPoint authenticationEntryPoint(final JwtProvider accessTokenProvider,
+                                                             final JwtProvider refreshTokenProvider,
+                                                             final ObjectMapper objectMapper) {
+        return new AuthenticationExceptionHandler(accessTokenProvider, refreshTokenProvider, objectMapper);
     }
 
     @Bean

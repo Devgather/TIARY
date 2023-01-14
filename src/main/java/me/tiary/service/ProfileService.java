@@ -35,6 +35,13 @@ public class ProfileService {
         return profileRepository.findByNickname(nickname).isPresent();
     }
 
+    public String searchNicknameUsingUuid(final String uuid) {
+        final Profile profile = profileRepository.findByUuidLeftJoinFetchAccount(uuid)
+                .orElseThrow(() -> new ProfileException(ProfileStatus.NOT_EXISTING_PROFILE));
+
+        return profile.getNickname();
+    }
+
     @Transactional
     public ProfileCreationResponseDto createProfile(final ProfileCreationRequestDto requestDto) {
         final String nickname = requestDto.getNickname();
@@ -43,9 +50,15 @@ public class ProfileService {
             throw new ProfileException(ProfileStatus.EXISTING_NICKNAME);
         }
 
+        String storageUrl = awsStorageProperties.getUrl();
+
+        if (storageUrl.endsWith("/")) {
+            storageUrl = storageUrl.substring(0, storageUrl.length() - 1);
+        }
+
         final Profile profile = Profile.builder()
                 .nickname(nickname)
-                .picture(Profile.BASIC_PICTURE)
+                .picture(storageUrl + Profile.BASIC_PICTURE)
                 .build();
 
         final Profile result = profileRepository.save(profile);
@@ -84,7 +97,7 @@ public class ProfileService {
         String storageUrl = awsStorageProperties.getUrl();
 
         if (!storageUrl.endsWith("/")) {
-            storageUrl += "/";
+            storageUrl += '/';
         }
 
         profile.updatePicture(storageUrl + picturePath);

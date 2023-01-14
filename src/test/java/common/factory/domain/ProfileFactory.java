@@ -5,7 +5,7 @@ import me.tiary.domain.Profile;
 
 public final class ProfileFactory {
     public static Profile createDefaultProfile() {
-        return create(FactoryPreset.NICKNAME, FactoryPreset.PICTURE);
+        return create(FactoryPreset.NICKNAME, FactoryPreset.STORAGE + FactoryPreset.PICTURE);
     }
 
     public static Profile create(final String nickname, final String picture) {
