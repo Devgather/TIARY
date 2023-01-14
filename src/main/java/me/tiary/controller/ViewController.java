@@ -41,6 +41,13 @@ public class ViewController {
         return "view/login";
     }
 
+    @GetMapping("/register")
+    public String directRegisterView(final Model model) {
+        model.addAttribute("authentication", false);
+
+        return "view/register";
+    }
+
     @GetMapping("/profile/{nickname}")
     public String directProfileView(@PathVariable @NotBlank @Size(max = Profile.NICKNAME_MAX_LENGTH) final String nickname,
                                     @AuthenticationPrincipal final MemberDetails memberDetails,

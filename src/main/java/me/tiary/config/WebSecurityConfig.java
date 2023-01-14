@@ -66,7 +66,7 @@ public class WebSecurityConfig {
         http.authorizeRequests()
                 .antMatchers(HttpMethod.GET, "/profile/editor").authenticated()
                 .antMatchers(HttpMethod.GET, "/", "/profile/**").permitAll()
-                .antMatchers(HttpMethod.GET, "/login").anonymous()
+                .antMatchers(HttpMethod.GET, "/login", "/register").anonymous()
                 .antMatchers(HttpMethod.HEAD, "/api/account/email/**").anonymous()
                 .antMatchers(HttpMethod.POST, "/api/account").anonymous()
                 .antMatchers(HttpMethod.POST, "/api/account/verification/**").anonymous()
