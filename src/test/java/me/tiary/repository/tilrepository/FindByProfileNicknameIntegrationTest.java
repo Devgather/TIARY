@@ -20,6 +20,7 @@ import org.springframework.data.domain.Sort;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.util.ArrayList;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -50,9 +51,10 @@ class FindByProfileNicknameIntegrationTest {
         // Given
         final Pageable pageable = PageRequest.of(0, 5, Sort.by("createdDate").descending());
 
-        // When, Then
+        // When
         final Page<Til> result = tilRepository.findByProfileNickname(profile.getNickname(), pageable);
 
+        // Then
         assertThat(result).isEmpty();
     }
 
@@ -60,7 +62,7 @@ class FindByProfileNicknameIntegrationTest {
     @DisplayName("[Success] til number does not meet request")
     void successIfTilNumberDoesNotMeetRequest() {
         // Given
-        final ArrayList<Til> tils = new ArrayList<>();
+        final List<Til> tils = new ArrayList<>();
 
         for (int i = 0; i < 3; i++) {
             tils.add(TilFactory.createDefaultTil(profile));
@@ -84,7 +86,7 @@ class FindByProfileNicknameIntegrationTest {
     @DisplayName("[Success] til number does meet request")
     void successIfTilNumberDoesMeetRequest() {
         // Given
-        final ArrayList<Til> tils = new ArrayList<>();
+        final List<Til> tils = new ArrayList<>();
 
         for (int i = 0; i < 13; i++) {
             tils.add(TilFactory.createDefaultTil(profile));
