@@ -21,7 +21,7 @@ import java.util.UUID;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @RepositoryIntegrationTest
-@DisplayName("[TilRepository] findByUuid")
+@DisplayName("[TilRepository - Integration] findByUuid")
 class FindByUuidIntegrationTest {
     @Autowired
     private TilRepository tilRepository;
