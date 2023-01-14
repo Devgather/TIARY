@@ -42,6 +42,13 @@ public class TilService {
 
     private final ModelMapper modelMapper;
 
+    public Til searchTilUsingUuid(final String uuid) {
+        final Til til = tilRepository.findByUuid(uuid)
+                .orElseThrow(() -> new TilException(TilStatus.NOT_EXISTING_TIL));
+
+        return til;
+    }
+
     @Transactional
     public TilWritingResponseDto writeTil(final String profileUuid, final TilWritingRequestDto requestDto) {
         final Profile profile = profileRepository.findByUuid(profileUuid)
