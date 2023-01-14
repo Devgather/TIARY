@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+
+    <title>TIARY</title>
+
+    <script src="https://code.jquery.com/jquery-3.6.3.min.js"
+            integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU=" crossorigin="anonymous" defer></script>
+    <script src="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.js" defer></script>
+
+    <script th:inline="javascript">
+        const memberNickname = [[${memberNickname}]];
+    </script>
+
+    <script src="/js/fragments/header.js" defer></script>
+    <script src="/js/til-editor.js" defer></script>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css"
+          integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A=="
+          crossorigin="anonymous" referrerpolicy="no-referrer"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.css"/>
+
+    <link rel="stylesheet" href="/css/til-editor.css"/>
+</head>
+<body>
+<header th:replace="view/fragments/header.html :: header"></header>
+
+<section class="section px-4">
+    <div class="container is-max-desktop">
+        <div class="box">
+            <div class="block mb-6">
+                <h4 class="title is-4">TIL 작성</h4>
+            </div>
+
+            <label class="label">제목</label>
+
+            <div class="field mb-5">
+                <div class="control">
+                    <input type="text" placeholder="제목" id="title-input" class="input">
+                </div>
+            </div>
+
+            <label class="label">내용</label>
+
+            <div class="field mb-5">
+                <div class="control">
+                    <textarea id="content-textarea"></textarea>
+                </div>
+            </div>
+
+            <label class="label">태그</label>
+
+            <div class="field mb-6">
+                <div class="control">
+                    <input type="text" placeholder="태그, 태그, 태그, ..." id="tags-input" class="input">
+                </div>
+            </div>
+
+            <div class="block is-flex is-align-content-center is-justify-content-center">
+                <div class="is-flex is-flex-direction-column">
+                    <div class="buttons">
+                        <button class="button has-background-primary-dark has-text-white" onclick="completeEdit()">
+                            작성 완료
+                        </button>
+
+                        <button class="button" onclick="cancelEdit()">작성 취소</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+</body>
+</html>
