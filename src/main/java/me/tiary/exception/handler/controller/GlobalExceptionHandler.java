@@ -78,7 +78,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler({TilException.class})
-    public ResponseEntity<Object> handlerTilException(final TilException ex) {
+    public ResponseEntity<Object> handleTilException(final TilException ex) {
         final TilStatus status = ex.getStatus();
 
         log.warn("TIL exception occurrence: {}", status.getMessage());
