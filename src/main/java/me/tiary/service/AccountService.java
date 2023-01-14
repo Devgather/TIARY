@@ -108,7 +108,7 @@ public class AccountService {
 
         mimeMessageHelper.setSubject("[TIARY] Verify your email address");
         mimeMessageHelper.setTo(email);
-        mimeMessageHelper.setText(templateEngine.process("/mail/verification", context), true);
+        mimeMessageHelper.setText(templateEngine.process("mail/verification", context), true);
 
         mailSender.send(mimeMessage);
     }
