@@ -2,10 +2,14 @@ package me.tiary.controller;
 
 import lombok.RequiredArgsConstructor;
 import me.tiary.dto.comment.CommentDeletionResponseDto;
+import me.tiary.dto.comment.CommentListReadResponseDto;
 import me.tiary.dto.comment.CommentWritingRequestDto;
 import me.tiary.dto.comment.CommentWritingResponseDto;
 import me.tiary.security.web.userdetails.MemberDetails;
 import me.tiary.service.CommentService;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -29,6 +33,17 @@ public class CommentController {
         final CommentWritingResponseDto responseDto = commentService.writeComment(profileUuid, requestDto);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(responseDto);
+    }
+
+    @GetMapping("/list/{tilUuid}")
+    public ResponseEntity<CommentListReadResponseDto> readCommentList(@PathVariable @NotBlank final String tilUuid,
+                                                                      @RequestParam final int page,
+                                                                      @RequestParam final int size) {
+        final Pageable pageable = PageRequest.of(page, size, Sort.by("createdDate").ascending());
+
+        final CommentListReadResponseDto result = commentService.readCommentList(tilUuid, pageable);
+
+        return ResponseEntity.ok(result);
     }
 
     @DeleteMapping("/{uuid}")
