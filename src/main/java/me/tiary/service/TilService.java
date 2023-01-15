@@ -40,6 +40,10 @@ public class TilService {
 
     private final ModelMapper modelMapper;
 
+    public boolean checkUuidExistence(final String uuid) {
+        return tilRepository.findByUuid(uuid).isPresent();
+    }
+
     @Transactional
     public TilWritingResponseDto writeTil(final String profileUuid, final TilWritingRequestDto requestDto) {
         final Profile profile = profileRepository.findByUuid(profileUuid)
