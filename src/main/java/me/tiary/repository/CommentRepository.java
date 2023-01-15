@@ -12,6 +12,8 @@ import java.util.Optional;
 
 @Repository
 public interface CommentRepository extends JpaRepository<Comment, Long> {
+    Optional<Comment> findByUuid(final String uuid);
+
     @Query("select c from Comment c join fetch c.profile where c.uuid = :uuid")
     Optional<Comment> findByUuidJoinFetchProfile(@Param("uuid") final String uuid);
 
