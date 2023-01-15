@@ -91,6 +91,7 @@ class ReadTilListTest {
 
         // Then
         assertThat(result.getTils()).isEmpty();
+        assertThat(result.getTotalPages()).isEqualTo(tilPage.getTotalPages());
     }
 
     @Test
@@ -118,5 +119,6 @@ class ReadTilListTest {
         assertThat(result.getTils().get(0).getUuid()).hasSize(36);
         assertThat(result.getTils().get(0).getTitle()).isEqualTo(tils.get(0).getTitle());
         assertThat(result.getTils().get(0).getContent()).isEqualTo(tils.get(0).getContent());
+        assertThat(result.getTotalPages()).isEqualTo(tilPage.getTotalPages());
     }
 }
