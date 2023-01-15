@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import me.tiary.domain.Comment;
 import me.tiary.domain.Profile;
 import me.tiary.domain.Til;
+import me.tiary.dto.comment.CommentDeletionResponseDto;
 import me.tiary.dto.comment.CommentWritingRequestDto;
 import me.tiary.dto.comment.CommentWritingResponseDto;
 import me.tiary.exception.CommentException;
@@ -44,5 +45,19 @@ public class CommentService {
         final Comment result = commentRepository.save(comment);
 
         return modelMapper.map(result, CommentWritingResponseDto.class);
+    }
+
+    @Transactional
+    public CommentDeletionResponseDto deleteComment(final String profileUuid, final String commentUuid) {
+        final Comment comment = commentRepository.findByUuidJoinFetchProfile(commentUuid)
+                .orElseThrow(() -> new CommentException(CommentStatus.NOT_EXISTING_COMMENT));
+
+        if (!comment.getProfile().getUuid().equals(profileUuid)) {
+            throw new CommentException(CommentStatus.NOT_AUTHORIZED_MEMBER);
+        }
+
+        commentRepository.delete(comment);
+
+        return modelMapper.map(comment, CommentDeletionResponseDto.class);
     }
 }
