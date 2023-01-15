@@ -9,6 +9,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @Builder
 @Getter
+@EqualsAndHashCode
 public class TilEditRequestDto {
     @NotBlank
     private final String title;
