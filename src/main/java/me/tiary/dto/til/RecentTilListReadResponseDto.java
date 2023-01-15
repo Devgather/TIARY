@@ -1,7 +1,7 @@
 package me.tiary.dto.til;
 
 import lombok.*;
-import me.tiary.vo.til.TilVo;
+import me.tiary.vo.til.TilWithProfileVo;
 
 import java.util.List;
 
@@ -9,8 +9,6 @@ import java.util.List;
 @RequiredArgsConstructor
 @Builder
 @Getter
-public class TilListReadResponseDto {
-    private final List<TilVo> tils;
-
-    private final int totalPages;
+public class RecentTilListReadResponseDto {
+    private final List<TilWithProfileVo> tils;
 }

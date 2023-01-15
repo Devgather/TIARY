@@ -52,6 +52,15 @@ public class TilController {
         return ResponseEntity.ok(result);
     }
 
+    @GetMapping("/list")
+    public ResponseEntity<RecentTilListReadResponseDto> readRecentTilList(@RequestParam final int size) {
+        final Pageable pageable = PageRequest.of(0, size, Sort.by("createdDate").descending());
+
+        final RecentTilListReadResponseDto result = tilService.readRecentTilList(pageable);
+
+        return ResponseEntity.ok(result);
+    }
+
     @PutMapping("/{uuid}")
     public ResponseEntity<TilEditResponseDto> updateTil(@PathVariable @NotBlank final String uuid,
                                                         @AuthenticationPrincipal final MemberDetails memberDetails,

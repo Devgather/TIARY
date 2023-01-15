@@ -48,6 +48,8 @@ class DirectProfileViewIntegrationTest {
         // When
         final ResultActions resultActions = mockMvc.perform(
                 MockMvcRequestBuilders.get(url)
+                        .param("page", "1")
+                        .param("size", "5")
         );
 
         // Then
@@ -65,6 +67,8 @@ class DirectProfileViewIntegrationTest {
         // When
         final ResultActions resultActions = mockMvc.perform(
                 MockMvcRequestBuilders.get(url)
+                        .param("page", "1")
+                        .param("size", "5")
         );
 
         // Then
@@ -84,6 +88,8 @@ class DirectProfileViewIntegrationTest {
         // When
         final ResultActions resultActions = mockMvc.perform(
                 MockMvcRequestBuilders.get(url)
+                        .param("page", "1")
+                        .param("size", "5")
         );
 
         // Then
@@ -103,6 +109,8 @@ class DirectProfileViewIntegrationTest {
         // When
         final ResultActions resultActions = mockMvc.perform(
                 MockMvcRequestBuilders.get(url)
+                        .param("page", "1")
+                        .param("size", "5")
         );
 
         // Then
@@ -132,6 +140,8 @@ class DirectProfileViewIntegrationTest {
         // When
         final ResultActions resultActions = mockMvc.perform(
                 MockMvcRequestBuilders.get(url)
+                        .param("page", "1")
+                        .param("size", "5")
                         .cookie(new Cookie(AccessTokenProperties.COOKIE_NAME, accessToken))
         );
 
@@ -160,6 +170,8 @@ class DirectProfileViewIntegrationTest {
         // When
         final ResultActions resultActions = mockMvc.perform(
                 MockMvcRequestBuilders.get(url)
+                        .param("page", "1")
+                        .param("size", "5")
                         .cookie(new Cookie(AccessTokenProperties.COOKIE_NAME, accessToken))
         );
 

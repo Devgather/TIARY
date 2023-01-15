@@ -1,7 +1,7 @@
-package me.tiary.dto.til;
+package me.tiary.dto.comment;
 
 import lombok.*;
-import me.tiary.vo.til.TilVo;
+import me.tiary.vo.comment.CommentWithProfileVo;
 
 import java.util.List;
 
@@ -9,8 +9,8 @@ import java.util.List;
 @RequiredArgsConstructor
 @Builder
 @Getter
-public class TilListReadResponseDto {
-    private final List<TilVo> tils;
+public class CommentListReadResponseDto {
+    private final List<CommentWithProfileVo> comments;
 
     private final int totalPages;
 }
