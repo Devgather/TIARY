@@ -32,17 +32,10 @@ class ReadRecentTilListTest {
     @Mock
     private TilRepository tilRepository;
 
-    @Spy
-    private ModelMapper modelMapper;
-
     private Profile profile;
 
     @BeforeEach
     void beforeEach() {
-        modelMapper.getConfiguration()
-                .setFieldMatchingEnabled(true)
-                .setFieldAccessLevel(org.modelmapper.config.Configuration.AccessLevel.PRIVATE);
-
         profile = ProfileFactory.createDefaultProfile();
     }
 
@@ -84,6 +77,8 @@ class ReadRecentTilListTest {
 
         // Then
         assertThat(result.getTils().get(0).getUuid()).hasSize(36);
+        assertThat(result.getTils().get(0).getNickname()).isEqualTo(profile.getNickname());
+        assertThat(result.getTils().get(0).getPicture()).isEqualTo(profile.getPicture());
         assertThat(result.getTils().get(0).getTitle()).isEqualTo(tils.get(0).getTitle());
         assertThat(result.getTils().get(0).getContent()).isEqualTo(tils.get(0).getContent());
     }
