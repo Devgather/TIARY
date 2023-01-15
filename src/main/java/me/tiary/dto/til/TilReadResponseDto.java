@@ -14,6 +14,8 @@ public class TilReadResponseDto {
 
     private final String content;
 
+    private final String markdown;
+
     private final String author;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")

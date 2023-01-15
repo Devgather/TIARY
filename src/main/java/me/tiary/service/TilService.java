@@ -93,12 +93,13 @@ public class TilService {
                 .orElseThrow(() -> new TilException(TilStatus.NOT_EXISTING_TIL));
 
         final Parser markdownParser = Parser.builder().build();
-        final HtmlRenderer htmlRenderer = HtmlRenderer.builder().escapeHtml(true).build();
+        final HtmlRenderer htmlRenderer = HtmlRenderer.builder().build();
         final Node document = markdownParser.parse(til.getContent());
 
         return TilReadResponseDto.builder()
                 .title(til.getTitle())
                 .content(htmlRenderer.render(document))
+                .markdown(til.getContent())
                 .author(til.getProfile().getNickname())
                 .createdDate(til.getCreatedDate())
                 .build();

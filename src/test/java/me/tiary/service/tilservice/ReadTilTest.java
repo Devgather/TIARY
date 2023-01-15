@@ -71,6 +71,7 @@ class ReadTilTest {
         // Then
         assertThat(result.getTitle()).isEqualTo(til.getTitle());
         assertThat(result.getContent()).isEqualTo(htmlRenderer.render(document));
+        assertThat(result.getMarkdown()).isEqualTo(til.getContent());
         assertThat(result.getAuthor()).isEqualTo(til.getProfile().getNickname());
     }
 }
