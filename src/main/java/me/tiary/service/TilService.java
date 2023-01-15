@@ -190,4 +190,20 @@ public class TilService {
 
         return modelMapper.map(til, TilEditResponseDto.class);
     }
+
+    @Transactional
+    public TilDeletionResponseDto deleteTil(final String profileUuid, final String tilUuid) {
+        final Til til = tilRepository.findByUuidJoinFetchProfile(tilUuid)
+                .orElseThrow(() -> new TilException(TilStatus.NOT_EXISTING_TIL));
+
+        if (!til.getProfile().getUuid().equals(profileUuid)) {
+            throw new TilException(TilStatus.NOT_AUTHORIZED_MEMBER);
+        }
+
+        tilRepository.deleteByUuid(tilUuid);
+
+        tilTagRepository.deleteAllByTilUuid(tilUuid);
+
+        return modelMapper.map(til, TilDeletionResponseDto.class);
+    }
 }

@@ -881,6 +881,44 @@ class SecurityFilterChainIntegrationTest {
     }
 
     @Test
+    @DisplayName("[Success] member requests til deletion api")
+    void successIfMemberRequestsTilDeletionApi() throws Exception {
+        // Given
+        final String tilUuid = UUID.randomUUID().toString();
+
+        final String url = TilApiUrl.TIL_DELETION.getEntireUrl() + tilUuid;
+
+        // Algorithm = HMAC256, Payload = { "uuid": "cbf0f220-97b8-4312-82ce-f98266c428d4" }, Secret Key = jwt-access-token-secret-key
+        final String accessToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiY2JmMGYyMjAtOTdiOC00MzEyLTgyY2UtZjk4MjY2YzQyOGQ0In0.rftGC07wvthl89A-lHN4NzeP2gcVv9UxTTnST3Nhqz8";
+
+        // When
+        final ResultActions resultActions = mockMvc.perform(
+                MockMvcRequestBuilders.delete(url)
+                        .cookie(new Cookie(AccessTokenProperties.COOKIE_NAME, accessToken))
+        );
+
+        // Then
+        resultActions.andExpect(status().is(not(HttpStatus.FORBIDDEN.value())));
+    }
+
+    @Test
+    @DisplayName("[Fail] anonymous requests til deletion api")
+    void failIfAnonymousRequestsTilDeletionApi() throws Exception {
+        // Given
+        final String tilUuid = UUID.randomUUID().toString();
+
+        final String url = TilApiUrl.TIL_DELETION.getEntireUrl() + tilUuid;
+
+        // When
+        final ResultActions resultActions = mockMvc.perform(
+                MockMvcRequestBuilders.delete(url)
+        );
+
+        // Then
+        resultActions.andExpect(status().isUnauthorized());
+    }
+
+    @Test
     @DisplayName("[Success] member requests comment writing api")
     void successIfMemberRequestsCommentWritingApi() throws Exception {
         // Given
