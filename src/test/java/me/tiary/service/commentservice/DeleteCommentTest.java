@@ -91,8 +91,8 @@ class DeleteCommentTest {
     }
 
     @Test
-    @DisplayName("[Success] member does have authorization")
-    void successIfMemberDoesHaveAuthorization() {
+    @DisplayName("[Success] comment is deleted")
+    void successIfCommentIsDeleted() {
         // Given
         final Comment comment = CommentFactory.createDefaultComment(profile, til);
 
