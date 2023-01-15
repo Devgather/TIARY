@@ -2,6 +2,7 @@ package common.config.url;
 
 public enum CommentApiUrl {
     COMMENT_WRITING(""),
+    COMMENT_LIST_READ("/list/"),
     COMMENT_DELETION("/");
 
     public static final String COMMON_URL = "/api/comment";

@@ -1,5 +1,6 @@
 package me.tiary.vo.comment;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -15,5 +16,6 @@ public class CommentWithProfileVo {
 
     private final String content;
 
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private final LocalDateTime createdDate;
 }
