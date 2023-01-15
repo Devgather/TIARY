@@ -877,6 +877,48 @@ class SecurityFilterChainIntegrationTest {
     }
 
     @Test
+    @DisplayName("[Success] member requests comment list read api")
+    void successIfMemberRequestsCommentListReadApi() throws Exception {
+        // Given
+        final String tilUuid = UUID.randomUUID().toString();
+
+        final String url = CommentApiUrl.COMMENT_LIST_READ.getEntireUrl() + tilUuid;
+
+        // Algorithm = HMAC256, Payload = { "uuid": "cbf0f220-97b8-4312-82ce-f98266c428d4" }, Secret Key = jwt-access-token-secret-key
+        final String accessToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiY2JmMGYyMjAtOTdiOC00MzEyLTgyY2UtZjk4MjY2YzQyOGQ0In0.rftGC07wvthl89A-lHN4NzeP2gcVv9UxTTnST3Nhqz8";
+
+        // When
+        final ResultActions resultActions = mockMvc.perform(
+                MockMvcRequestBuilders.get(url)
+                        .param("page", "0")
+                        .param("size", "5")
+                        .cookie(new Cookie(AccessTokenProperties.COOKIE_NAME, accessToken))
+        );
+
+        // Then
+        resultActions.andExpect(status().is(not(HttpStatus.FORBIDDEN.value())));
+    }
+
+    @Test
+    @DisplayName("[Fail] anonymous requests comment list read api")
+    void failIfAnonymousRequestsCommentListReadApi() throws Exception {
+        // Given
+        final String tilUuid = UUID.randomUUID().toString();
+
+        final String url = CommentApiUrl.COMMENT_LIST_READ.getEntireUrl() + tilUuid;
+
+        // When
+        final ResultActions resultActions = mockMvc.perform(
+                MockMvcRequestBuilders.get(url)
+                        .param("page", "0")
+                        .param("size", "5")
+        );
+
+        // Then
+        resultActions.andExpect(status().is(not(HttpStatus.FORBIDDEN.value())));
+    }
+
+    @Test
     @DisplayName("[Success] member requests comment deletion api")
     void successIfMemberRequestsCommentDeletionApi() throws Exception {
         // Given

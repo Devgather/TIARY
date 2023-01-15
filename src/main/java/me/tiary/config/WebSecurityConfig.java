@@ -78,6 +78,7 @@ public class WebSecurityConfig {
                 .antMatchers(HttpMethod.GET, "/api/til/**").permitAll()
                 .antMatchers(HttpMethod.GET, "/api/til/list/**").permitAll()
                 .antMatchers(HttpMethod.GET, "/api/til/list").permitAll()
+                .antMatchers(HttpMethod.GET, "/api/comment/list/**").permitAll()
                 .anyRequest().authenticated();
 
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
