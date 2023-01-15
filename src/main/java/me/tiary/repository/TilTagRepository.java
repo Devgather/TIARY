@@ -10,4 +10,6 @@ import java.util.List;
 @Repository
 public interface TilTagRepository extends JpaRepository<TilTag, TilTagId> {
     List<TilTag> findAllByTilUuid(final String tilUuid);
+
+    void deleteAllByTilUuid(final String tilUuid);
 }
