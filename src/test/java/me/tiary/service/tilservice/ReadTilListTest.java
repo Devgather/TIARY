@@ -20,6 +20,7 @@ import org.mockito.Spy;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -67,6 +68,29 @@ class ReadTilListTest {
         final TilException result = assertThrows(TilException.class, () -> tilService.readTilList(profile.getNickname(), pageable));
 
         assertThat(result.getStatus()).isEqualTo(TilStatus.NOT_EXISTING_PROFILE);
+    }
+
+    @Test
+    @DisplayName("[Success] tils do not exist")
+    void successIfTilsDoNotExist() {
+        // Given
+        doReturn(Optional.of(profile))
+                .when(profileRepository)
+                .findByNickname(profile.getNickname());
+
+        final Pageable pageable = PageRequest.of(0, 5, Sort.by("createdDate").descending());
+
+        final Page<Til> tilPage = new PageImpl<>(new ArrayList<>(), pageable, 0);
+
+        doReturn(tilPage)
+                .when(tilRepository)
+                .findByProfileNickname(profile.getNickname(), pageable);
+
+        // When
+        final TilListReadResponseDto result = tilService.readTilList(profile.getNickname(), pageable);
+
+        // Then
+        assertThat(result.getTils()).isEmpty();
     }
 
     @Test
