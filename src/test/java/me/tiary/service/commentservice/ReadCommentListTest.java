@@ -93,7 +93,7 @@ class ReadCommentListTest {
 
     @Test
     @DisplayName("[Success] comments do exist")
-    void successIfTilsDoExist() {
+    void successIfCommentsDoExist() {
         // Given
         doReturn(Optional.of(til))
                 .when(tilRepository)
