@@ -28,7 +28,7 @@ import static org.mockito.Mockito.doReturn;
 
 @ServiceTest
 @DisplayName("[TilService] deleteTil")
-public class DeleteTilTest {
+class DeleteTilTest {
     @InjectMocks
     private TilService tilService;
 
@@ -60,7 +60,7 @@ public class DeleteTilTest {
 
         doReturn(Optional.empty())
                 .when(tilRepository)
-                .findByUuid(tilUuid);
+                .findByUuidJoinFetchProfile(tilUuid);
 
         final String profileUuid = UUID.randomUUID().toString();
 
@@ -78,7 +78,7 @@ public class DeleteTilTest {
 
         doReturn(Optional.of(til))
                 .when(tilRepository)
-                .findByUuid(til.getUuid());
+                .findByUuidJoinFetchProfile(til.getUuid());
 
         final String profileUuid = UUID.randomUUID().toString();
 
@@ -96,7 +96,7 @@ public class DeleteTilTest {
 
         doReturn(Optional.of(til))
                 .when(tilRepository)
-                .findByUuid(til.getUuid());
+                .findByUuidJoinFetchProfile(til.getUuid());
 
         // When
         final TilDeletionResponseDto result = tilService.deleteTil(profile.getUuid(), til.getUuid());

@@ -181,7 +181,7 @@ public class TilService {
 
     @Transactional
     public TilDeletionResponseDto deleteTil(final String profileUuid, final String tilUuid) {
-        final Til til = tilRepository.findByUuid(tilUuid)
+        final Til til = tilRepository.findByUuidJoinFetchProfile(tilUuid)
                 .orElseThrow(() -> new TilException(TilStatus.NOT_EXISTING_TIL));
 
         if (!til.getProfile().getUuid().equals(profileUuid)) {
