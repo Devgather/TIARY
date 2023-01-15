@@ -6,6 +6,6 @@ import lombok.*;
 @Builder
 @RequiredArgsConstructor
 @Getter
-public class TilUpdateResponseDto {
+public class TilEditResponseDto {
     private final String tilUuid;
 }

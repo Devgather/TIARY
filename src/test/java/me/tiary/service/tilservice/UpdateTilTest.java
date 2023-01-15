@@ -6,13 +6,13 @@ import common.factory.domain.ProfileFactory;
 import common.factory.domain.TagFactory;
 import common.factory.domain.TilFactory;
 import common.factory.domain.TilTagFactory;
-import common.factory.dto.til.TilUpdateRequestDtoFactory;
+import common.factory.dto.til.TilEditRequestDtoFactory;
 import me.tiary.domain.Profile;
 import me.tiary.domain.Tag;
 import me.tiary.domain.Til;
 import me.tiary.domain.TilTag;
-import me.tiary.dto.til.TilUpdateRequestDto;
-import me.tiary.dto.til.TilUpdateResponseDto;
+import me.tiary.dto.til.TilEditRequestDto;
+import me.tiary.dto.til.TilEditResponseDto;
 import me.tiary.exception.TilException;
 import me.tiary.exception.status.TilStatus;
 import me.tiary.repository.TagRepository;
@@ -73,7 +73,7 @@ class UpdateTilTest {
                 .when(tilRepository)
                 .findByUuid(tilUuid);
 
-        final TilUpdateRequestDto requestDto = TilUpdateRequestDtoFactory.createDefaultTilUpdateRequestDto();
+        final TilEditRequestDto requestDto = TilEditRequestDtoFactory.createDefaultTilEditRequestDto();
 
         // When, Then
         final TilException result = assertThrows(TilException.class, () -> tilService.updateTil(profileUuid, tilUuid, requestDto));
@@ -95,7 +95,7 @@ class UpdateTilTest {
                 .when(tilRepository)
                 .findByUuid(til.getUuid());
 
-        final TilUpdateRequestDto requestDto = TilUpdateRequestDtoFactory.createDefaultTilUpdateRequestDto();
+        final TilEditRequestDto requestDto = TilEditRequestDtoFactory.createDefaultTilEditRequestDto();
 
         // When, Then
         final TilException result = assertThrows(TilException.class, () -> tilService.updateTil(profileUuid, til.getUuid(), requestDto));
@@ -139,10 +139,10 @@ class UpdateTilTest {
                 .when(tilTagRepository)
                 .saveAll(any());
 
-        final TilUpdateRequestDto requestDto = TilUpdateRequestDtoFactory.createDefaultTilUpdateRequestDto();
+        final TilEditRequestDto requestDto = TilEditRequestDtoFactory.createDefaultTilEditRequestDto();
 
         // When
-        final TilUpdateResponseDto result = tilService.updateTil(profile.getUuid(), til.getUuid(), requestDto);
+        final TilEditResponseDto result = tilService.updateTil(profile.getUuid(), til.getUuid(), requestDto);
 
         // Then
         assertThat(result.getTilUuid().length()).isEqualTo(36);

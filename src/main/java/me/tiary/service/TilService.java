@@ -24,7 +24,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 @Service
 @Transactional(readOnly = true)
@@ -115,7 +114,7 @@ public class TilService {
                 .build();
     }
 
-    public TilUpdateResponseDto updateTil(final String profileUuid, final String tilUuid, final TilUpdateRequestDto requestDto) {
+    public TilEditResponseDto updateTil(final String profileUuid, final String tilUuid, final TilEditRequestDto requestDto) {
         final Til til = tilRepository.findByUuid(tilUuid)
                 .orElseThrow(() -> new TilException(TilStatus.NOT_EXISTING_TIL));
 
@@ -123,7 +122,7 @@ public class TilService {
             throw new TilException(TilStatus.NOT_AUTHORIZED_MEMBER);
         }
 
-        til.updateTil(requestDto.getTitle(), requestDto.getContent());
+        til.update(requestDto.getTitle(), requestDto.getContent());
 
         tilTagRepository.deleteAllByTilUuid(tilUuid);
 
@@ -148,6 +147,6 @@ public class TilService {
 
         tilTagRepository.saveAll(tilTags);
 
-        return modelMapper.map(til, TilUpdateResponseDto.class);
+        return modelMapper.map(til, TilEditResponseDto.class);
     }
 }

@@ -9,8 +9,8 @@ import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@DisplayName("[Til] updateTil")
-class UpdateTilTest {
+@DisplayName("[Til] update")
+class UpdateTest {
     @Test
     @DisplayName("[Success] til is updated")
     void successIfTilIsUpdated() {
@@ -23,7 +23,7 @@ class UpdateTilTest {
         final String content = "New content";
 
         // When
-        til.updateTil(title, content);
+        til.update(title, content);
 
         // Then
         assertThat(til.getTitle()).isEqualTo(title);

@@ -61,7 +61,7 @@ public class Til extends Timestamp {
         this.uuid = UUID.randomUUID().toString();
     }
 
-    public void updateTil(final String title, final String content) {
+    public void update(final String title, final String content) {
         this.title = title;
         this.content = content;
     }
