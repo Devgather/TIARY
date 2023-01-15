@@ -10,6 +10,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
@@ -50,6 +51,8 @@ public class ViewController {
 
     @GetMapping("/profile/{nickname}")
     public String directProfileView(@PathVariable @NotBlank @Size(max = Profile.NICKNAME_MAX_LENGTH) final String nickname,
+                                    @RequestParam final int page,
+                                    @RequestParam final int size,
                                     @AuthenticationPrincipal final MemberDetails memberDetails,
                                     final Model model) {
         if (!profileService.checkNicknameExistence(nickname)) {
@@ -60,6 +63,9 @@ public class ViewController {
 
         model.addAttribute("nickname", nickname);
         model.addAttribute("editPermission", false);
+
+        model.addAttribute("page", page);
+        model.addAttribute("size", size);
 
         if (memberDetails != null) {
             final String memberNickname = profileService.searchNicknameUsingUuid(memberDetails.getProfileUuid());

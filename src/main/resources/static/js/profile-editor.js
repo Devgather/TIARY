@@ -95,9 +95,9 @@ function completeEdit() {
         uploadProfilePicture(pictureFile);
     }
 
-    window.location.replace(`/profile/${nickname}`);
+    window.location.replace(`/profile/${nickname}?page=1&size=5`);
 }
 
 function cancelEdit() {
-    window.location.replace(`/profile/${memberNickname}`);
+    window.location.replace(`/profile/${memberNickname}?page=1&size=5`);
 }
