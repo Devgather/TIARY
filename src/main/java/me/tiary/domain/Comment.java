@@ -50,6 +50,10 @@ public class Comment extends Timestamp {
         this.uuid = UUID.randomUUID().toString();
     }
 
+    public void update(final String content) {
+        this.content = content;
+    }
+
     void setProfile(final Profile profile) {
         if (this.profile != null) {
             this.profile.getComments().remove(this);
