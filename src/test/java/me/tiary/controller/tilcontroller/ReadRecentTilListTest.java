@@ -112,6 +112,8 @@ class ReadRecentTilListTest {
         // Then
         resultActions.andExpect(status().isOk());
         assertThat(response.getTils().get(0).getUuid()).hasSize(36);
+        assertThat(response.getTils().get(0).getNickname()).isEqualTo(responseDto.getTils().get(0).getNickname());
+        assertThat(response.getTils().get(0).getPicture()).isEqualTo(responseDto.getTils().get(0).getPicture());
         assertThat(response.getTils().get(0).getTitle()).isEqualTo(responseDto.getTils().get(0).getTitle());
         assertThat(response.getTils().get(0).getContent()).isEqualTo(responseDto.getTils().get(0).getContent());
     }
