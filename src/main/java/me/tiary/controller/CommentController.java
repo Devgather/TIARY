@@ -1,10 +1,7 @@
 package me.tiary.controller;
 
 import lombok.RequiredArgsConstructor;
-import me.tiary.dto.comment.CommentDeletionResponseDto;
-import me.tiary.dto.comment.CommentListReadResponseDto;
-import me.tiary.dto.comment.CommentWritingRequestDto;
-import me.tiary.dto.comment.CommentWritingResponseDto;
+import me.tiary.dto.comment.*;
 import me.tiary.security.web.userdetails.MemberDetails;
 import me.tiary.service.CommentService;
 import org.springframework.data.domain.PageRequest;
@@ -42,6 +39,17 @@ public class CommentController {
         final Pageable pageable = PageRequest.of(page, size, Sort.by("createdDate").ascending());
 
         final CommentListReadResponseDto result = commentService.readCommentList(tilUuid, pageable);
+
+        return ResponseEntity.ok(result);
+    }
+
+    @PutMapping("/{uuid}")
+    public ResponseEntity<CommentEditResponseDto> updateComment(@AuthenticationPrincipal final MemberDetails memberDetails,
+                                                                @PathVariable @NotBlank final String uuid,
+                                                                @RequestBody @Valid final CommentEditRequestDto requestDto) {
+        final String profileUuid = memberDetails.getProfileUuid();
+
+        final CommentEditResponseDto result = commentService.updateComment(profileUuid, uuid, requestDto);
 
         return ResponseEntity.ok(result);
     }
