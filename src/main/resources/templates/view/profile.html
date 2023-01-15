@@ -10,6 +10,9 @@
 
     <script th:inline="javascript">
         const nickname = [[${nickname}]];
+
+        const page = [[${page}]];
+        const size = [[${size}]];
     </script>
 
     <script src="/js/fragments/header.js" defer></script>
@@ -38,12 +41,18 @@
             </div>
         </div>
 
-        <div class="is-flex is-align-content-center is-justify-content-space-between">
-            <h4 class="title is-4">TIL</h4>
+        <div class="is-flex is-align-content-center is-justify-content-space-between mb-5">
+            <h4 class="title is-4 mb-0">TIL</h4>
 
             <a th:if="${editPermission}" href="/til/editor"
                class="button has-background-primary-dark has-text-white is-size-7">작성</a>
         </div>
+
+        <div id="til" class="is-flex is-flex-direction-column"></div>
+
+        <nav class="pagination is-centered">
+            <ul id="pagination-list" class="pagination-list"></ul>
+        </nav>
     </div>
 </section>
 </body>

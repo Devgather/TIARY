@@ -34,12 +34,12 @@ function completeEdit() {
         })
     }).done(function () {
         alert('TIL 작성을 성공했습니다.');
-        window.location.replace(`/profile/${memberNickname}`);
+        window.location.replace(`/profile/${memberNickname}?page=1&size=5`);
     }).fail(function () {
         alert('TIL 작성을 실패했습니다.');
     });
 }
 
 function cancelEdit() {
-    window.location.replace(`/profile/${memberNickname}`);
+    window.location.replace(`/profile/${memberNickname}?page=1&size=5`);
 }

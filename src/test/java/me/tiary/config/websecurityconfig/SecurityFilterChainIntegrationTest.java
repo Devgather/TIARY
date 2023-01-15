@@ -170,6 +170,8 @@ class SecurityFilterChainIntegrationTest {
         // When
         final ResultActions resultActions = mockMvc.perform(
                 MockMvcRequestBuilders.get(url)
+                        .param("page", "1")
+                        .param("size", "5")
                         .cookie(new Cookie(AccessTokenProperties.COOKIE_NAME, accessToken))
         );
 
@@ -186,6 +188,8 @@ class SecurityFilterChainIntegrationTest {
         // When
         final ResultActions resultActions = mockMvc.perform(
                 MockMvcRequestBuilders.get(url)
+                        .param("page", "1")
+                        .param("size", "5")
         );
 
         // Then
@@ -793,6 +797,42 @@ class SecurityFilterChainIntegrationTest {
     }
 
     @Test
+    @DisplayName("[Success] member requests recent til list read api")
+    void successIfMemberRequestsRecentTilListReadApi() throws Exception {
+        // Given
+        final String url = TilApiUrl.RECENT_TIL_LIST_READ.getEntireUrl();
+
+        // Algorithm = HMAC256, Payload = { "uuid": "cbf0f220-97b8-4312-82ce-f98266c428d4" }, Secret Key = jwt-access-token-secret-key
+        final String accessToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiY2JmMGYyMjAtOTdiOC00MzEyLTgyY2UtZjk4MjY2YzQyOGQ0In0.rftGC07wvthl89A-lHN4NzeP2gcVv9UxTTnST3Nhqz8";
+
+        // When
+        final ResultActions resultActions = mockMvc.perform(
+                MockMvcRequestBuilders.get(url)
+                        .param("size", "3")
+                        .cookie(new Cookie(AccessTokenProperties.COOKIE_NAME, accessToken))
+        );
+
+        // Then
+        resultActions.andExpect(status().is(not(HttpStatus.FORBIDDEN.value())));
+    }
+
+    @Test
+    @DisplayName("[Success] anonymous requests recent til list read api")
+    void successIfAnonymousRequestsRecentTilListReadApi() throws Exception {
+        // Given
+        final String url = TilApiUrl.RECENT_TIL_LIST_READ.getEntireUrl();
+
+        // When
+        final ResultActions resultActions = mockMvc.perform(
+                MockMvcRequestBuilders.get(url)
+                        .param("size", "3")
+        );
+
+        // Then
+        resultActions.andExpect(status().is(not(HttpStatus.FORBIDDEN.value())));
+    }
+
+    @Test
     @DisplayName("[Success] member requests til edit api")
     void successIfMemberRequestsTilEditApi() throws Exception {
         // Given
@@ -878,6 +918,44 @@ class SecurityFilterChainIntegrationTest {
                 MockMvcRequestBuilders.post(url)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(gson.toJson(requestDto))
+        );
+
+        // Then
+        resultActions.andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    @DisplayName("[Success] member requests comment deletion api")
+    void successIfMemberRequestsCommentDeletionApi() throws Exception {
+        // Given
+        final String commentUuid = UUID.randomUUID().toString();
+
+        final String url = CommentApiUrl.COMMENT_DELETION.getEntireUrl() + commentUuid;
+
+        // Algorithm = HMAC256, Payload = { "uuid": "cbf0f220-97b8-4312-82ce-f98266c428d4" }, Secret Key = jwt-access-token-secret-key
+        final String accessToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiY2JmMGYyMjAtOTdiOC00MzEyLTgyY2UtZjk4MjY2YzQyOGQ0In0.rftGC07wvthl89A-lHN4NzeP2gcVv9UxTTnST3Nhqz8";
+
+        // When
+        final ResultActions resultActions = mockMvc.perform(
+                MockMvcRequestBuilders.delete(url)
+                        .cookie(new Cookie(AccessTokenProperties.COOKIE_NAME, accessToken))
+        );
+
+        // Then
+        resultActions.andExpect(status().is(not(HttpStatus.FORBIDDEN.value())));
+    }
+
+    @Test
+    @DisplayName("[Fail] anonymous requests comment deletion api")
+    void failIfAnonymousRequestsCommentDeletionApi() throws Exception {
+        // Given
+        final String commentUuid = UUID.randomUUID().toString();
+
+        final String url = CommentApiUrl.COMMENT_DELETION.getEntireUrl() + commentUuid;
+
+        // When
+        final ResultActions resultActions = mockMvc.perform(
+                MockMvcRequestBuilders.delete(url)
         );
 
         // Then
