@@ -5,10 +5,7 @@ import me.tiary.domain.Profile;
 import me.tiary.domain.Tag;
 import me.tiary.domain.Til;
 import me.tiary.domain.TilTag;
-import me.tiary.dto.til.TilListReadResponseDto;
-import me.tiary.dto.til.TilReadResponseDto;
-import me.tiary.dto.til.TilWritingRequestDto;
-import me.tiary.dto.til.TilWritingResponseDto;
+import me.tiary.dto.til.*;
 import me.tiary.exception.TilException;
 import me.tiary.exception.status.TilStatus;
 import me.tiary.repository.ProfileRepository;
@@ -27,6 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @Transactional(readOnly = true)
@@ -115,5 +113,41 @@ public class TilService {
         return TilListReadResponseDto.builder()
                 .tils(tils)
                 .build();
+    }
+
+    public TilUpdateResponseDto updateTil(final String profileUuid, final String tilUuid, final TilUpdateRequestDto requestDto) {
+        final Til til = tilRepository.findByUuid(tilUuid)
+                .orElseThrow(() -> new TilException(TilStatus.NOT_EXISTING_TIL));
+
+        if (!til.getProfile().getUuid().equals(profileUuid)) {
+            throw new TilException(TilStatus.NOT_AUTHORIZED_MEMBER);
+        }
+
+        til.updateTil(requestDto.getTitle(), requestDto.getContent());
+
+        tilTagRepository.deleteAllByTilUuid(tilUuid);
+
+        final List<TilTag> tilTags = new ArrayList<>();
+
+        for (final String tagName : requestDto.getTags()) {
+            final Tag tag = tagRepository.findByName(tagName)
+                    .orElseGet(() -> tagRepository.save(
+                                    Tag.builder()
+                                            .name(tagName)
+                                            .build()
+                            )
+                    );
+
+            final TilTag tilTag = TilTag.builder()
+                    .til(til)
+                    .tag(tag)
+                    .build();
+
+            tilTags.add(tilTag);
+        }
+
+        tilTagRepository.saveAll(tilTags);
+
+        return modelMapper.map(til, TilUpdateResponseDto.class);
     }
 }
