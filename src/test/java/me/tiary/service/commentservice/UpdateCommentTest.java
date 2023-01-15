@@ -112,6 +112,6 @@ class UpdateCommentTest {
         final CommentEditResponseDto result = commentService.updateComment(profile.getUuid(), comment.getUuid(), requestDto);
 
         // Then
-        assertThat(result.getContent()).isEqualTo(comment.getContent());
+        assertThat(result.getContent()).isEqualTo(requestDto.getContent());
     }
 }
