@@ -12,7 +12,7 @@ import me.tiary.repository.ProfileRepository;
 import me.tiary.repository.TagRepository;
 import me.tiary.repository.TilRepository;
 import me.tiary.repository.TilTagRepository;
-import me.tiary.vo.til.TilVo;
+import me.tiary.vo.til.TilWithProfileVo;
 import org.commonmark.node.Node;
 import org.commonmark.parser.Parser;
 import org.commonmark.renderer.html.HtmlRenderer;
@@ -103,12 +103,12 @@ public class TilService {
 
         final int totalPages = tilPage.getTotalPages();
 
-        final List<TilVo> tils = new ArrayList<>();
+        final List<TilWithProfileVo> tils = new ArrayList<>();
 
         for (final Til til : tilContent) {
-            final TilVo tilVo = modelMapper.map(til, TilVo.class);
+            final TilWithProfileVo tilWithProfileVo = modelMapper.map(til, TilWithProfileVo.class);
 
-            tils.add(tilVo);
+            tils.add(tilWithProfileVo);
         }
 
         return TilListReadResponseDto.builder()
@@ -122,12 +122,18 @@ public class TilService {
 
         final List<Til> tilContent = tilPage.getContent();
 
-        final List<TilVo> tils = new ArrayList<>();
+        final List<TilWithProfileVo> tils = new ArrayList<>();
 
         for (final Til til : tilContent) {
-            final TilVo tilVo = modelMapper.map(til, TilVo.class);
+            final TilWithProfileVo tilWithProfileVo = TilWithProfileVo.builder()
+                    .uuid(til.getUuid())
+                    .nickname(til.getProfile().getNickname())
+                    .picture(til.getProfile().getPicture())
+                    .title(til.getTitle())
+                    .content(til.getContent())
+                    .build();
 
-            tils.add(tilVo);
+            tils.add(tilWithProfileVo);
         }
 
         return RecentTilListReadResponseDto.builder()

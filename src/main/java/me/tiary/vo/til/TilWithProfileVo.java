@@ -6,8 +6,12 @@ import lombok.*;
 @RequiredArgsConstructor
 @Builder
 @Getter
-public class TilVo {
+public class TilWithProfileVo {
     private final String uuid;
+
+    private final String nickname;
+
+    private final String picture;
 
     private final String title;
 
