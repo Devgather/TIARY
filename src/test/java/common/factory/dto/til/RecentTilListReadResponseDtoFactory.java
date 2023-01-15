@@ -8,7 +8,7 @@ import me.tiary.vo.til.TilVo;
 import java.util.List;
 
 public final class RecentTilListReadResponseDtoFactory {
-    public static RecentTilListReadResponseDto createDefaultTilListReadResponseDto() {
+    public static RecentTilListReadResponseDto createDefaultRecentTilListReadResponseDto() {
         return create(List.of(TilVoFactory.createDefaultTilVo()));
     }
 

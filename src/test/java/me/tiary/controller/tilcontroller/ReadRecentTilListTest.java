@@ -90,7 +90,7 @@ class ReadRecentTilListTest {
 
         final Pageable pageable = PageRequest.of(0, 3, Sort.by("createdDate").descending());
 
-        final RecentTilListReadResponseDto responseDto = RecentTilListReadResponseDtoFactory.createDefaultTilListReadResponseDto();
+        final RecentTilListReadResponseDto responseDto = RecentTilListReadResponseDtoFactory.createDefaultRecentTilListReadResponseDto();
 
         doReturn(responseDto)
                 .when(tilService)
