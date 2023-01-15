@@ -2,10 +2,7 @@ package me.tiary.controller;
 
 import lombok.RequiredArgsConstructor;
 import me.tiary.domain.Profile;
-import me.tiary.dto.til.TilListReadResponseDto;
-import me.tiary.dto.til.TilReadResponseDto;
-import me.tiary.dto.til.TilWritingRequestDto;
-import me.tiary.dto.til.TilWritingResponseDto;
+import me.tiary.dto.til.*;
 import me.tiary.security.web.userdetails.MemberDetails;
 import me.tiary.service.TilService;
 import org.springframework.data.domain.PageRequest;
@@ -51,6 +48,15 @@ public class TilController {
         final Pageable pageable = PageRequest.of(page, size, Sort.by("createdDate").descending());
 
         final TilListReadResponseDto result = tilService.readTilList(nickname, pageable);
+
+        return ResponseEntity.ok(result);
+    }
+
+    @GetMapping("/list")
+    public ResponseEntity<RecentTilListReadResponseDto> readRecentTilList(@RequestParam final int size) {
+        final Pageable pageable = PageRequest.of(0, size, Sort.by("createdDate").descending());
+
+        final RecentTilListReadResponseDto result = tilService.readRecentTilList(pageable);
 
         return ResponseEntity.ok(result);
     }
