@@ -46,6 +46,10 @@ public class Comment extends Timestamp {
         createUuid();
     }
 
+    public void updateContent(final String content) {
+        this.content = content;
+    }
+
     public void createUuid() {
         this.uuid = UUID.randomUUID().toString();
     }
