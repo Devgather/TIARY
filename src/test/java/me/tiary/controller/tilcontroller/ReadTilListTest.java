@@ -27,6 +27,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.doReturn;
@@ -86,6 +87,41 @@ class ReadTilListTest {
         // Then
         resultActions.andExpect(status().is(TilStatus.NOT_EXISTING_PROFILE.getHttpStatus().value()));
         assertThat(response.getMessages()).contains(TilStatus.NOT_EXISTING_PROFILE.getMessage());
+    }
+
+    @Test
+    @DisplayName("[Success] tils do not exist")
+    void successIfTilsDoNotExist() throws Exception {
+        // Given
+        final String nickname = FactoryPreset.NICKNAME;
+
+        final String url = TilApiUrl.TIL_LIST_READ.getEntireUrl() + nickname;
+
+        final Pageable pageable = PageRequest.of(0, 5, Sort.by("createdDate").descending());
+
+        final TilListReadResponseDto responseDto = TilListReadResponseDtoFactory.create(new ArrayList<>());
+
+        doReturn(responseDto)
+                .when(tilService)
+                .readTilList(nickname, pageable);
+
+        // When
+        final ResultActions resultActions = mockMvc.perform(
+                MockMvcRequestBuilders.get(url)
+                        .param("page", "0")
+                        .param("size", "5")
+        );
+
+        final TilListReadResponseDto response = gson.fromJson(
+                resultActions.andReturn()
+                        .getResponse()
+                        .getContentAsString(StandardCharsets.UTF_8),
+                TilListReadResponseDto.class
+        );
+
+        // Then
+        resultActions.andExpect(status().isOk());
+        assertThat(response.getTils()).isEmpty();
     }
 
     @Test
