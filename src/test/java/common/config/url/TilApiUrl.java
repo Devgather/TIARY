@@ -5,7 +5,8 @@ public enum TilApiUrl {
     TIL_READ("/"),
     TIL_LIST_READ("/list/"),
     RECENT_TIL_LIST_READ("/list"),
-    TIL_EDIT("/");
+    TIL_EDIT("/"),
+    TIL_DELETION("/");
 
     public static final String COMMON_URL = "/api/til";
 
