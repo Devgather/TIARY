@@ -11,4 +11,6 @@ import java.util.List;
 @Getter
 public class TilListReadResponseDto {
     private final List<TilVo> tils;
+
+    private final int totalPages;
 }
