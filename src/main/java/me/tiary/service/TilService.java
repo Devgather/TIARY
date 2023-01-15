@@ -5,10 +5,7 @@ import me.tiary.domain.Profile;
 import me.tiary.domain.Tag;
 import me.tiary.domain.Til;
 import me.tiary.domain.TilTag;
-import me.tiary.dto.til.TilListReadResponseDto;
-import me.tiary.dto.til.TilReadResponseDto;
-import me.tiary.dto.til.TilWritingRequestDto;
-import me.tiary.dto.til.TilWritingResponseDto;
+import me.tiary.dto.til.*;
 import me.tiary.exception.TilException;
 import me.tiary.exception.status.TilStatus;
 import me.tiary.repository.ProfileRepository;
@@ -113,6 +110,24 @@ public class TilService {
         }
 
         return TilListReadResponseDto.builder()
+                .tils(tils)
+                .build();
+    }
+
+    public RecentTilListReadResponseDto readRecentTilList(final Pageable pageable) {
+        final Page<Til> tilPage = tilRepository.findAll(pageable);
+
+        final List<Til> tilContent = tilPage.getContent();
+
+        final List<TilVo> tils = new ArrayList<>();
+
+        for (final Til til : tilContent) {
+            final TilVo tilVo = modelMapper.map(til, TilVo.class);
+
+            tils.add(tilVo);
+        }
+
+        return RecentTilListReadResponseDto.builder()
                 .tils(tils)
                 .build();
     }
