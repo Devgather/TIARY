@@ -101,6 +101,8 @@ public class TilService {
 
         final List<Til> tilContent = tilPage.getContent();
 
+        final int totalPages = tilPage.getTotalPages();
+
         final List<TilVo> tils = new ArrayList<>();
 
         for (final Til til : tilContent) {
@@ -111,6 +113,7 @@ public class TilService {
 
         return TilListReadResponseDto.builder()
                 .tils(tils)
+                .totalPages(totalPages)
                 .build();
     }
 

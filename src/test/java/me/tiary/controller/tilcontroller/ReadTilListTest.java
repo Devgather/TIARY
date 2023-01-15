@@ -20,7 +20,6 @@ import org.mockito.Mock;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -99,7 +98,7 @@ class ReadTilListTest {
 
         final Pageable pageable = PageRequest.of(0, 5, Sort.by("createdDate").descending());
 
-        final TilListReadResponseDto responseDto = TilListReadResponseDtoFactory.create(new ArrayList<>());
+        final TilListReadResponseDto responseDto = TilListReadResponseDtoFactory.create(new ArrayList<>(), 0);
 
         doReturn(responseDto)
                 .when(tilService)
@@ -122,6 +121,7 @@ class ReadTilListTest {
         // Then
         resultActions.andExpect(status().isOk());
         assertThat(response.getTils()).isEmpty();
+        assertThat(response.getTotalPages()).isEqualTo(responseDto.getTotalPages());
     }
 
     @Test
@@ -159,5 +159,6 @@ class ReadTilListTest {
         assertThat(response.getTils().get(0).getUuid()).hasSize(36);
         assertThat(response.getTils().get(0).getTitle()).isEqualTo(responseDto.getTils().get(0).getTitle());
         assertThat(response.getTils().get(0).getContent()).isEqualTo(responseDto.getTils().get(0).getContent());
+        assertThat(response.getTotalPages()).isEqualTo(responseDto.getTotalPages());
     }
 }
