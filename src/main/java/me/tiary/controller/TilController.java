@@ -60,4 +60,15 @@ public class TilController {
 
         return ResponseEntity.ok(result);
     }
+
+    @PutMapping("/{uuid}")
+    public ResponseEntity<TilEditResponseDto> updateTil(@PathVariable @NotBlank final String uuid,
+                                                        @AuthenticationPrincipal final MemberDetails memberDetails,
+                                                        @RequestBody @Valid final TilEditRequestDto requestDto) {
+        final String profileUuid = memberDetails.getProfileUuid();
+
+        final TilEditResponseDto result = tilService.updateTil(profileUuid, uuid, requestDto);
+
+        return ResponseEntity.ok().body(result);
+    }
 }

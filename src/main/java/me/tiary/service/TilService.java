@@ -141,4 +141,41 @@ public class TilService {
                 .tils(tils)
                 .build();
     }
+
+    @Transactional
+    public TilEditResponseDto updateTil(final String profileUuid, final String tilUuid, final TilEditRequestDto requestDto) {
+        final Til til = tilRepository.findByUuid(tilUuid)
+                .orElseThrow(() -> new TilException(TilStatus.NOT_EXISTING_TIL));
+
+        if (!til.getProfile().getUuid().equals(profileUuid)) {
+            throw new TilException(TilStatus.NOT_AUTHORIZED_MEMBER);
+        }
+
+        til.update(requestDto.getTitle(), requestDto.getContent());
+
+        tilTagRepository.deleteAllByTilUuid(tilUuid);
+
+        final List<TilTag> tilTags = new ArrayList<>();
+
+        for (final String tagName : requestDto.getTags()) {
+            final Tag tag = tagRepository.findByName(tagName)
+                    .orElseGet(() -> tagRepository.save(
+                                    Tag.builder()
+                                            .name(tagName)
+                                            .build()
+                            )
+                    );
+
+            final TilTag tilTag = TilTag.builder()
+                    .til(til)
+                    .tag(tag)
+                    .build();
+
+            tilTags.add(tilTag);
+        }
+
+        tilTagRepository.saveAll(tilTags);
+
+        return modelMapper.map(til, TilEditResponseDto.class);
+    }
 }
