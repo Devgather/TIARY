@@ -71,4 +71,14 @@ public class TilController {
 
         return ResponseEntity.ok().body(result);
     }
+
+    @DeleteMapping("/{uuid}")
+    public ResponseEntity<TilDeletionResponseDto> deleteTil(@AuthenticationPrincipal final MemberDetails memberDetails,
+                                                            @PathVariable @NotBlank final String uuid) {
+        final String profileUuid = memberDetails.getProfileUuid();
+
+        final TilDeletionResponseDto result = tilService.deleteTil(profileUuid, uuid);
+
+        return ResponseEntity.ok(result);
+    }
 }
