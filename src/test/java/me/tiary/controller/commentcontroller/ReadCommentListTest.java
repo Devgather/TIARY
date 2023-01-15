@@ -73,7 +73,7 @@ class ReadCommentListTest {
 
         final String url = CommentApiUrl.COMMENT_LIST_READ.getEntireUrl() + tilUuid;
 
-        final Pageable pageable = PageRequest.of(0, 5, Sort.by("createdDate").descending());
+        final Pageable pageable = PageRequest.of(0, 5, Sort.by("createdDate").ascending());
 
         doThrow(new CommentException(CommentStatus.NOT_EXISTING_TIL))
                 .when(commentService)
@@ -106,7 +106,7 @@ class ReadCommentListTest {
 
         final String url = CommentApiUrl.COMMENT_LIST_READ.getEntireUrl() + tilUuid;
 
-        final Pageable pageable = PageRequest.of(0, 5, Sort.by("createdDate").descending());
+        final Pageable pageable = PageRequest.of(0, 5, Sort.by("createdDate").ascending());
 
         final CommentListReadResponseDto responseDto = CommentListReadResponseDtoFactory.create(new ArrayList<>(), 0);
 
@@ -142,7 +142,7 @@ class ReadCommentListTest {
 
         final String url = CommentApiUrl.COMMENT_LIST_READ.getEntireUrl() + tilUuid;
 
-        final Pageable pageable = PageRequest.of(0, 5, Sort.by("createdDate").descending());
+        final Pageable pageable = PageRequest.of(0, 5, Sort.by("createdDate").ascending());
 
         final CommentListReadResponseDto responseDto = CommentListReadResponseDtoFactory.createDefaultCommentListReadResponseDto();
 

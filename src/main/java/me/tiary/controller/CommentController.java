@@ -39,7 +39,7 @@ public class CommentController {
     public ResponseEntity<CommentListReadResponseDto> readCommentList(@PathVariable @NotBlank final String tilUuid,
                                                                       @RequestParam final int page,
                                                                       @RequestParam final int size) {
-        final Pageable pageable = PageRequest.of(page, size, Sort.by("createdDate").descending());
+        final Pageable pageable = PageRequest.of(page, size, Sort.by("createdDate").ascending());
 
         final CommentListReadResponseDto result = commentService.readCommentList(tilUuid, pageable);
 

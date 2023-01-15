@@ -900,8 +900,8 @@ class SecurityFilterChainIntegrationTest {
     }
 
     @Test
-    @DisplayName("[Fail] anonymous requests comment list read api")
-    void failIfAnonymousRequestsCommentListReadApi() throws Exception {
+    @DisplayName("[Success] anonymous requests comment list read api")
+    void successIfAnonymousRequestsCommentListReadApi() throws Exception {
         // Given
         final String tilUuid = UUID.randomUUID().toString();
 

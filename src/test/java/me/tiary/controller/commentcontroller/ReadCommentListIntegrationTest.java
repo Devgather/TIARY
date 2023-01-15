@@ -18,7 +18,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @ControllerIntegrationTest(CommentController.class)
 @DisplayName("[CommentController - Integration] readCommentList")
-public class ReadCommentListIntegrationTest {
+class ReadCommentListIntegrationTest {
     @Autowired
     private MockMvc mockMvc;
 
