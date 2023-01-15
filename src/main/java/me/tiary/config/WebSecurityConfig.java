@@ -64,16 +64,20 @@ public class WebSecurityConfig {
                                                    final AuthenticationEntryPoint authenticationEntryPoint,
                                                    final AccessDeniedHandler accessDeniedHandler) throws Exception {
         http.authorizeRequests()
+                .antMatchers(HttpMethod.GET, "/profile/editor", "/til/editor").authenticated()
                 .antMatchers(HttpMethod.GET, "/", "/profile/**").permitAll()
-                .antMatchers(HttpMethod.GET, "/login").anonymous()
+                .antMatchers(HttpMethod.GET, "/login", "/register").anonymous()
                 .antMatchers(HttpMethod.HEAD, "/api/account/email/**").anonymous()
                 .antMatchers(HttpMethod.POST, "/api/account").anonymous()
                 .antMatchers(HttpMethod.POST, "/api/account/verification/**").anonymous()
                 .antMatchers(HttpMethod.PATCH, "/api/account/verification").anonymous()
                 .antMatchers(HttpMethod.POST, "/api/account/login").anonymous()
-                .antMatchers(HttpMethod.HEAD, "/api/profile/nickname/**").anonymous()
+                .antMatchers(HttpMethod.HEAD, "/api/profile/nickname/**").permitAll()
                 .antMatchers(HttpMethod.POST, "/api/profile").anonymous()
                 .antMatchers(HttpMethod.GET, "/api/profile/**").permitAll()
+                .antMatchers(HttpMethod.GET, "/api/til/**").permitAll()
+                .antMatchers(HttpMethod.GET, "/api/til/list/**").permitAll()
+                .antMatchers(HttpMethod.GET, "/api/til/list").permitAll()
                 .anyRequest().authenticated();
 
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
