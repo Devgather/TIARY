@@ -4,10 +4,7 @@ import lombok.RequiredArgsConstructor;
 import me.tiary.domain.Comment;
 import me.tiary.domain.Profile;
 import me.tiary.domain.Til;
-import me.tiary.dto.comment.CommentDeletionResponseDto;
-import me.tiary.dto.comment.CommentListReadResponseDto;
-import me.tiary.dto.comment.CommentWritingRequestDto;
-import me.tiary.dto.comment.CommentWritingResponseDto;
+import me.tiary.dto.comment.*;
 import me.tiary.exception.CommentException;
 import me.tiary.exception.status.CommentStatus;
 import me.tiary.repository.CommentRepository;
@@ -82,6 +79,22 @@ public class CommentService {
                 .comments(comments)
                 .totalPages(totalPages)
                 .build();
+    }
+
+    @Transactional
+    public CommentEditResponseDto updateComment(final String profileUuid, final String commentUuid, final CommentEditRequestDto requestDto) {
+        final Comment comment = commentRepository.findByUuidJoinFetchProfile(commentUuid)
+                .orElseThrow(() -> new CommentException(CommentStatus.NOT_EXISTING_COMMENT));
+
+        if (!comment.getProfile().getUuid().equals(profileUuid)) {
+            throw new CommentException(CommentStatus.NOT_AUTHORIZED_MEMBER);
+        }
+
+        final String content = requestDto.getContent();
+
+        comment.update(content);
+
+        return modelMapper.map(comment, CommentEditResponseDto.class);
     }
 
     @Transactional
