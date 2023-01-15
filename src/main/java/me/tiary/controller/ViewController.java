@@ -10,6 +10,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
@@ -35,12 +36,23 @@ public class ViewController {
     }
 
     @GetMapping("/login")
-    public String directLoginView() {
+    public String directLoginView(final Model model) {
+        model.addAttribute("authentication", false);
+
         return "view/login";
+    }
+
+    @GetMapping("/register")
+    public String directRegisterView(final Model model) {
+        model.addAttribute("authentication", false);
+
+        return "view/register";
     }
 
     @GetMapping("/profile/{nickname}")
     public String directProfileView(@PathVariable @NotBlank @Size(max = Profile.NICKNAME_MAX_LENGTH) final String nickname,
+                                    @RequestParam final int page,
+                                    @RequestParam final int size,
                                     @AuthenticationPrincipal final MemberDetails memberDetails,
                                     final Model model) {
         if (!profileService.checkNicknameExistence(nickname)) {
@@ -52,6 +64,9 @@ public class ViewController {
         model.addAttribute("nickname", nickname);
         model.addAttribute("editPermission", false);
 
+        model.addAttribute("page", page);
+        model.addAttribute("size", size);
+
         if (memberDetails != null) {
             final String memberNickname = profileService.searchNicknameUsingUuid(memberDetails.getProfileUuid());
 
@@ -61,5 +76,27 @@ public class ViewController {
         }
 
         return "view/profile";
+    }
+
+    @GetMapping("/profile/editor")
+    public String directProfileEditorView(@AuthenticationPrincipal final MemberDetails memberDetails,
+                                          final Model model) {
+        final String memberNickname = profileService.searchNicknameUsingUuid(memberDetails.getProfileUuid());
+
+        model.addAttribute("authentication", true);
+        model.addAttribute("memberNickname", memberNickname);
+
+        return "view/profile-editor";
+    }
+
+    @GetMapping("/til/editor")
+    public String directTilEditorView(@AuthenticationPrincipal final MemberDetails memberDetails,
+                                      final Model model) {
+        final String memberNickname = profileService.searchNicknameUsingUuid(memberDetails.getProfileUuid());
+
+        model.addAttribute("authentication", true);
+        model.addAttribute("memberNickname", memberNickname);
+
+        return "view/til-editor";
     }
 }

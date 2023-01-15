@@ -34,7 +34,15 @@ public class TilTag extends Timestamp {
 
     @PrePersist
     private void prePersist() {
+        createId();
         createUuid();
+    }
+
+    public void createId() {
+        this.id = TilTagId.builder()
+                .tilId((til == null) ? (null) : (til.getId()))
+                .tagId((tag == null) ? (null) : (tag.getId()))
+                .build();
     }
 
     public void createUuid() {

@@ -96,8 +96,8 @@ public class ProfileService {
 
         String storageUrl = awsStorageProperties.getUrl();
 
-        if (storageUrl.endsWith("/")) {
-            storageUrl = storageUrl.substring(0, storageUrl.length() - 1);
+        if (!storageUrl.endsWith("/")) {
+            storageUrl += '/';
         }
 
         profile.updatePicture(storageUrl + picturePath);

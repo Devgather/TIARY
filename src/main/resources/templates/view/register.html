@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+
+    <title>TIARY</title>
+
+    <script src="https://code.jquery.com/jquery-3.6.3.min.js"
+            integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU=" crossorigin="anonymous" defer></script>
+
+    <script src="/js/fragments/header.js" defer></script>
+    <script src="/js/register.js" defer></script>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css"
+          integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A=="
+          crossorigin="anonymous" referrerpolicy="no-referrer"/>
+
+    <link rel="stylesheet" href="/css/register.css"/>
+</head>
+<body>
+<header th:replace="view/fragments/header.html :: header"></header>
+
+<section class="section px-4">
+    <div class="container is-max-desktop">
+        <div class="box">
+            <div class="block mb-6">
+                <h4 class="title is-4">회원가입</h4>
+            </div>
+
+            <label class="label">이메일</label>
+
+            <div class="field has-addons mb-5">
+                <div class="control is-expanded has-icons-left">
+                    <input type="email" placeholder="이메일" id="email-input" class="input">
+
+                    <span class="icon is-small is-left">
+                        <i class="fa-solid fa-envelope"></i>
+                    </span>
+                </div>
+
+                <button id="email-verification-button"
+                        class="button has-background-primary-dark has-text-white"
+                        onclick="verifyEmail()">
+                    메일 인증
+                </button>
+            </div>
+
+            <label id="email-verification-label" class="label is-hidden">인증 코드</label>
+
+            <div id="email-verification-field" class="field has-addons mb-5 is-hidden">
+                <div class="control is-expanded has-icons-left">
+                    <input type="text" maxlength="6" placeholder="인증 코드" id="code-input" class="input">
+
+                    <span class="icon is-small is-left">
+                        <i class="fa-solid fa-code"></i>
+                    </span>
+                </div>
+
+                <button class="button has-background-primary-dark has-text-white"
+                        onclick="verifyCode()">
+                    코드 확인
+                </button>
+            </div>
+
+            <label class="label">비밀번호</label>
+
+            <div class="field mb-5">
+                <div class="control has-icons-left">
+                    <input type="password" placeholder="비밀번호" id="password-input" class="input">
+
+                    <span class="icon is-small is-left">
+                        <i class="fa-solid fa-lock"></i>
+                    </span>
+                </div>
+            </div>
+
+            <label class="label">비밀번호 확인</label>
+
+            <div class="field mb-5">
+                <div class="control has-icons-left">
+                    <input type="password" placeholder="비밀번호 확인" id="confirm-password-input" class="input">
+
+                    <span class="icon is-small is-left">
+                        <i class="fa-solid fa-lock"></i>
+                    </span>
+                </div>
+            </div>
+
+            <label class="label">닉네임</label>
+
+            <div class="field has-addons mb-6">
+                <div class="control is-expanded has-icons-left">
+                    <input type="text" placeholder="닉네임" id="nickname-input" class="input">
+
+                    <span class="icon is-small is-left">
+                        <i class="fa-solid fa-user"></i>
+                    </span>
+                </div>
+
+                <div class="control">
+                    <button class="button has-background-primary-dark has-text-white"
+                            onclick="checkNicknameDuplication()">
+                        중복 확인
+                    </button>
+                </div>
+            </div>
+
+            <div class="block is-flex is-align-content-center is-justify-content-center">
+                <div class="is-flex is-flex-direction-column">
+                    <div class="buttons">
+                        <button class="button has-background-primary-dark has-text-white" onclick="register()">
+                            회원가입
+                        </button>
+
+                        <a href="/" class="button">돌아가기</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+</body>
+</html>

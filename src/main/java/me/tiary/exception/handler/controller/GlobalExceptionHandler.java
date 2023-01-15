@@ -4,10 +4,12 @@ import lombok.extern.slf4j.Slf4j;
 import me.tiary.exception.AccountException;
 import me.tiary.exception.CommentException;
 import me.tiary.exception.ProfileException;
+import me.tiary.exception.TilException;
 import me.tiary.exception.handler.ExceptionResponse;
 import me.tiary.exception.status.AccountStatus;
 import me.tiary.exception.status.CommentStatus;
 import me.tiary.exception.status.ProfileStatus;
+import me.tiary.exception.status.TilStatus;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -73,6 +75,15 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         final ProfileStatus status = ex.getStatus();
 
         log.warn("Profile exception occurrence: {}", status.getMessage());
+
+        return ResponseEntity.status(status.getHttpStatus()).body(new ExceptionResponse(List.of(status.getMessage())));
+    }
+
+    @ExceptionHandler({TilException.class})
+    public ResponseEntity<Object> handleTilException(final TilException ex) {
+        final TilStatus status = ex.getStatus();
+
+        log.warn("TIL exception occurrence: {}", status.getMessage());
 
         return ResponseEntity.status(status.getHttpStatus()).body(new ExceptionResponse(List.of(status.getMessage())));
     }

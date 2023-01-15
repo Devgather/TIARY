@@ -3,10 +3,7 @@ package me.tiary.config.websecurityconfig;
 import com.google.gson.Gson;
 import common.annotation.application.ApplicationIntegrationTest;
 import common.config.factory.FactoryPreset;
-import common.config.url.AccountApiUrl;
-import common.config.url.CommentApiUrl;
-import common.config.url.ProfileApiUrl;
-import common.config.url.ViewUrl;
+import common.config.url.*;
 import common.factory.dto.account.AccountCreationRequestDtoFactory;
 import common.factory.dto.account.AccountLoginRequestDtoFactory;
 import common.factory.dto.account.AccountVerificationRequestDtoFactory;
@@ -14,6 +11,7 @@ import common.factory.dto.comment.CommentWritingRequestDtoFactory;
 import common.factory.dto.profile.ProfileCreationRequestDtoFactory;
 import common.factory.dto.profile.ProfilePictureUploadRequestDtoFactory;
 import common.factory.dto.profile.ProfileUpdateRequestDtoFactory;
+import common.factory.dto.til.TilWritingRequestDtoFactory;
 import me.tiary.domain.Verification;
 import me.tiary.dto.account.AccountCreationRequestDto;
 import me.tiary.dto.account.AccountLoginRequestDto;
@@ -22,6 +20,7 @@ import me.tiary.dto.comment.CommentWritingRequestDto;
 import me.tiary.dto.profile.ProfileCreationRequestDto;
 import me.tiary.dto.profile.ProfilePictureUploadRequestDto;
 import me.tiary.dto.profile.ProfileUpdateRequestDto;
+import me.tiary.dto.til.TilWritingRequestDto;
 import me.tiary.properties.jwt.AccessTokenProperties;
 import me.tiary.utility.common.StringUtility;
 import org.junit.jupiter.api.BeforeEach;
@@ -124,6 +123,40 @@ class SecurityFilterChainIntegrationTest {
     }
 
     @Test
+    @DisplayName("[Fail] member requests register view")
+    void failIfMemberRequestsRegisterView() throws Exception {
+        // Given
+        final String url = ViewUrl.REGISTER.getEntireUrl();
+
+        // Algorithm = HMAC256, Payload = { "uuid": "cbf0f220-97b8-4312-82ce-f98266c428d4" }, Secret Key = jwt-access-token-secret-key
+        final String accessToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiY2JmMGYyMjAtOTdiOC00MzEyLTgyY2UtZjk4MjY2YzQyOGQ0In0.rftGC07wvthl89A-lHN4NzeP2gcVv9UxTTnST3Nhqz8";
+
+        // When
+        final ResultActions resultActions = mockMvc.perform(
+                MockMvcRequestBuilders.get(url)
+                        .cookie(new Cookie(AccessTokenProperties.COOKIE_NAME, accessToken))
+        );
+
+        // Then
+        resultActions.andExpect(status().isForbidden());
+    }
+
+    @Test
+    @DisplayName("[Success] anonymous requests register view")
+    void successIfAnonymousRequestsRegisterView() throws Exception {
+        // Given
+        final String url = ViewUrl.REGISTER.getEntireUrl();
+
+        // When
+        final ResultActions resultActions = mockMvc.perform(
+                MockMvcRequestBuilders.get(url)
+        );
+
+        // Then
+        resultActions.andExpect(status().is(not(HttpStatus.FORBIDDEN.value())));
+    }
+
+    @Test
     @DisplayName("[Success] member requests profile view")
     void successIfMemberRequestsProfileView() throws Exception {
         // Given
@@ -135,6 +168,8 @@ class SecurityFilterChainIntegrationTest {
         // When
         final ResultActions resultActions = mockMvc.perform(
                 MockMvcRequestBuilders.get(url)
+                        .param("page", "1")
+                        .param("size", "5")
                         .cookie(new Cookie(AccessTokenProperties.COOKIE_NAME, accessToken))
         );
 
@@ -151,10 +186,80 @@ class SecurityFilterChainIntegrationTest {
         // When
         final ResultActions resultActions = mockMvc.perform(
                 MockMvcRequestBuilders.get(url)
+                        .param("page", "1")
+                        .param("size", "5")
         );
 
         // Then
         resultActions.andExpect(status().is(not(HttpStatus.FORBIDDEN.value())));
+    }
+
+    @Test
+    @DisplayName("[Success] member requests profile editor view")
+    void successIfMemberRequestsProfileEditorView() throws Exception {
+        // Given
+        final String url = ViewUrl.PROFILE_EDITOR.getEntireUrl();
+
+        // Algorithm = HMAC256, Payload = { "uuid": "cbf0f220-97b8-4312-82ce-f98266c428d4" }, Secret Key = jwt-access-token-secret-key
+        final String accessToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiY2JmMGYyMjAtOTdiOC00MzEyLTgyY2UtZjk4MjY2YzQyOGQ0In0.rftGC07wvthl89A-lHN4NzeP2gcVv9UxTTnST3Nhqz8";
+
+        // When
+        final ResultActions resultActions = mockMvc.perform(
+                MockMvcRequestBuilders.get(url)
+                        .cookie(new Cookie(AccessTokenProperties.COOKIE_NAME, accessToken))
+        );
+
+        // Then
+        resultActions.andExpect(status().is(not(HttpStatus.FORBIDDEN.value())));
+    }
+
+    @Test
+    @DisplayName("[Fail] anonymous requests profile editor view")
+    void failIfAnonymousRequestsProfileEditorView() throws Exception {
+        // Given
+        final String url = ViewUrl.PROFILE_EDITOR.getEntireUrl();
+
+        // When
+        final ResultActions resultActions = mockMvc.perform(
+                MockMvcRequestBuilders.get(url)
+        );
+
+        // Then
+        resultActions.andExpect(status().isFound());
+    }
+
+    @Test
+    @DisplayName("[Success] member requests til editor view")
+    void successIfMemberRequestsTilEditorView() throws Exception {
+        // Given
+        final String url = ViewUrl.TIL_EDITOR.getEntireUrl();
+
+        // Algorithm = HMAC256, Payload = { "uuid": "cbf0f220-97b8-4312-82ce-f98266c428d4" }, Secret Key = jwt-access-token-secret-key
+        final String accessToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiY2JmMGYyMjAtOTdiOC00MzEyLTgyY2UtZjk4MjY2YzQyOGQ0In0.rftGC07wvthl89A-lHN4NzeP2gcVv9UxTTnST3Nhqz8";
+
+        // When
+        final ResultActions resultActions = mockMvc.perform(
+                MockMvcRequestBuilders.get(url)
+                        .cookie(new Cookie(AccessTokenProperties.COOKIE_NAME, accessToken))
+        );
+
+        // Then
+        resultActions.andExpect(status().is(not(HttpStatus.FORBIDDEN.value())));
+    }
+
+    @Test
+    @DisplayName("[Fail] anonymous requests til editor view")
+    void failIfAnonymousRequestsTilEditorView() throws Exception {
+        // Given
+        final String url = ViewUrl.TIL_EDITOR.getEntireUrl();
+
+        // When
+        final ResultActions resultActions = mockMvc.perform(
+                MockMvcRequestBuilders.get(url)
+        );
+
+        // Then
+        resultActions.andExpect(status().isFound());
     }
 
     @Test
@@ -362,8 +467,8 @@ class SecurityFilterChainIntegrationTest {
     }
 
     @Test
-    @DisplayName("[Fail] member requests nickname existence check api")
-    void failIfMemberRequestsNicknameExistenceCheckApi() throws Exception {
+    @DisplayName("[Success] member requests nickname existence check api")
+    void successIfMemberRequestsNicknameExistenceCheckApi() throws Exception {
         // Given
         final String url = ProfileApiUrl.NICKNAME_EXISTENCE_CHECK.getEntireUrl() + FactoryPreset.NICKNAME;
 
@@ -377,7 +482,7 @@ class SecurityFilterChainIntegrationTest {
         );
 
         // Then
-        resultActions.andExpect(status().isForbidden());
+        resultActions.andExpect(status().is(not(HttpStatus.FORBIDDEN.value())));
     }
 
     @Test
@@ -565,6 +670,164 @@ class SecurityFilterChainIntegrationTest {
 
         // Then
         resultActions.andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    @DisplayName("[Success] member requests til writing api")
+    void successIfMemberRequestsTilWritingApi() throws Exception {
+        // Given
+        final String url = TilApiUrl.TIL_WRITING.getEntireUrl();
+
+        // Algorithm = HMAC256, Payload = { "uuid": "cbf0f220-97b8-4312-82ce-f98266c428d4" }, Secret Key = jwt-access-token-secret-key
+        final String accessToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiY2JmMGYyMjAtOTdiOC00MzEyLTgyY2UtZjk4MjY2YzQyOGQ0In0.rftGC07wvthl89A-lHN4NzeP2gcVv9UxTTnST3Nhqz8";
+
+        final TilWritingRequestDto requestDto = TilWritingRequestDtoFactory.createDefaultWritingRequestDto();
+
+        // When
+        final ResultActions resultActions = mockMvc.perform(
+                MockMvcRequestBuilders.post(url)
+                        .cookie(new Cookie(AccessTokenProperties.COOKIE_NAME, accessToken))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(gson.toJson(requestDto))
+        );
+
+        // Then
+        resultActions.andExpect(status().is(not(HttpStatus.FORBIDDEN.value())));
+    }
+
+    @Test
+    @DisplayName("[Fail] anonymous requests til writing api")
+    void failIfAnonymousRequestsTilWritingApi() throws Exception {
+        // Given
+        final String url = TilApiUrl.TIL_WRITING.getEntireUrl();
+
+        final TilWritingRequestDto requestDto = TilWritingRequestDtoFactory.createDefaultWritingRequestDto();
+
+        // When
+        final ResultActions resultActions = mockMvc.perform(
+                MockMvcRequestBuilders.post(url)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(gson.toJson(requestDto))
+        );
+
+        // Then
+        resultActions.andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    @DisplayName("[Success] member requests til read api")
+    void successIfMemberRequestsTilReadApi() throws Exception {
+        // Given
+        final String tilUuid = UUID.randomUUID().toString();
+
+        final String url = TilApiUrl.TIL_READ.getEntireUrl() + tilUuid;
+
+        // Algorithm = HMAC256, Payload = { "uuid": "cbf0f220-97b8-4312-82ce-f98266c428d4" }, Secret Key = jwt-access-token-secret-key
+        final String accessToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiY2JmMGYyMjAtOTdiOC00MzEyLTgyY2UtZjk4MjY2YzQyOGQ0In0.rftGC07wvthl89A-lHN4NzeP2gcVv9UxTTnST3Nhqz8";
+
+        // When
+        final ResultActions resultActions = mockMvc.perform(
+                MockMvcRequestBuilders.get(url)
+                        .cookie(new Cookie(AccessTokenProperties.COOKIE_NAME, accessToken))
+        );
+
+        // Then
+        resultActions.andExpect(status().is(not(HttpStatus.FORBIDDEN.value())));
+    }
+
+    @Test
+    @DisplayName("[Success] anonymous requests til read api")
+    void successIfAnonymousRequestsTilReadApi() throws Exception {
+        // Given
+        final String tilUuid = UUID.randomUUID().toString();
+
+        final String url = TilApiUrl.TIL_READ.getEntireUrl() + tilUuid;
+
+        // When
+        final ResultActions resultActions = mockMvc.perform(
+                MockMvcRequestBuilders.get(url)
+        );
+
+        // Then
+        resultActions.andExpect(status().is(not(HttpStatus.FORBIDDEN.value())));
+    }
+
+    @Test
+    @DisplayName("[Success] member requests til list read api")
+    void successIfMemberRequestsTilListReadApi() throws Exception {
+        // Given
+        final String nickname = FactoryPreset.NICKNAME;
+
+        final String url = TilApiUrl.TIL_LIST_READ.getEntireUrl() + nickname;
+
+        // Algorithm = HMAC256, Payload = { "uuid": "cbf0f220-97b8-4312-82ce-f98266c428d4" }, Secret Key = jwt-access-token-secret-key
+        final String accessToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiY2JmMGYyMjAtOTdiOC00MzEyLTgyY2UtZjk4MjY2YzQyOGQ0In0.rftGC07wvthl89A-lHN4NzeP2gcVv9UxTTnST3Nhqz8";
+
+        // When
+        final ResultActions resultActions = mockMvc.perform(
+                MockMvcRequestBuilders.get(url)
+                        .param("page", "0")
+                        .param("size", "5")
+                        .cookie(new Cookie(AccessTokenProperties.COOKIE_NAME, accessToken))
+        );
+
+        // Then
+        resultActions.andExpect(status().is(not(HttpStatus.FORBIDDEN.value())));
+    }
+
+    @Test
+    @DisplayName("[Success] anonymous requests til list read api")
+    void successIfAnonymousRequestsTilListReadApi() throws Exception {
+        // Given
+        final String nickname = FactoryPreset.NICKNAME;
+
+        final String url = TilApiUrl.TIL_LIST_READ.getEntireUrl() + nickname;
+
+        // When
+        final ResultActions resultActions = mockMvc.perform(
+                MockMvcRequestBuilders.get(url)
+                        .param("page", "0")
+                        .param("size", "5")
+        );
+
+        // Then
+        resultActions.andExpect(status().is(not(HttpStatus.FORBIDDEN.value())));
+    }
+
+    @Test
+    @DisplayName("[Success] member requests recent til list read api")
+    void successIfMemberRequestsRecentTilListReadApi() throws Exception {
+        // Given
+        final String url = TilApiUrl.RECENT_TIL_LIST_READ.getEntireUrl();
+
+        // Algorithm = HMAC256, Payload = { "uuid": "cbf0f220-97b8-4312-82ce-f98266c428d4" }, Secret Key = jwt-access-token-secret-key
+        final String accessToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiY2JmMGYyMjAtOTdiOC00MzEyLTgyY2UtZjk4MjY2YzQyOGQ0In0.rftGC07wvthl89A-lHN4NzeP2gcVv9UxTTnST3Nhqz8";
+
+        // When
+        final ResultActions resultActions = mockMvc.perform(
+                MockMvcRequestBuilders.get(url)
+                        .param("size", "3")
+                        .cookie(new Cookie(AccessTokenProperties.COOKIE_NAME, accessToken))
+        );
+
+        // Then
+        resultActions.andExpect(status().is(not(HttpStatus.FORBIDDEN.value())));
+    }
+
+    @Test
+    @DisplayName("[Success] anonymous requests recent til list read api")
+    void successIfAnonymousRequestsRecentTilListReadApi() throws Exception {
+        // Given
+        final String url = TilApiUrl.RECENT_TIL_LIST_READ.getEntireUrl();
+
+        // When
+        final ResultActions resultActions = mockMvc.perform(
+                MockMvcRequestBuilders.get(url)
+                        .param("size", "3")
+        );
+
+        // Then
+        resultActions.andExpect(status().is(not(HttpStatus.FORBIDDEN.value())));
     }
 
     @Test
