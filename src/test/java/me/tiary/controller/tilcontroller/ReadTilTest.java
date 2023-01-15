@@ -120,6 +120,7 @@ class ReadTilTest {
         resultActions.andExpect(status().isOk());
         assertThat(response.getTitle()).isEqualTo(responseDto.getTitle());
         assertThat(response.getContent()).isEqualTo(responseDto.getContent());
+        assertThat(response.getMarkdown()).isEqualTo(responseDto.getMarkdown());
         assertThat(response.getAuthor()).isEqualTo(responseDto.getAuthor());
         assertThat(response.getCreatedDate()).isEqualTo(responseDto.getCreatedDate().truncatedTo(ChronoUnit.SECONDS));
     }

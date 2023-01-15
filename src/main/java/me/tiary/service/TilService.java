@@ -40,6 +40,17 @@ public class TilService {
 
     private final ModelMapper modelMapper;
 
+    public boolean checkUuidExistence(final String uuid) {
+        return tilRepository.findByUuid(uuid).isPresent();
+    }
+
+    public String searchAuthorUsingUuid(final String uuid) {
+        final Til til = tilRepository.findByUuidJoinFetchProfile(uuid)
+                .orElseThrow(() -> new TilException(TilStatus.NOT_EXISTING_TIL));
+
+        return til.getProfile().getNickname();
+    }
+
     @Transactional
     public TilWritingResponseDto writeTil(final String profileUuid, final TilWritingRequestDto requestDto) {
         final Profile profile = profileRepository.findByUuid(profileUuid)
@@ -82,12 +93,13 @@ public class TilService {
                 .orElseThrow(() -> new TilException(TilStatus.NOT_EXISTING_TIL));
 
         final Parser markdownParser = Parser.builder().build();
-        final HtmlRenderer htmlRenderer = HtmlRenderer.builder().escapeHtml(true).build();
+        final HtmlRenderer htmlRenderer = HtmlRenderer.builder().build();
         final Node document = markdownParser.parse(til.getContent());
 
         return TilReadResponseDto.builder()
                 .title(til.getTitle())
                 .content(htmlRenderer.render(document))
+                .markdown(til.getContent())
                 .author(til.getProfile().getNickname())
                 .createdDate(til.getCreatedDate())
                 .build();
