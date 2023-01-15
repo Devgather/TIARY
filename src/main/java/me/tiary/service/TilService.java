@@ -114,6 +114,7 @@ public class TilService {
                 .build();
     }
 
+    @Transactional
     public TilEditResponseDto updateTil(final String profileUuid, final String tilUuid, final TilEditRequestDto requestDto) {
         final Til til = tilRepository.findByUuid(tilUuid)
                 .orElseThrow(() -> new TilException(TilStatus.NOT_EXISTING_TIL));
