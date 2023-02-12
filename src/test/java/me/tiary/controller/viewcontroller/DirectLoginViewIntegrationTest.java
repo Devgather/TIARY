@@ -6,6 +6,7 @@ import me.tiary.controller.ViewController;
 import me.tiary.repository.OAuthRepository;
 import me.tiary.repository.ProfileRepository;
 import me.tiary.service.ProfileService;
+import me.tiary.service.TilService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +26,9 @@ class DirectLoginViewIntegrationTest {
 
     @MockBean
     private ProfileService profileService;
+
+    @MockBean
+    private TilService tilService;
 
     @MockBean
     private ProfileRepository profileRepository;
