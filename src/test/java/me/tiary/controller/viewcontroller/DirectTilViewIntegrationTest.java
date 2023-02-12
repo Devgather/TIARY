@@ -25,8 +25,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ControllerIntegrationTest(ViewController.class)
-@DisplayName("[ViewController - Integration] directTilEditorView")
-class DirectTilEditorViewIntegrationTest {
+@DisplayName("[ViewController - Integration] directTilView")
+class DirectTilViewIntegrationTest {
     @Autowired
     private MockMvc mockMvc;
 
@@ -46,15 +46,13 @@ class DirectTilEditorViewIntegrationTest {
     @DisplayName("[Fail] uuid is blank")
     void failIfUuidIsBlank() throws Exception {
         // Given
-        final String url = ViewUrl.TIL_EDITOR.getEntireUrl() + " ";
-
-        // Algorithm = HMAC256, Payload = { "uuid": "cbf0f220-97b8-4312-82ce-f98266c428d4" }, Secret Key = jwt-access-token-secret-key
-        final String accessToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiY2JmMGYyMjAtOTdiOC00MzEyLTgyY2UtZjk4MjY2YzQyOGQ0In0.rftGC07wvthl89A-lHN4NzeP2gcVv9UxTTnST3Nhqz8";
+        final String url = ViewUrl.TIL.getEntireUrl() + " ";
 
         // When
         final ResultActions resultActions = mockMvc.perform(
                 MockMvcRequestBuilders.get(url)
-                        .cookie(new Cookie(AccessTokenProperties.COOKIE_NAME, accessToken))
+                        .param("page", "1")
+                        .param("size", "5")
         );
 
         // Then
@@ -67,10 +65,7 @@ class DirectTilEditorViewIntegrationTest {
         // Given
         final String uuid = UUID.randomUUID().toString();
 
-        final String url = ViewUrl.TIL_EDITOR.getEntireUrl() + uuid;
-
-        // Algorithm = HMAC256, Payload = { "uuid": "cbf0f220-97b8-4312-82ce-f98266c428d4" }, Secret Key = jwt-access-token-secret-key
-        final String accessToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiY2JmMGYyMjAtOTdiOC00MzEyLTgyY2UtZjk4MjY2YzQyOGQ0In0.rftGC07wvthl89A-lHN4NzeP2gcVv9UxTTnST3Nhqz8";
+        final String url = ViewUrl.TIL.getEntireUrl() + uuid;
 
         doReturn(false)
                 .when(tilService)
@@ -79,7 +74,8 @@ class DirectTilEditorViewIntegrationTest {
         // When
         final ResultActions resultActions = mockMvc.perform(
                 MockMvcRequestBuilders.get(url)
-                        .cookie(new Cookie(AccessTokenProperties.COOKIE_NAME, accessToken))
+                        .param("page", "1")
+                        .param("size", "5")
         );
 
         // Then
@@ -87,12 +83,36 @@ class DirectTilEditorViewIntegrationTest {
     }
 
     @Test
-    @DisplayName("[Fail] member does not have edit permission")
-    void failIfMemberDoesNotHaveEditPermission() throws Exception {
+    @DisplayName("[Success] anonymous views someone else til")
+    void successIfAnonymousViewsSomeoneElseTil() throws Exception {
         // Given
         final String uuid = UUID.randomUUID().toString();
 
-        final String url = ViewUrl.TIL_EDITOR.getEntireUrl() + uuid;
+        final String url = ViewUrl.TIL.getEntireUrl() + uuid;
+
+        doReturn(true)
+                .when(tilService)
+                .checkUuidExistence(uuid);
+
+        // When
+        final ResultActions resultActions = mockMvc.perform(
+                MockMvcRequestBuilders.get(url)
+                        .param("page", "1")
+                        .param("size", "5")
+        );
+
+        // Then
+        resultActions.andExpect(status().isOk());
+        resultActions.andExpect(content().contentType("text/html;charset=UTF-8"));
+    }
+
+    @Test
+    @DisplayName("[Success] member views someone else til")
+    void successIfMemberViewsSomeoneElseTil() throws Exception {
+        // Given
+        final String uuid = UUID.randomUUID().toString();
+
+        final String url = ViewUrl.TIL.getEntireUrl() + uuid;
 
         // Algorithm = HMAC256, Payload = { "uuid": "cbf0f220-97b8-4312-82ce-f98266c428d4" }, Secret Key = jwt-access-token-secret-key
         final String accessToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiY2JmMGYyMjAtOTdiOC00MzEyLTgyY2UtZjk4MjY2YzQyOGQ0In0.rftGC07wvthl89A-lHN4NzeP2gcVv9UxTTnST3Nhqz8";
@@ -112,25 +132,8 @@ class DirectTilEditorViewIntegrationTest {
         // When
         final ResultActions resultActions = mockMvc.perform(
                 MockMvcRequestBuilders.get(url)
-                        .cookie(new Cookie(AccessTokenProperties.COOKIE_NAME, accessToken))
-        );
-
-        // Then
-        resultActions.andExpect(status().isFound());
-    }
-
-    @Test
-    @DisplayName("[Success] til editor view is rendered")
-    void successIfTilEditorViewIsRendered() throws Exception {
-        // Given
-        final String url = ViewUrl.TIL_EDITOR.getEntireUrl();
-
-        // Algorithm = HMAC256, Payload = { "uuid": "cbf0f220-97b8-4312-82ce-f98266c428d4" }, Secret Key = jwt-access-token-secret-key
-        final String accessToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiY2JmMGYyMjAtOTdiOC00MzEyLTgyY2UtZjk4MjY2YzQyOGQ0In0.rftGC07wvthl89A-lHN4NzeP2gcVv9UxTTnST3Nhqz8";
-
-        // When
-        final ResultActions resultActions = mockMvc.perform(
-                MockMvcRequestBuilders.get(url)
+                        .param("page", "1")
+                        .param("size", "5")
                         .cookie(new Cookie(AccessTokenProperties.COOKIE_NAME, accessToken))
         );
 
@@ -140,12 +143,12 @@ class DirectTilEditorViewIntegrationTest {
     }
 
     @Test
-    @DisplayName("[Success] member has edit permission")
-    void successIfMemberHasEditPermission() throws Exception {
+    @DisplayName("[Success] member views own til")
+    void successIfMemberViewsOwnTil() throws Exception {
         // Given
         final String uuid = UUID.randomUUID().toString();
 
-        final String url = ViewUrl.TIL_EDITOR.getEntireUrl() + uuid;
+        final String url = ViewUrl.TIL.getEntireUrl() + uuid;
 
         // Algorithm = HMAC256, Payload = { "uuid": "cbf0f220-97b8-4312-82ce-f98266c428d4" }, Secret Key = jwt-access-token-secret-key
         final String accessToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiY2JmMGYyMjAtOTdiOC00MzEyLTgyY2UtZjk4MjY2YzQyOGQ0In0.rftGC07wvthl89A-lHN4NzeP2gcVv9UxTTnST3Nhqz8";
@@ -165,6 +168,8 @@ class DirectTilEditorViewIntegrationTest {
         // When
         final ResultActions resultActions = mockMvc.perform(
                 MockMvcRequestBuilders.get(url)
+                        .param("page", "1")
+                        .param("size", "5")
                         .cookie(new Cookie(AccessTokenProperties.COOKIE_NAME, accessToken))
         );
 

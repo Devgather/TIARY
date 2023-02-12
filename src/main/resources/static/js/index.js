@@ -8,7 +8,7 @@ $(function () {
         tils.forEach(til => {
             $('#recent-til').append(`
                 <div class="card mb-4">
-                    <a href="/til/${til.uuid}">
+                    <a href="/til/${til.uuid}?page=1&size=5">
                         <div class="card-content">
                             <div class="media">
                                 <div class="media-left">
