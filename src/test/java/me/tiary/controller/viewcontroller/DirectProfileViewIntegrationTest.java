@@ -9,6 +9,7 @@ import me.tiary.properties.jwt.AccessTokenProperties;
 import me.tiary.repository.OAuthRepository;
 import me.tiary.repository.ProfileRepository;
 import me.tiary.service.ProfileService;
+import me.tiary.service.TilService;
 import me.tiary.utility.common.StringUtility;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -32,6 +33,9 @@ class DirectProfileViewIntegrationTest {
 
     @MockBean
     private ProfileService profileService;
+
+    @MockBean
+    private TilService tilService;
 
     @MockBean
     private ProfileRepository profileRepository;

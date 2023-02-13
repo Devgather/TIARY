@@ -6,7 +6,8 @@ public enum ViewUrl {
     REGISTER("/register"),
     PROFILE("/profile/"),
     PROFILE_EDITOR("/profile/editor"),
-    TIL_EDITOR("/til/editor");
+    TIL("/til/"),
+    TIL_EDITOR("/til/editor/");
 
     private final String url;
 

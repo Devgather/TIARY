@@ -17,7 +17,7 @@ $(function () {
         tils.forEach(til => {
             $('#til').append(`
                 <div class="card mb-4">
-                    <a href="/til/${til.uuid}">
+                    <a href="/til/${til.uuid}?page=1&size=5">
                         <div class="card-content">
                             <div class="content">
                                 <h4 class="title is-4">${til.title}</h4>
