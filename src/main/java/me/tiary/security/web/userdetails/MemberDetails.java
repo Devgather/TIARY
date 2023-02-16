@@ -16,7 +16,8 @@ public class MemberDetails implements UserDetails {
 
     @Builder
     public MemberDetails(final String profileUuid, final String... authorities) {
-        this(profileUuid, (authorities == null) ? (null) : (AuthorityUtils.createAuthorityList(authorities)));
+        this.profileUuid = profileUuid;
+        this.authorities = (authorities == null) ? (null) : (AuthorityUtils.createAuthorityList(authorities));
     }
 
     public String getProfileUuid() {
