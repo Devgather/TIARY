@@ -4,4 +4,4 @@ RUN apk --no-cache add tzdata && cp /usr/share/zoneinfo/Asia/Seoul /etc/localtim
 
 COPY build/libs/*.jar application.jar
 
-ENTRYPOINT ["java", "-jar", "-Dspring.profiles.active=development", "application.jar"]
+ENTRYPOINT ["java", "-jar", "-Djava.net.preferIPv4Stack=true", "-Dspring.profiles.active=development", "application.jar"]
