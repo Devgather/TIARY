@@ -12,6 +12,7 @@ import me.tiary.properties.jwt.RefreshTokenProperties;
 import me.tiary.repository.OAuthRepository;
 import me.tiary.repository.ProfileRepository;
 import me.tiary.security.oauth2.user.OAuth2Member;
+import me.tiary.utility.common.CookieUtility;
 import me.tiary.utility.common.StringUtility;
 import me.tiary.utility.jwt.JwtProvider;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -64,12 +65,17 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
 
         final String profileUuid = oAuth.getProfile().getUuid();
 
-        response.addCookie(
-                createAccessTokenCookie(Map.of(AccessTokenProperties.AccessTokenClaim.PROFILE_UUID.getClaim(), profileUuid))
+        CookieUtility.addCookie(
+                response,
+                AccessTokenProperties.COOKIE_NAME,
+                accessTokenProvider.generate(Map.of(AccessTokenProperties.AccessTokenClaim.PROFILE_UUID.getClaim(), profileUuid))
         );
 
-        response.addCookie(
-                createRefreshTokenCookie(Map.of(RefreshTokenProperties.RefreshTokenClaim.PROFILE_UUID.getClaim(), profileUuid))
+        CookieUtility.addCookie(
+                response,
+                RefreshTokenProperties.COOKIE_NAME,
+                refreshTokenProvider.generate(Map.of(RefreshTokenProperties.RefreshTokenClaim.PROFILE_UUID.getClaim(), profileUuid)),
+                refreshTokenProvider.getValidSeconds()
         );
 
         final String provider = Character.toUpperCase(member.getRegistrationId().charAt(0)) + member.getRegistrationId().substring(1);
@@ -128,30 +134,5 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
                 .build();
 
         return profileRepository.save(profile);
-    }
-
-    private Cookie createAccessTokenCookie(final Map<String, ?> payload) {
-        final String accessToken = accessTokenProvider.generate(payload);
-
-        final Cookie accessTokenCookie = new Cookie(AccessTokenProperties.COOKIE_NAME, accessToken);
-
-        accessTokenCookie.setHttpOnly(true);
-        accessTokenCookie.setSecure(true);
-        accessTokenCookie.setPath("/");
-
-        return accessTokenCookie;
-    }
-
-    private Cookie createRefreshTokenCookie(final Map<String, ?> payload) {
-        final String refreshToken = refreshTokenProvider.generate(payload);
-
-        final Cookie refreshTokenCookie = new Cookie(RefreshTokenProperties.COOKIE_NAME, refreshToken);
-
-        refreshTokenCookie.setHttpOnly(true);
-        refreshTokenCookie.setSecure(true);
-        refreshTokenCookie.setPath("/");
-        refreshTokenCookie.setMaxAge(refreshTokenProvider.getValidSeconds());
-
-        return refreshTokenCookie;
     }
 }

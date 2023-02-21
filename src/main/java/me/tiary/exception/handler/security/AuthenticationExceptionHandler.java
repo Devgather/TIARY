@@ -11,6 +11,7 @@ import me.tiary.properties.jwt.AccessTokenProperties;
 import me.tiary.properties.jwt.AccessTokenProperties.AccessTokenClaim;
 import me.tiary.properties.jwt.RefreshTokenProperties;
 import me.tiary.properties.jwt.RefreshTokenProperties.RefreshTokenClaim;
+import me.tiary.utility.common.CookieUtility;
 import me.tiary.utility.jwt.JwtProvider;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -53,12 +54,17 @@ public class AuthenticationExceptionHandler implements AuthenticationEntryPoint 
 
                 profileUuid = profileUuid.substring(1, profileUuid.length() - 1);
 
-                response.addCookie(
-                        createAccessTokenCookie(Map.of(AccessTokenClaim.PROFILE_UUID.getClaim(), profileUuid))
+                CookieUtility.addCookie(
+                        response,
+                        AccessTokenProperties.COOKIE_NAME,
+                        accessTokenProvider.generate(Map.of(AccessTokenClaim.PROFILE_UUID.getClaim(), profileUuid))
                 );
 
-                response.addCookie(
-                        createRefreshTokenCookie(Map.of(RefreshTokenClaim.PROFILE_UUID.getClaim(), profileUuid))
+                CookieUtility.addCookie(
+                        response,
+                        RefreshTokenProperties.COOKIE_NAME,
+                        refreshTokenProvider.generate(Map.of(RefreshTokenClaim.PROFILE_UUID.getClaim(), profileUuid)),
+                        refreshTokenProvider.getValidSeconds()
                 );
 
                 response.sendRedirect(request.getRequestURI());
@@ -68,8 +74,8 @@ public class AuthenticationExceptionHandler implements AuthenticationEntryPoint 
 
             log.warn("Authentication exception occurrence: {}", authException.getMessage());
 
-            response.addCookie(deleteCookie(AccessTokenProperties.COOKIE_NAME));
-            response.addCookie(deleteCookie(RefreshTokenProperties.COOKIE_NAME));
+            CookieUtility.deleteCookie(response, AccessTokenProperties.COOKIE_NAME);
+            CookieUtility.deleteCookie(response, RefreshTokenProperties.COOKIE_NAME);
 
             if (uriTokens.length > 0 && uriTokens[0].equals("api")) {
                 final String responseBody = objectMapper.writeValueAsString(
@@ -114,41 +120,5 @@ public class AuthenticationExceptionHandler implements AuthenticationEntryPoint 
         } catch (final JWTVerificationException ex) {
             throw new BadCredentialsException(ex.getMessage());
         }
-    }
-
-    private Cookie createAccessTokenCookie(final Map<String, ?> payload) {
-        final String accessToken = accessTokenProvider.generate(payload);
-
-        final Cookie accessTokenCookie = new Cookie(AccessTokenProperties.COOKIE_NAME, accessToken);
-
-        accessTokenCookie.setHttpOnly(true);
-        accessTokenCookie.setSecure(true);
-        accessTokenCookie.setPath("/");
-
-        return accessTokenCookie;
-    }
-
-    private Cookie createRefreshTokenCookie(final Map<String, ?> payload) {
-        final String refreshToken = refreshTokenProvider.generate(payload);
-
-        final Cookie refreshTokenCookie = new Cookie(RefreshTokenProperties.COOKIE_NAME, refreshToken);
-
-        refreshTokenCookie.setHttpOnly(true);
-        refreshTokenCookie.setSecure(true);
-        refreshTokenCookie.setPath("/");
-        refreshTokenCookie.setMaxAge(refreshTokenProvider.getValidSeconds());
-
-        return refreshTokenCookie;
-    }
-
-    private Cookie deleteCookie(final String name) {
-        final Cookie cookie = new Cookie(name, null);
-
-        cookie.setHttpOnly(true);
-        cookie.setSecure(true);
-        cookie.setPath("/");
-        cookie.setMaxAge(0);
-
-        return cookie;
     }
 }
