@@ -2,41 +2,16 @@ name: Amazon ECS
 
 on:
   workflow_call:
-    secrets:
-      aws-access-key-id:
+    inputs:
+      environment:
         required: true
-
-      aws-secret-access-key:
-        required: true
-
-      aws-region:
-        required: true
-
-      aws-ecr-repository:
-        required: true
-
-      aws-ecr-image-tag:
-        required: true
-
-      dockerfile:
-        required: true
-
-      aws-ecs-task-definition:
-        required: true
-
-      aws-ecs-container-name:
-        required: true
-
-      aws-ecs-service:
-        required: true
-
-      aws-ecs-cluster:
-        required: true
+        type: string
 
 jobs:
   deploy:
     name: Amazon ECS
     runs-on: ubuntu-latest
+    environment: ${{ inputs.environment }}
 
     steps:
       - name: Check out GitHub repository
@@ -54,9 +29,9 @@ jobs:
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
-          aws-access-key-id: ${{ secrets.aws-access-key-id }}
-          aws-secret-access-key: ${{ secrets.aws-secret-access-key }}
-          aws-region: ${{ secrets.aws-region }}
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
 
       - name: Login to Amazon ECR
         id: ecr-login
@@ -64,25 +39,25 @@ jobs:
 
       - name: Build, tag, push Docker image to Amazon ECR
         run: |
-          docker build -t ${{ steps.ecr-login.outputs.registry }}/${{ secrets.aws-ecr-repository }}:${{ secrets.aws-ecr-image-tag }} -f ${{ secrets.dockerfile }} .
-          docker push ${{ steps.ecr-login.outputs.registry }}/${{ secrets.aws-ecr-repository }}:${{ secrets.aws-ecr-image-tag }}
+          docker build -t ${{ steps.ecr-login.outputs.registry }}/${{ secrets.AWS_ECR_REPOSITORY }}:${{ secrets.AWS_ECR_IMAGE_TAG }} -f ${{ secrets.DOCKERFILE }} .
+          docker push ${{ steps.ecr-login.outputs.registry }}/${{ secrets.AWS_ECR_REPOSITORY }}:${{ secrets.AWS_ECR_IMAGE_TAG }}
 
       - name: Clean up Amazon ECR
         run: ./script/amazon-ecr-cleaner.sh
         env:
-          AWS_ECR_REPOSITORY: ${{ secrets.aws-ecr-repository }}
+          AWS_ECR_REPOSITORY: ${{ secrets.AWS_ECR_REPOSITORY }}
 
       - name: Render Amazon ECS task definition
         id: web-container-rendering
         uses: aws-actions/amazon-ecs-render-task-definition@v1
         with:
-          task-definition: ${{ secrets.aws-ecs-task-definition }}
-          container-name: ${{ secrets.aws-ecs-container-name }}
-          image: ${{ steps.ecr-login.outputs.registry }}/${{ secrets.aws-ecr-repository }}:${{ secrets.aws-ecr-image-tag }}
+          task-definition: ${{ secrets.AWS_ECS_TASK_DEFINITION }}
+          container-name: ${{ secrets.AWS_ECS_CONTAINER_NAME }}
+          image: ${{ steps.ecr-login.outputs.registry }}/${{ secrets.AWS_ECR_REPOSITORY }}:${{ secrets.AWS_ECR_IMAGE_TAG }}
 
       - name: Deploy to Amazon ECS service
         uses: aws-actions/amazon-ecs-deploy-task-definition@v1
         with:
           task-definition: ${{ steps.web-container-rendering.outputs.task-definition }}
-          service: ${{ secrets.aws-ecs-service }}
-          cluster: ${{ secrets.aws-ecs-cluster }}
+          service: ${{ secrets.AWS_ECS_SERVICE }}
+          cluster: ${{ secrets.AWS_ECS_CLUSTER }}
