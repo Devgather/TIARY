@@ -22,3 +22,4 @@ jobs:
     uses: ./.github/workflows/amazon-ecs.yml
     with:
       environment: development
+    secrets: inherit
