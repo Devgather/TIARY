@@ -94,7 +94,10 @@ function hideCommentEditComponents(commentUuid) {
 function deleteTil() {
     $.ajax({
         type: 'DELETE',
-        url: `/api/til/${uuid}`
+        url: `/api/til/${uuid}`,
+        headers: {
+            'X-XSRF-TOKEN': document.cookie.replace(/(?:(?:^|.*;\s*)XSRF-TOKEN\s*\=\s*([^;]*).*$)|^.*$/, '$1')
+        }
     }).done(function () {
         alert('TIL 삭제를 성공했습니다.');
         window.location.replace(`/profile/${memberNickname}?page=1&size=5`);
@@ -119,6 +122,9 @@ function writeComment() {
     $.ajax({
         type: 'POST',
         url: '/api/comment',
+        headers: {
+            'X-XSRF-TOKEN': document.cookie.replace(/(?:(?:^|.*;\s*)XSRF-TOKEN\s*\=\s*([^;]*).*$)|^.*$/, '$1')
+        },
         contentType: 'application/json',
         data: JSON.stringify({
             'tilUuid': uuid,
@@ -142,6 +148,9 @@ function completeCommentEdit(commentUuid) {
     $.ajax({
         type: 'PUT',
         url: `/api/comment/${commentUuid}`,
+        headers: {
+            'X-XSRF-TOKEN': document.cookie.replace(/(?:(?:^|.*;\s*)XSRF-TOKEN\s*\=\s*([^;]*).*$)|^.*$/, '$1')
+        },
         contentType: 'application/json',
         data: JSON.stringify({
             'content': commentContent
@@ -161,7 +170,10 @@ function cancelCommentEdit(commentUuid) {
 function deleteComment(commentUuid) {
     $.ajax({
         type: 'DELETE',
-        url: `/api/comment/${commentUuid}`
+        url: `/api/comment/${commentUuid}`,
+        headers: {
+            'X-XSRF-TOKEN': document.cookie.replace(/(?:(?:^|.*;\s*)XSRF-TOKEN\s*\=\s*([^;]*).*$)|^.*$/, '$1')
+        }
     }).done(function () {
         alert('댓글 삭제를 성공했습니다.');
         window.location.replace(`/til/${uuid}?page=1&size=5`);
