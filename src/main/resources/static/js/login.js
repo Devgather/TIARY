@@ -5,6 +5,9 @@ function login() {
     $.ajax({
         type: 'POST',
         url: '/api/account/login',
+        headers: {
+            'X-XSRF-TOKEN': document.cookie.replace(/(?:(?:^|.*;\s*)XSRF-TOKEN\s*\=\s*([^;]*).*$)|^.*$/, '$1')
+        },
         contentType: 'application/json',
         data: JSON.stringify({
             'email': email,

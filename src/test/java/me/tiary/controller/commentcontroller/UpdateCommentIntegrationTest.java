@@ -22,6 +22,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import javax.servlet.http.Cookie;
 
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ControllerIntegrationTest(CommentController.class)
@@ -60,9 +61,10 @@ class UpdateCommentIntegrationTest {
         // When
         final ResultActions resultActions = mockMvc.perform(
                 MockMvcRequestBuilders.put(url)
+                        .with(csrf())
+                        .cookie(new Cookie(AccessTokenProperties.COOKIE_NAME, accessToken))
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(gson.toJson(requestDto))
-                        .cookie(new Cookie(AccessTokenProperties.COOKIE_NAME, accessToken))
         );
 
         // Then

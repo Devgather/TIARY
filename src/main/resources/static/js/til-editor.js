@@ -39,6 +39,9 @@ function completeEdit() {
         $.ajax({
             type: 'PUT',
             url: `/api/til/${uuid}`,
+            headers: {
+                'X-XSRF-TOKEN': document.cookie.replace(/(?:(?:^|.*;\s*)XSRF-TOKEN\s*\=\s*([^;]*).*$)|^.*$/, '$1')
+            },
             contentType: 'application/json',
             data: JSON.stringify({
                 'title': title,
@@ -55,6 +58,9 @@ function completeEdit() {
         $.ajax({
             type: 'POST',
             url: '/api/til',
+            headers: {
+                'X-XSRF-TOKEN': document.cookie.replace(/(?:(?:^|.*;\s*)XSRF-TOKEN\s*\=\s*([^;]*).*$)|^.*$/, '$1')
+            },
             contentType: 'application/json',
             data: JSON.stringify({
                 'title': title,
