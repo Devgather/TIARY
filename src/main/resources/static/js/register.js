@@ -68,6 +68,9 @@ function sendVerificationMail() {
     $.ajax({
         type: 'POST',
         url: `/api/account/verification/${email}`,
+        headers: {
+            'X-XSRF-TOKEN': document.cookie.replace(/(?:(?:^|.*;\s*)XSRF-TOKEN\s*\=\s*([^;]*).*$)|^.*$/, '$1')
+        },
         async: false
     }).done(function () {
         result = true;
@@ -108,6 +111,9 @@ function verifyCode() {
     $.ajax({
         type: 'PATCH',
         url: '/api/account/verification',
+        headers: {
+            'X-XSRF-TOKEN': document.cookie.replace(/(?:(?:^|.*;\s*)XSRF-TOKEN\s*\=\s*([^;]*).*$)|^.*$/, '$1')
+        },
         contentType: 'application/json',
         data: JSON.stringify({
             'email': email,
@@ -156,6 +162,9 @@ function createProfile() {
     $.ajax({
         type: 'POST',
         url: '/api/profile',
+        headers: {
+            'X-XSRF-TOKEN': document.cookie.replace(/(?:(?:^|.*;\s*)XSRF-TOKEN\s*\=\s*([^;]*).*$)|^.*$/, '$1')
+        },
         contentType: 'application/json',
         data: JSON.stringify({
             'nickname': nickname
@@ -181,6 +190,9 @@ function createAccount() {
     $.ajax({
         type: 'POST',
         url: '/api/account',
+        headers: {
+            'X-XSRF-TOKEN': document.cookie.replace(/(?:(?:^|.*;\s*)XSRF-TOKEN\s*\=\s*([^;]*).*$)|^.*$/, '$1')
+        },
         contentType: 'application/json',
         data: JSON.stringify({
             'verificationUuid': verificationUuid,
@@ -219,7 +231,7 @@ function register() {
     if (!password) {
         alert('비밀번호를 입력해 주세요.');
 
-       return;
+        return;
     }
 
     if (!confirmPassword) {

@@ -43,6 +43,7 @@ import javax.servlet.http.Cookie;
 import java.util.UUID;
 
 import static org.hamcrest.Matchers.not;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ApplicationIntegrationTest
@@ -389,6 +390,7 @@ class SecurityFilterChainIntegrationTest {
         // When
         final ResultActions resultActions = mockMvc.perform(
                 MockMvcRequestBuilders.post(url)
+                        .with(csrf())
                         .cookie(new Cookie(AccessTokenProperties.COOKIE_NAME, accessToken))
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(gson.toJson(requestDto))
@@ -412,6 +414,7 @@ class SecurityFilterChainIntegrationTest {
         // When
         final ResultActions resultActions = mockMvc.perform(
                 MockMvcRequestBuilders.post(url)
+                        .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(gson.toJson(requestDto))
         );
@@ -432,6 +435,7 @@ class SecurityFilterChainIntegrationTest {
         // When
         final ResultActions resultActions = mockMvc.perform(
                 MockMvcRequestBuilders.post(url)
+                        .with(csrf())
                         .cookie(new Cookie(AccessTokenProperties.COOKIE_NAME, accessToken))
         );
 
@@ -448,6 +452,7 @@ class SecurityFilterChainIntegrationTest {
         // When
         final ResultActions resultActions = mockMvc.perform(
                 MockMvcRequestBuilders.post(url)
+                        .with(csrf())
         );
 
         // Then
@@ -470,6 +475,7 @@ class SecurityFilterChainIntegrationTest {
         // When
         final ResultActions resultActions = mockMvc.perform(
                 MockMvcRequestBuilders.patch(url)
+                        .with(csrf())
                         .cookie(new Cookie(AccessTokenProperties.COOKIE_NAME, accessToken))
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(gson.toJson(requestDto))
@@ -492,6 +498,7 @@ class SecurityFilterChainIntegrationTest {
         // When
         final ResultActions resultActions = mockMvc.perform(
                 MockMvcRequestBuilders.patch(url)
+                        .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(gson.toJson(requestDto))
         );
@@ -514,6 +521,7 @@ class SecurityFilterChainIntegrationTest {
         // When
         final ResultActions resultActions = mockMvc.perform(
                 MockMvcRequestBuilders.post(url)
+                        .with(csrf())
                         .cookie(new Cookie(AccessTokenProperties.COOKIE_NAME, accessToken))
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(gson.toJson(requestDto))
@@ -534,6 +542,7 @@ class SecurityFilterChainIntegrationTest {
         // When
         final ResultActions resultActions = mockMvc.perform(
                 MockMvcRequestBuilders.post(url)
+                        .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(gson.toJson(requestDto))
         );
@@ -590,6 +599,7 @@ class SecurityFilterChainIntegrationTest {
         // When
         final ResultActions resultActions = mockMvc.perform(
                 MockMvcRequestBuilders.post(url)
+                        .with(csrf())
                         .cookie(new Cookie(AccessTokenProperties.COOKIE_NAME, accessToken))
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(gson.toJson(requestDto))
@@ -610,6 +620,7 @@ class SecurityFilterChainIntegrationTest {
         // When
         final ResultActions resultActions = mockMvc.perform(
                 MockMvcRequestBuilders.post(url)
+                        .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(gson.toJson(requestDto))
         );
@@ -666,6 +677,7 @@ class SecurityFilterChainIntegrationTest {
         // When
         final ResultActions resultActions = mockMvc.perform(
                 MockMvcRequestBuilders.patch(url)
+                        .with(csrf())
                         .cookie(new Cookie(AccessTokenProperties.COOKIE_NAME, accessToken))
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(gson.toJson(requestDto))
@@ -686,6 +698,7 @@ class SecurityFilterChainIntegrationTest {
         // When
         final ResultActions resultActions = mockMvc.perform(
                 MockMvcRequestBuilders.patch(url)
+                        .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(gson.toJson(requestDto))
         );
@@ -717,6 +730,7 @@ class SecurityFilterChainIntegrationTest {
 
         final ResultActions resultActions = mockMvc.perform(
                 builder.file((MockMultipartFile) requestDto.getPictureFile())
+                        .with(csrf())
         );
 
         // Then
@@ -742,6 +756,7 @@ class SecurityFilterChainIntegrationTest {
 
         final ResultActions resultActions = mockMvc.perform(
                 builder.file((MockMultipartFile) requestDto.getPictureFile())
+                        .with(csrf())
         );
 
         // Then
@@ -762,6 +777,7 @@ class SecurityFilterChainIntegrationTest {
         // When
         final ResultActions resultActions = mockMvc.perform(
                 MockMvcRequestBuilders.post(url)
+                        .with(csrf())
                         .cookie(new Cookie(AccessTokenProperties.COOKIE_NAME, accessToken))
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(gson.toJson(requestDto))
@@ -782,6 +798,7 @@ class SecurityFilterChainIntegrationTest {
         // When
         final ResultActions resultActions = mockMvc.perform(
                 MockMvcRequestBuilders.post(url)
+                        .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(gson.toJson(requestDto))
         );
@@ -922,6 +939,7 @@ class SecurityFilterChainIntegrationTest {
         // When
         final ResultActions resultActions = mockMvc.perform(
                 MockMvcRequestBuilders.put(url)
+                        .with(csrf())
                         .cookie(new Cookie(AccessTokenProperties.COOKIE_NAME, accessToken))
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(gson.toJson(requestDto))
@@ -944,6 +962,7 @@ class SecurityFilterChainIntegrationTest {
         // When
         final ResultActions resultActions = mockMvc.perform(
                 MockMvcRequestBuilders.put(url)
+                        .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(gson.toJson(requestDto))
         );
@@ -966,6 +985,7 @@ class SecurityFilterChainIntegrationTest {
         // When
         final ResultActions resultActions = mockMvc.perform(
                 MockMvcRequestBuilders.delete(url)
+                        .with(csrf())
                         .cookie(new Cookie(AccessTokenProperties.COOKIE_NAME, accessToken))
         );
 
@@ -984,6 +1004,7 @@ class SecurityFilterChainIntegrationTest {
         // When
         final ResultActions resultActions = mockMvc.perform(
                 MockMvcRequestBuilders.delete(url)
+                        .with(csrf())
         );
 
         // Then
@@ -1006,6 +1027,7 @@ class SecurityFilterChainIntegrationTest {
         // When
         final ResultActions resultActions = mockMvc.perform(
                 MockMvcRequestBuilders.post(url)
+                        .with(csrf())
                         .cookie(new Cookie(AccessTokenProperties.COOKIE_NAME, accessToken))
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(gson.toJson(requestDto))
@@ -1028,6 +1050,7 @@ class SecurityFilterChainIntegrationTest {
         // When
         final ResultActions resultActions = mockMvc.perform(
                 MockMvcRequestBuilders.post(url)
+                        .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(gson.toJson(requestDto))
         );
@@ -1094,9 +1117,10 @@ class SecurityFilterChainIntegrationTest {
         // When
         final ResultActions resultActions = mockMvc.perform(
                 MockMvcRequestBuilders.put(url)
+                        .with(csrf())
+                        .cookie(new Cookie(AccessTokenProperties.COOKIE_NAME, accessToken))
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(gson.toJson(requestDto))
-                        .cookie(new Cookie(AccessTokenProperties.COOKIE_NAME, accessToken))
         );
 
         // Then
@@ -1116,6 +1140,7 @@ class SecurityFilterChainIntegrationTest {
         // When
         final ResultActions resultActions = mockMvc.perform(
                 MockMvcRequestBuilders.put(url)
+                        .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(gson.toJson(requestDto))
         );
@@ -1138,6 +1163,7 @@ class SecurityFilterChainIntegrationTest {
         // When
         final ResultActions resultActions = mockMvc.perform(
                 MockMvcRequestBuilders.delete(url)
+                        .with(csrf())
                         .cookie(new Cookie(AccessTokenProperties.COOKIE_NAME, accessToken))
         );
 
@@ -1156,6 +1182,7 @@ class SecurityFilterChainIntegrationTest {
         // When
         final ResultActions resultActions = mockMvc.perform(
                 MockMvcRequestBuilders.delete(url)
+                        .with(csrf())
         );
 
         // Then

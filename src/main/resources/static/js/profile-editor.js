@@ -57,6 +57,9 @@ function updateProfile() {
     $.ajax({
         type: 'PATCH',
         url: '/api/profile',
+        headers: {
+            'X-XSRF-TOKEN': document.cookie.replace(/(?:(?:^|.*;\s*)XSRF-TOKEN\s*\=\s*([^;]*).*$)|^.*$/, '$1')
+        },
         contentType: 'application/json',
         data: JSON.stringify({
             'nickname': nickname
@@ -73,6 +76,9 @@ function uploadProfilePicture(pictureFile) {
     $.ajax({
         type: 'PATCH',
         url: '/api/profile/picture',
+        headers: {
+            'X-XSRF-TOKEN': document.cookie.replace(/(?:(?:^|.*;\s*)XSRF-TOKEN\s*\=\s*([^;]*).*$)|^.*$/, '$1')
+        },
         contentType: false,
         processData: false,
         data: formData,
