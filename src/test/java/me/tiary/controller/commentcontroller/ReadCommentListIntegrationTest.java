@@ -3,8 +3,6 @@ package me.tiary.controller.commentcontroller;
 import common.annotation.controller.ControllerIntegrationTest;
 import common.config.url.CommentApiUrl;
 import me.tiary.controller.CommentController;
-import me.tiary.repository.OAuthRepository;
-import me.tiary.repository.ProfileRepository;
 import me.tiary.service.CommentService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -24,12 +22,6 @@ class ReadCommentListIntegrationTest {
 
     @MockBean
     private CommentService commentService;
-
-    @MockBean
-    private ProfileRepository profileRepository;
-
-    @MockBean
-    private OAuthRepository oAuthRepository;
 
     @Test
     @DisplayName("[Fail] til uuid is blank")

@@ -1,6 +1,8 @@
 package common.annotation.controller;
 
 import me.tiary.config.WebSecurityConfig;
+import me.tiary.repository.OAuthRepository;
+import me.tiary.repository.ProfileRepository;
 import org.springframework.boot.autoconfigure.ImportAutoConfiguration;
 import org.springframework.boot.autoconfigure.h2.H2ConsoleProperties;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -17,7 +19,7 @@ import java.lang.annotation.*;
 @Inherited
 @WebMvcTest
 @Import({WebSecurityConfig.class, H2ConsoleProperties.class})
-@MockBean(JpaMetamodelMappingContext.class)
+@MockBean({JpaMetamodelMappingContext.class, ProfileRepository.class, OAuthRepository.class})
 public @interface ControllerIntegrationTest {
     String[] properties() default {};
 
