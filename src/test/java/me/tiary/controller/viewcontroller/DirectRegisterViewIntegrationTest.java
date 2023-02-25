@@ -3,8 +3,6 @@ package me.tiary.controller.viewcontroller;
 import common.annotation.controller.ControllerIntegrationTest;
 import common.config.url.ViewUrl;
 import me.tiary.controller.ViewController;
-import me.tiary.repository.OAuthRepository;
-import me.tiary.repository.ProfileRepository;
 import me.tiary.service.ProfileService;
 import me.tiary.service.TilService;
 import org.junit.jupiter.api.DisplayName;
@@ -29,12 +27,6 @@ class DirectRegisterViewIntegrationTest {
 
     @MockBean
     private TilService tilService;
-
-    @MockBean
-    private ProfileRepository profileRepository;
-
-    @MockBean
-    private OAuthRepository oAuthRepository;
 
     @Test
     @DisplayName("[Success] register view is rendered")

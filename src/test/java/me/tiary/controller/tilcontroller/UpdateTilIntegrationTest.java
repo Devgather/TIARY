@@ -7,8 +7,6 @@ import common.factory.dto.til.TilEditRequestDtoFactory;
 import me.tiary.controller.TilController;
 import me.tiary.dto.til.TilEditRequestDto;
 import me.tiary.properties.jwt.AccessTokenProperties;
-import me.tiary.repository.OAuthRepository;
-import me.tiary.repository.ProfileRepository;
 import me.tiary.service.TilService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -33,12 +31,6 @@ class UpdateTilIntegrationTest {
 
     @MockBean
     private TilService tilService;
-
-    @MockBean
-    private ProfileRepository profileRepository;
-
-    @MockBean
-    private OAuthRepository oAuthRepository;
 
     private Gson gson;
 

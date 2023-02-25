@@ -4,8 +4,6 @@ import common.annotation.controller.ControllerIntegrationTest;
 import common.config.url.CommentApiUrl;
 import me.tiary.controller.CommentController;
 import me.tiary.properties.jwt.AccessTokenProperties;
-import me.tiary.repository.OAuthRepository;
-import me.tiary.repository.ProfileRepository;
 import me.tiary.service.CommentService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -28,12 +26,6 @@ class DeleteCommentIntegrationTest {
 
     @MockBean
     private CommentService commentService;
-
-    @MockBean
-    private ProfileRepository profileRepository;
-
-    @MockBean
-    private OAuthRepository oAuthRepository;
 
     @Test
     @DisplayName("[Fail] uuid is blank")

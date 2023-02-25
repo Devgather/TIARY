@@ -4,8 +4,6 @@ import common.annotation.controller.ControllerIntegrationTest;
 import common.config.url.ProfileApiUrl;
 import me.tiary.controller.ProfileController;
 import me.tiary.domain.Profile;
-import me.tiary.repository.OAuthRepository;
-import me.tiary.repository.ProfileRepository;
 import me.tiary.service.ProfileService;
 import me.tiary.utility.common.StringUtility;
 import org.junit.jupiter.api.DisplayName;
@@ -26,12 +24,6 @@ class CheckNicknameExistenceIntegrationTest {
 
     @MockBean
     private ProfileService profileService;
-
-    @MockBean
-    private ProfileRepository profileRepository;
-
-    @MockBean
-    private OAuthRepository oAuthRepository;
 
     @Test
     @DisplayName("[Fail] nickname is blank")
