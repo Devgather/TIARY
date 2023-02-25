@@ -7,8 +7,6 @@ import common.factory.dto.comment.CommentEditRequestDtoFactory;
 import me.tiary.controller.CommentController;
 import me.tiary.dto.comment.CommentEditRequestDto;
 import me.tiary.properties.jwt.AccessTokenProperties;
-import me.tiary.repository.OAuthRepository;
-import me.tiary.repository.ProfileRepository;
 import me.tiary.service.CommentService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -33,12 +31,6 @@ class UpdateCommentIntegrationTest {
 
     @MockBean
     private CommentService commentService;
-
-    @MockBean
-    private ProfileRepository profileRepository;
-
-    @MockBean
-    private OAuthRepository oAuthRepository;
 
     private Gson gson;
 

@@ -4,8 +4,6 @@ import common.annotation.controller.ControllerIntegrationTest;
 import common.config.url.TilApiUrl;
 import me.tiary.controller.TilController;
 import me.tiary.domain.Profile;
-import me.tiary.repository.OAuthRepository;
-import me.tiary.repository.ProfileRepository;
 import me.tiary.service.TilService;
 import me.tiary.utility.common.StringUtility;
 import org.junit.jupiter.api.DisplayName;
@@ -26,12 +24,6 @@ class ReadTilListIntegrationTest {
 
     @MockBean
     private TilService tilService;
-
-    @MockBean
-    private ProfileRepository profileRepository;
-
-    @MockBean
-    private OAuthRepository oAuthRepository;
 
     @Test
     @DisplayName("[Fail] nickname is blank")
