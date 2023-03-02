@@ -55,14 +55,16 @@ class ReadCommentListTest {
     @DisplayName("[Fail] til does not exist")
     void failIfTilDoesNotExist() {
         // Given
+        final String tilUuid = til.getUuid();
+
         doReturn(Optional.empty())
                 .when(tilRepository)
-                .findByUuid(til.getUuid());
+                .findByUuid(tilUuid);
 
         final Pageable pageable = PageRequest.of(0, 5, Sort.by("createdDate").descending());
 
         // When, Then
-        final CommentException result = assertThrows(CommentException.class, () -> commentService.readCommentList(til.getUuid(), pageable));
+        final CommentException result = assertThrows(CommentException.class, () -> commentService.readCommentList(tilUuid, pageable));
 
         assertThat(result.getStatus()).isEqualTo(CommentStatus.NOT_EXISTING_TIL);
     }

@@ -19,6 +19,6 @@ class CreateUuidTest {
 
         // Then
         assertThat(tilTag.getUuid()).isNotNull();
-        assertThat(tilTag.getUuid().length()).isEqualTo(36);
+        assertThat(tilTag.getUuid()).hasSize(36);
     }
 }

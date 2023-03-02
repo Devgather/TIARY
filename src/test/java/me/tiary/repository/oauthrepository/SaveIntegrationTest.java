@@ -113,7 +113,7 @@ class SaveIntegrationTest {
         // Then
         assertThat(result.getId()).isNotNull();
         assertThat(result.getProfile()).isEqualTo(oAuth.getProfile());
-        assertThat(result.getUuid().length()).isEqualTo(36);
+        assertThat(result.getUuid()).hasSize(36);
         assertThat(result.getIdentifier()).isEqualTo(oAuth.getIdentifier());
         assertThat(result.getProvider()).isEqualTo(oAuth.getProvider());
     }

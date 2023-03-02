@@ -30,7 +30,6 @@ import java.util.UUID;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doReturn;
 
 @ServiceTest
@@ -74,7 +73,7 @@ class WriteCommentTest {
 
         doReturn(Optional.empty())
                 .when(profileRepository)
-                .findByUuid(eq(profileUuid));
+                .findByUuid(profileUuid);
 
         final String tilUuid = UUID.randomUUID().toString();
 
@@ -94,13 +93,13 @@ class WriteCommentTest {
 
         doReturn(Optional.of(profile))
                 .when(profileRepository)
-                .findByUuid(eq(profileUuid));
+                .findByUuid(profileUuid);
 
         final String tilUuid = UUID.randomUUID().toString();
 
         doReturn(Optional.empty())
                 .when(tilRepository)
-                .findByUuid(eq(tilUuid));
+                .findByUuid(tilUuid);
 
         final CommentWritingRequestDto requestDto = CommentWritingRequestDtoFactory.createDefaultCommentWritingRequestDto(tilUuid);
 
@@ -118,13 +117,13 @@ class WriteCommentTest {
 
         doReturn(Optional.of(profile))
                 .when(profileRepository)
-                .findByUuid(eq(profileUuid));
+                .findByUuid(profileUuid);
 
         final String tilUuid = UUID.randomUUID().toString();
 
         doReturn(Optional.of(til))
                 .when(tilRepository)
-                .findByUuid(eq(tilUuid));
+                .findByUuid(tilUuid);
 
         doReturn(CommentFactory.createDefaultComment(profile, til))
                 .when(commentRepository)
@@ -136,6 +135,6 @@ class WriteCommentTest {
         final CommentWritingResponseDto result = commentService.writeComment(profileUuid, requestDto);
 
         // Then
-        assertThat(result.getUuid().length()).isEqualTo(36);
+        assertThat(result.getUuid()).hasSize(36);
     }
 }

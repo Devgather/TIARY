@@ -47,11 +47,9 @@ class DeleteAllByTilUuidIntegrationTest {
 
     private Til til;
 
-    private Profile profile;
-
     @BeforeEach
     void beforeEach() {
-        profile = profileRepository.save(ProfileFactory.createDefaultProfile());
+        final Profile profile = profileRepository.save(ProfileFactory.createDefaultProfile());
 
         til = tilRepository.save(TilFactory.createDefaultTil(profile));
 

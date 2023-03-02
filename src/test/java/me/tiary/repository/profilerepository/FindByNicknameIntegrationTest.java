@@ -32,7 +32,7 @@ class FindByNicknameIntegrationTest {
         final Optional<Profile> result = profileRepository.findByNickname(FactoryPreset.NICKNAME);
 
         // Then
-        assertThat(result.isEmpty()).isTrue();
+        assertThat(result).isNotPresent();
     }
 
     @Test
@@ -49,7 +49,7 @@ class FindByNicknameIntegrationTest {
         final Optional<Profile> result = profileRepository.findByNickname(FactoryPreset.NICKNAME);
 
         // Then
-        assertThat(result.isPresent()).isTrue();
+        assertThat(result).isPresent();
         assertThat(result.get().getNickname()).isEqualTo(profile.getNickname());
         assertThat(result.get().getPicture()).isEqualTo(profile.getPicture());
     }

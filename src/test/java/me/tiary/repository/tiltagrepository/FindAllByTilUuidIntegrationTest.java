@@ -47,11 +47,9 @@ class FindAllByTilUuidIntegrationTest {
 
     private Til til;
 
-    private Profile profile;
-
     @BeforeEach
     void beforeEach() {
-        profile = profileRepository.save(ProfileFactory.createDefaultProfile());
+        final Profile profile = profileRepository.save(ProfileFactory.createDefaultProfile());
 
         til = tilRepository.save(TilFactory.createDefaultTil(profile));
 
@@ -65,7 +63,7 @@ class FindAllByTilUuidIntegrationTest {
         final List<TilTag> result = tilTagRepository.findAllByTilUuid(til.getUuid());
 
         // Then
-        assertThat(result).hasSize(0);
+        assertThat(result).isEmpty();
     }
 
     @Test
@@ -88,7 +86,7 @@ class FindAllByTilUuidIntegrationTest {
         final List<TilTag> result = tilTagRepository.findAllByTilUuid(til.getUuid());
 
         // Then
-        assertThat(result.size()).isEqualTo(2);
+        assertThat(result).hasSize(2);
         assertThat(result.get(0).getTil()).isEqualTo(til);
         assertThat(result.get(0).getTag()).isEqualTo(tag1);
         assertThat(result.get(1).getTil()).isEqualTo(til);

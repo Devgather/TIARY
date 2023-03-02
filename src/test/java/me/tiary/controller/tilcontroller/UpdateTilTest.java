@@ -19,6 +19,9 @@ import me.tiary.service.TilService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.NullAndEmptySource;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.http.MediaType;
@@ -65,15 +68,17 @@ class UpdateTilTest {
         gson = new Gson();
     }
 
-    @Test
-    @DisplayName("[Fail] title is null")
-    void failIfTitleIsNull() throws Exception {
+    @ParameterizedTest
+    @NullAndEmptySource
+    @ValueSource(strings = {" "})
+    @DisplayName("[Fail] title is invalid")
+    void failIfTitleIsInvalid(final String title) throws Exception {
         // Given
         final String tilUuid = UUID.randomUUID().toString();
 
         final String url = TilApiUrl.TIL_EDIT.getEntireUrl() + tilUuid;
 
-        final TilEditRequestDto requestDto = TilEditRequestDtoFactory.create(null, FactoryPreset.CONTENT, FactoryPreset.TAGS);
+        final TilEditRequestDto requestDto = TilEditRequestDtoFactory.create(title, FactoryPreset.CONTENT, FactoryPreset.TAGS);
 
         // When
         final ResultActions resultActions = mockMvc.perform(
@@ -86,99 +91,17 @@ class UpdateTilTest {
         resultActions.andExpect(status().isBadRequest());
     }
 
-    @Test
-    @DisplayName("[Fail] title is empty")
-    void failIfTitleIsEmpty() throws Exception {
+    @ParameterizedTest
+    @NullAndEmptySource
+    @ValueSource(strings = {" "})
+    @DisplayName("[Fail] content is invalid")
+    void failIfContentIsInvalid(final String content) throws Exception {
         // Given
         final String tilUuid = UUID.randomUUID().toString();
 
         final String url = TilApiUrl.TIL_EDIT.getEntireUrl() + tilUuid;
 
-        final TilEditRequestDto requestDto = TilEditRequestDtoFactory.create("", FactoryPreset.CONTENT, FactoryPreset.TAGS);
-
-        // When
-        final ResultActions resultActions = mockMvc.perform(
-                MockMvcRequestBuilders.put(url)
-                        .content(gson.toJson(requestDto))
-                        .contentType(MediaType.APPLICATION_JSON)
-        );
-
-        // Then
-        resultActions.andExpect(status().isBadRequest());
-    }
-
-    @Test
-    @DisplayName("[Fail] title is blank")
-    void failIfTitleIsBlank() throws Exception {
-        // Given
-        final String tilUuid = UUID.randomUUID().toString();
-
-        final String url = TilApiUrl.TIL_EDIT.getEntireUrl() + tilUuid;
-
-        final TilEditRequestDto requestDto = TilEditRequestDtoFactory.create(" ", FactoryPreset.CONTENT, FactoryPreset.TAGS);
-
-        // When
-        final ResultActions resultActions = mockMvc.perform(
-                MockMvcRequestBuilders.put(url)
-                        .content(gson.toJson(requestDto))
-                        .contentType(MediaType.APPLICATION_JSON)
-        );
-
-        // Then
-        resultActions.andExpect(status().isBadRequest());
-    }
-
-    @Test
-    @DisplayName("[Fail] content is null")
-    void failIfContentIsNull() throws Exception {
-        // Given
-        final String tilUuid = UUID.randomUUID().toString();
-
-        final String url = TilApiUrl.TIL_EDIT.getEntireUrl() + tilUuid;
-
-        final TilEditRequestDto requestDto = TilEditRequestDtoFactory.create(FactoryPreset.TITLE, null, FactoryPreset.TAGS);
-
-        // When
-        final ResultActions resultActions = mockMvc.perform(
-                MockMvcRequestBuilders.put(url)
-                        .content(gson.toJson(requestDto))
-                        .contentType(MediaType.APPLICATION_JSON)
-        );
-
-        // Then
-        resultActions.andExpect(status().isBadRequest());
-    }
-
-    @Test
-    @DisplayName("[Fail] content is empty")
-    void failIfContentIsEmpty() throws Exception {
-        // Given
-        final String tilUuid = UUID.randomUUID().toString();
-
-        final String url = TilApiUrl.TIL_EDIT.getEntireUrl() + tilUuid;
-
-        final TilEditRequestDto requestDto = TilEditRequestDtoFactory.create(FactoryPreset.TITLE, "", FactoryPreset.TAGS);
-
-        // When
-        final ResultActions resultActions = mockMvc.perform(
-                MockMvcRequestBuilders.put(url)
-                        .content(gson.toJson(requestDto))
-                        .contentType(MediaType.APPLICATION_JSON)
-        );
-
-        // Then
-        resultActions.andExpect(status().isBadRequest());
-    }
-
-    @Test
-    @DisplayName("[Fail] content is blank")
-    void failIfContentIsBlank() throws Exception {
-        // Given
-        final String tilUuid = UUID.randomUUID().toString();
-
-        final String url = TilApiUrl.TIL_EDIT.getEntireUrl() + tilUuid;
-
-        final TilEditRequestDto requestDto = TilEditRequestDtoFactory.create(FactoryPreset.TITLE, " ", FactoryPreset.TAGS);
+        final TilEditRequestDto requestDto = TilEditRequestDtoFactory.create(FactoryPreset.TITLE, content, FactoryPreset.TAGS);
 
         // When
         final ResultActions resultActions = mockMvc.perform(

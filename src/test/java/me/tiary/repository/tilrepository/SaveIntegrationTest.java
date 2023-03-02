@@ -84,7 +84,7 @@ class SaveIntegrationTest {
         // Then
         assertThat(result.getId()).isNotNull();
         assertThat(result.getProfile()).isEqualTo(til.getProfile());
-        assertThat(result.getUuid().length()).isEqualTo(36);
+        assertThat(result.getUuid()).hasSize(36);
         assertThat(result.getTitle()).isEqualTo(til.getTitle());
         assertThat(result.getContent()).isEqualTo(til.getContent());
 

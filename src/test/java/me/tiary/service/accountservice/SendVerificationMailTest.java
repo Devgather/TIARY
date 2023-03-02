@@ -32,7 +32,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 
 @ServiceTest
@@ -59,9 +58,9 @@ class SendVerificationMailTest {
         // Given
         final Account account = AccountFactory.createDefaultAccount(ProfileFactory.createDefaultProfile());
 
-        doReturn(Optional.ofNullable(account))
+        doReturn(Optional.of(account))
                 .when(accountRepository)
-                .findByEmail(eq(account.getEmail()));
+                .findByEmail(account.getEmail());
 
         // When
         final AccountException result = assertThrows(AccountException.class, () -> accountService.sendVerificationMail(FactoryPreset.EMAIL));
@@ -109,9 +108,9 @@ class SendVerificationMailTest {
 
         final Verification unverifiedVerification = VerificationFactory.createUnverifiedVerification();
 
-        doReturn(Optional.ofNullable(unverifiedVerification))
+        doReturn(Optional.of(unverifiedVerification))
                 .when(verificationRepository)
-                .findByEmail(eq(unverifiedVerification.getEmail()));
+                .findByEmail(unverifiedVerification.getEmail());
 
         final Session session = Session.getInstance(new Properties());
         final InputStream inputStream = new ByteArrayInputStream(new byte[0]);
@@ -136,9 +135,9 @@ class SendVerificationMailTest {
 
         final Verification verifiedVerification = VerificationFactory.createVerifiedVerification();
 
-        doReturn(Optional.ofNullable(verifiedVerification))
+        doReturn(Optional.of(verifiedVerification))
                 .when(verificationRepository)
-                .findByEmail(eq(verifiedVerification.getEmail()));
+                .findByEmail(verifiedVerification.getEmail());
 
         final Session session = Session.getInstance(new Properties());
         final InputStream inputStream = new ByteArrayInputStream(new byte[0]);

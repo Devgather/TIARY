@@ -22,7 +22,6 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doReturn;
 
 @ServiceTest
@@ -64,9 +63,9 @@ class ReadProfileTest {
         // Given
         final Profile profile = ProfileFactory.createDefaultProfile();
 
-        doReturn(Optional.ofNullable(profile))
+        doReturn(Optional.of(profile))
                 .when(profileRepository)
-                .findByNickname(eq(profile.getNickname()));
+                .findByNickname(profile.getNickname());
 
         // When
         final ProfileReadResponseDto result = profileService.readProfile(FactoryPreset.NICKNAME);

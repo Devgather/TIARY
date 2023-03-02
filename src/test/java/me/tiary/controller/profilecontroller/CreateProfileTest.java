@@ -18,6 +18,9 @@ import me.tiary.utility.common.StringUtility;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.NullAndEmptySource;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.http.MediaType;
@@ -29,7 +32,6 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import java.nio.charset.StandardCharsets;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.doThrow;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -57,45 +59,13 @@ class CreateProfileTest {
         gson = new Gson();
     }
 
-    @Test
-    @DisplayName("[Fail] nickname is null")
-    void failIfNicknameIsNull() throws Exception {
+    @ParameterizedTest
+    @NullAndEmptySource
+    @ValueSource(strings = {" "})
+    @DisplayName("[Fail] nickname is invalid")
+    void failIfNicknameIsInvalid(final String nickname) throws Exception {
         // Given
-        final ProfileCreationRequestDto requestDto = ProfileCreationRequestDtoFactory.create(null);
-
-        // When
-        final ResultActions resultActions = mockMvc.perform(
-                MockMvcRequestBuilders.post(ProfileApiUrl.PROFILE_CREATION.getEntireUrl())
-                        .content(gson.toJson(requestDto))
-                        .contentType(MediaType.APPLICATION_JSON)
-        );
-
-        // Then
-        resultActions.andExpect(status().isBadRequest());
-    }
-
-    @Test
-    @DisplayName("[Fail] nickname is empty")
-    void failIfNicknameIsEmpty() throws Exception {
-        // Given
-        final ProfileCreationRequestDto requestDto = ProfileCreationRequestDtoFactory.create("");
-
-        // When
-        final ResultActions resultActions = mockMvc.perform(
-                MockMvcRequestBuilders.post(ProfileApiUrl.PROFILE_CREATION.getEntireUrl())
-                        .content(gson.toJson(requestDto))
-                        .contentType(MediaType.APPLICATION_JSON)
-        );
-
-        // Then
-        resultActions.andExpect(status().isBadRequest());
-    }
-
-    @Test
-    @DisplayName("[Fail] nickname is blank")
-    void failIfNicknameIsBlank() throws Exception {
-        // Given
-        final ProfileCreationRequestDto requestDto = ProfileCreationRequestDtoFactory.create(" ");
+        final ProfileCreationRequestDto requestDto = ProfileCreationRequestDtoFactory.create(nickname);
 
         // When
         final ResultActions resultActions = mockMvc.perform(
@@ -135,7 +105,7 @@ class CreateProfileTest {
 
         doThrow(new ProfileException(ProfileStatus.EXISTING_NICKNAME))
                 .when(profileService)
-                .createProfile(eq(requestDto));
+                .createProfile(requestDto);
 
         // When
         final ResultActions resultActions = mockMvc.perform(
@@ -162,7 +132,9 @@ class CreateProfileTest {
 
         final ProfileCreationResponseDto responseDto = ProfileCreationResponseDtoFactory.createDefaultProfileCreationResponseDto();
 
-        doReturn(responseDto).when(profileService).createProfile(eq(requestDto));
+        doReturn(responseDto)
+                .when(profileService)
+                .createProfile(requestDto);
 
         // When
         final ResultActions resultActions = mockMvc.perform(
@@ -178,7 +150,7 @@ class CreateProfileTest {
 
         // Then
         resultActions.andExpect(status().isCreated());
-        assertThat(response.getUuid().length()).isEqualTo(36);
+        assertThat(response.getUuid()).hasSize(36);
         assertThat(response.getNickname()).isEqualTo(responseDto.getNickname());
     }
 }

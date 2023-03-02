@@ -86,7 +86,7 @@ class SaveIntegrationTest {
 
         // Then
         assertThat(result.getId()).isNotNull();
-        assertThat(result.getUuid().length()).isEqualTo(36);
+        assertThat(result.getUuid()).hasSize(36);
         assertThat(result.getNickname()).isEqualTo(profile.getNickname());
         assertThat(result.getPicture()).isEqualTo(profile.getPicture());
     }

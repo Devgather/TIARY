@@ -39,8 +39,10 @@ class SearchAuthorUsingUuidTest {
                 .when(tilRepository)
                 .findByUuidJoinFetchProfile(any(String.class));
 
+        final String uuid = UUID.randomUUID().toString();
+
         // When, Then
-        final TilException result = assertThrows(TilException.class, () -> tilService.searchAuthorUsingUuid(UUID.randomUUID().toString()));
+        final TilException result = assertThrows(TilException.class, () -> tilService.searchAuthorUsingUuid(uuid));
 
         assertThat(result.getStatus()).isEqualTo(TilStatus.NOT_EXISTING_TIL);
     }

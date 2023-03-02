@@ -1,5 +1,6 @@
 package me.tiary.controller;
 
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import me.tiary.domain.Profile;
 import me.tiary.security.web.userdetails.MemberDetails;
@@ -20,6 +21,8 @@ import javax.validation.constraints.Size;
 @Validated
 @RequiredArgsConstructor
 public class ViewController {
+    private static final String INDEX_VIEW_REDIRECTION = "redirect:/";
+
     private final ProfileService profileService;
 
     private final TilService tilService;
@@ -27,12 +30,12 @@ public class ViewController {
     @GetMapping("/")
     public String directIndexView(@AuthenticationPrincipal final MemberDetails memberDetails,
                                   final Model model) {
-        model.addAttribute("authentication", memberDetails != null);
+        model.addAttribute(ModelCommonAttribute.AUTHENTICATION.getName(), memberDetails != null);
 
         if (memberDetails != null) {
             final String memberNickname = profileService.searchNicknameUsingUuid(memberDetails.getProfileUuid());
 
-            model.addAttribute("memberNickname", memberNickname);
+            model.addAttribute(ModelCommonAttribute.NICKNAME.getName(), memberNickname);
         }
 
         return "view/index";
@@ -40,14 +43,14 @@ public class ViewController {
 
     @GetMapping("/login")
     public String directLoginView(final Model model) {
-        model.addAttribute("authentication", false);
+        model.addAttribute(ModelCommonAttribute.AUTHENTICATION.getName(), false);
 
         return "view/login";
     }
 
     @GetMapping("/register")
     public String directRegisterView(final Model model) {
-        model.addAttribute("authentication", false);
+        model.addAttribute(ModelCommonAttribute.AUTHENTICATION.getName(), false);
 
         return "view/register";
     }
@@ -59,23 +62,23 @@ public class ViewController {
                                     @AuthenticationPrincipal final MemberDetails memberDetails,
                                     final Model model) {
         if (!profileService.checkNicknameExistence(nickname)) {
-            return "redirect:/";
+            return INDEX_VIEW_REDIRECTION;
         }
 
-        model.addAttribute("authentication", memberDetails != null);
+        model.addAttribute(ModelCommonAttribute.AUTHENTICATION.getName(), memberDetails != null);
 
-        model.addAttribute("nickname", nickname);
-        model.addAttribute("editPermission", false);
+        model.addAttribute(ModelParameterAttribute.PROFILE_NICKNAME.getName(), nickname);
+        model.addAttribute(ModelParameterAttribute.EDIT_PERMISSION.getName(), false);
 
-        model.addAttribute("page", page);
-        model.addAttribute("size", size);
+        model.addAttribute(ModelParameterAttribute.PAGE.getName(), page);
+        model.addAttribute(ModelParameterAttribute.SIZE.getName(), size);
 
         if (memberDetails != null) {
             final String memberNickname = profileService.searchNicknameUsingUuid(memberDetails.getProfileUuid());
 
-            model.addAttribute("memberNickname", memberNickname);
+            model.addAttribute(ModelCommonAttribute.NICKNAME.getName(), memberNickname);
 
-            model.addAttribute("editPermission", memberNickname.equals(nickname));
+            model.addAttribute(ModelParameterAttribute.EDIT_PERMISSION.getName(), memberNickname.equals(nickname));
         }
 
         return "view/profile";
@@ -86,8 +89,8 @@ public class ViewController {
                                           final Model model) {
         final String memberNickname = profileService.searchNicknameUsingUuid(memberDetails.getProfileUuid());
 
-        model.addAttribute("authentication", true);
-        model.addAttribute("memberNickname", memberNickname);
+        model.addAttribute(ModelCommonAttribute.AUTHENTICATION.getName(), true);
+        model.addAttribute(ModelCommonAttribute.NICKNAME.getName(), memberNickname);
 
         return "view/profile-editor";
     }
@@ -99,25 +102,25 @@ public class ViewController {
                                 @AuthenticationPrincipal final MemberDetails memberDetails,
                                 final Model model) {
         if (!tilService.checkUuidExistence(uuid)) {
-            return "redirect:/";
+            return INDEX_VIEW_REDIRECTION;
         }
 
-        model.addAttribute("authentication", memberDetails != null);
+        model.addAttribute(ModelCommonAttribute.AUTHENTICATION.getName(), memberDetails != null);
 
-        model.addAttribute("uuid", uuid);
-        model.addAttribute("editPermission", false);
+        model.addAttribute(ModelParameterAttribute.TIL_UUID.getName(), uuid);
+        model.addAttribute(ModelParameterAttribute.EDIT_PERMISSION.getName(), false);
 
-        model.addAttribute("page", page);
-        model.addAttribute("size", size);
+        model.addAttribute(ModelParameterAttribute.PAGE.getName(), page);
+        model.addAttribute(ModelParameterAttribute.SIZE.getName(), size);
 
         if (memberDetails != null) {
             final String memberNickname = profileService.searchNicknameUsingUuid(memberDetails.getProfileUuid());
 
             final String author = tilService.searchAuthorUsingUuid(uuid);
 
-            model.addAttribute("memberNickname", memberNickname);
+            model.addAttribute(ModelCommonAttribute.NICKNAME.getName(), memberNickname);
 
-            model.addAttribute("editPermission", memberNickname.equals(author));
+            model.addAttribute(ModelParameterAttribute.EDIT_PERMISSION.getName(), memberNickname.equals(author));
         }
 
         return "view/til";
@@ -128,8 +131,8 @@ public class ViewController {
                                       final Model model) {
         final String memberNickname = profileService.searchNicknameUsingUuid(memberDetails.getProfileUuid());
 
-        model.addAttribute("authentication", true);
-        model.addAttribute("memberNickname", memberNickname);
+        model.addAttribute(ModelCommonAttribute.AUTHENTICATION.getName(), true);
+        model.addAttribute(ModelCommonAttribute.NICKNAME.getName(), memberNickname);
 
         return "view/til-editor";
     }
@@ -139,7 +142,7 @@ public class ViewController {
                                       @AuthenticationPrincipal final MemberDetails memberDetails,
                                       final Model model) {
         if (!tilService.checkUuidExistence(uuid)) {
-            return "redirect:/";
+            return INDEX_VIEW_REDIRECTION;
         }
 
         final String memberNickname = profileService.searchNicknameUsingUuid(memberDetails.getProfileUuid());
@@ -147,14 +150,35 @@ public class ViewController {
         final String author = tilService.searchAuthorUsingUuid(uuid);
 
         if (!memberNickname.equals(author)) {
-            return "redirect:/";
+            return INDEX_VIEW_REDIRECTION;
         }
 
-        model.addAttribute("authentication", true);
-        model.addAttribute("memberNickname", memberNickname);
+        model.addAttribute(ModelCommonAttribute.AUTHENTICATION.getName(), true);
+        model.addAttribute(ModelCommonAttribute.NICKNAME.getName(), memberNickname);
 
-        model.addAttribute("uuid", uuid);
+        model.addAttribute(ModelParameterAttribute.TIL_UUID.getName(), uuid);
 
         return "view/til-editor";
+    }
+
+    @RequiredArgsConstructor
+    @Getter
+    private enum ModelCommonAttribute {
+        AUTHENTICATION("authentication"),
+        NICKNAME("memberNickname");
+
+        private final String name;
+    }
+
+    @RequiredArgsConstructor
+    @Getter
+    private enum ModelParameterAttribute {
+        PROFILE_NICKNAME("nickname"),
+        TIL_UUID("uuid"),
+        EDIT_PERMISSION("editPermission"),
+        PAGE("page"),
+        SIZE("size");
+
+        private final String name;
     }
 }

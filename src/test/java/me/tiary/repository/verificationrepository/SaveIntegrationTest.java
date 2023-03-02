@@ -96,7 +96,7 @@ class SaveIntegrationTest {
 
         // Then
         assertThat(result.getId()).isNotNull();
-        assertThat(result.getUuid().length()).isEqualTo(36);
+        assertThat(result.getUuid()).hasSize(36);
         assertThat(result.getEmail()).isEqualTo(verification.getEmail());
         assertThat(result.getCode()).isEqualTo(verification.getCode());
         assertThat(result.getState()).isEqualTo(verification.getState());

@@ -19,6 +19,6 @@ class CreateUuidTest {
 
         // Then
         assertThat(oAuth.getUuid()).isNotNull();
-        assertThat(oAuth.getUuid().length()).isEqualTo(36);
+        assertThat(oAuth.getUuid()).hasSize(36);
     }
 }

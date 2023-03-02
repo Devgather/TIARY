@@ -58,7 +58,7 @@ class FindAllIntegrationTest {
         final List<Comment> result = commentRepository.findAll();
 
         // Then
-        assertThat(result).hasSize(0);
+        assertThat(result).isEmpty();
     }
 
     @Test

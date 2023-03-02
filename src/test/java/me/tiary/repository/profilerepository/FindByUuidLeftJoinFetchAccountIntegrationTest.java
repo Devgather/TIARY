@@ -36,7 +36,7 @@ class FindByUuidLeftJoinFetchAccountIntegrationTest {
         final Optional<Profile> result = profileRepository.findByUuidLeftJoinFetchAccount("45b2e8bc-df75-4c56-8148-ee03643c11b5");
 
         // Then
-        assertThat(result.isEmpty()).isTrue();
+        assertThat(result).isNotPresent();
     }
 
     @Test
@@ -51,7 +51,7 @@ class FindByUuidLeftJoinFetchAccountIntegrationTest {
         final Optional<Profile> result = profileRepository.findByUuidLeftJoinFetchAccount(profile.getUuid());
 
         // Then
-        assertThat(result.isPresent()).isTrue();
+        assertThat(result).isPresent();
         assertThat(result.get().getNickname()).isEqualTo(profile.getNickname());
         assertThat(result.get().getPicture()).isEqualTo(profile.getPicture());
         assertThat(result.get().getAccount()).isNull();
@@ -71,7 +71,7 @@ class FindByUuidLeftJoinFetchAccountIntegrationTest {
         final Optional<Profile> result = profileRepository.findByUuidLeftJoinFetchAccount(profile.getUuid());
 
         // Then
-        assertThat(result.isPresent()).isTrue();
+        assertThat(result).isPresent();
         assertThat(result.get().getNickname()).isEqualTo(profile.getNickname());
         assertThat(result.get().getPicture()).isEqualTo(profile.getPicture());
         assertThat(result.get().getAccount()).isNotNull();
