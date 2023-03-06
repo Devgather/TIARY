@@ -10,7 +10,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Function;
+import java.util.function.UnaryOperator;
 
 @RequiredArgsConstructor
 public class AwsS3Manager {
@@ -18,7 +18,7 @@ public class AwsS3Manager {
 
     private final String bucket;
 
-    public List<String> uploadFiles(final Function<String, String> titleGenerator, final List<MultipartFile> multipartFile) {
+    public List<String> uploadFiles(final UnaryOperator<String> titleGenerator, final List<MultipartFile> multipartFile) {
         final List<String> fileNameList = new ArrayList<>();
 
         multipartFile.forEach(file -> {

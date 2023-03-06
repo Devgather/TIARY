@@ -47,6 +47,6 @@ class DeleteByLastModifiedDateLessThanEqualIntegrationTest {
         verificationRepository.deleteByLastModifiedDateLessThanEqual(LocalDateTime.now());
 
         // Then
-        assertThat(verificationRepository.findAll().size()).isEqualTo(0);
+        assertThat(verificationRepository.findAll()).isEmpty();
     }
 }

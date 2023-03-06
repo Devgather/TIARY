@@ -62,7 +62,7 @@ public class AccountService {
         final Verification verification = verificationRepository.findByUuidAndEmail(requestDto.getVerificationUuid(), requestDto.getEmail())
                 .orElseThrow(() -> new AccountException(AccountStatus.UNREQUESTED_EMAIL_VERIFICATION));
 
-        if (!verification.getState()) {
+        if (Boolean.FALSE.equals(verification.getState())) {
             throw new AccountException(AccountStatus.UNVERIFIED_EMAIL);
         }
 
@@ -118,7 +118,7 @@ public class AccountService {
         final Verification verification = verificationRepository.findByEmail(requestDto.getEmail())
                 .orElseThrow(() -> new AccountException(AccountStatus.UNREQUESTED_EMAIL_VERIFICATION));
 
-        if (verification.getState()) {
+        if (Boolean.TRUE.equals(verification.getState())) {
             throw new AccountException(AccountStatus.VERIFIED_EMAIL);
         }
 
@@ -153,13 +153,11 @@ public class AccountService {
 
         final int refreshTokenValidSeconds = refreshTokenProvider.getValidSeconds();
 
-        final AccountLoginResponseDto result = AccountLoginResponseDto.builder()
+        return AccountLoginResponseDto.builder()
                 .accessToken(accessToken)
                 .refreshToken(refreshToken)
                 .refreshTokenValidSeconds(refreshTokenValidSeconds)
                 .build();
-
-        return result;
     }
 
     private Verification createUnverifiedVerification(final String email) {

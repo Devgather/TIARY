@@ -1,9 +1,13 @@
 package me.tiary.utility.common;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
+
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.util.Random;
 
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class StringUtility {
     public static String generateRandomString(final int length) {
         try {

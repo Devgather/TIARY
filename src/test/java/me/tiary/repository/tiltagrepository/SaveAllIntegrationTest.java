@@ -64,30 +64,30 @@ class SaveAllIntegrationTest {
     @DisplayName("[Fail] til is null and tag is null")
     void failIfTilIsNullAndTagIsNull() {
         // Given
-        final TilTag tilTag = TilTagFactory.create(null, null);
+        final List<TilTag> tilTags = List.of(TilTagFactory.create(null, null));
 
         // When, Then
-        assertThrows(JpaSystemException.class, () -> tilTagRepository.saveAll(List.of(tilTag)));
+        assertThrows(JpaSystemException.class, () -> tilTagRepository.saveAll(tilTags));
     }
 
     @Test
     @DisplayName("[Fail] til is not null and tag is null")
     void failIfTilIsNotNullAndTagIsNull() {
         // Given
-        final TilTag tilTag = TilTagFactory.create(til, null);
+        final List<TilTag> tilTags = List.of(TilTagFactory.create(til, null));
 
         // When, Then
-        assertThrows(JpaSystemException.class, () -> tilTagRepository.saveAll(List.of(tilTag)));
+        assertThrows(JpaSystemException.class, () -> tilTagRepository.saveAll(tilTags));
     }
 
     @Test
     @DisplayName("[Fail] til is null and tag is not null")
     void failIfTilIsNullAndTagIsNotNull() {
         // Given
-        final TilTag tilTag = TilTagFactory.create(null, tag);
+        final List<TilTag> tilTags = List.of(TilTagFactory.create(null, tag));
 
         // When, Then
-        assertThrows(JpaSystemException.class, () -> tilTagRepository.saveAll(List.of(tilTag)));
+        assertThrows(JpaSystemException.class, () -> tilTagRepository.saveAll(tilTags));
     }
 
     @Test
@@ -101,7 +101,7 @@ class SaveAllIntegrationTest {
 
         // Then
         assertThat(result.get(0).getId()).isNotNull();
-        assertThat(result.get(0).getUuid().length()).isEqualTo(36);
+        assertThat(result.get(0).getUuid()).hasSize(36);
         assertThat(result.get(0).getTil()).isEqualTo(tilTag.getTil());
         assertThat(result.get(0).getTag()).isEqualTo(tilTag.getTag());
     }

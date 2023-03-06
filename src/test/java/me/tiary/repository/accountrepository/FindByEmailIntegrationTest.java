@@ -48,7 +48,7 @@ class FindByEmailIntegrationTest {
         final Optional<Account> result = accountRepository.findByEmail(FactoryPreset.EMAIL);
 
         // Then
-        assertThat(result.isEmpty()).isTrue();
+        assertThat(result).isNotPresent();
     }
 
     @Test
@@ -65,7 +65,7 @@ class FindByEmailIntegrationTest {
         final Optional<Account> result = accountRepository.findByEmail(FactoryPreset.EMAIL);
 
         // Then
-        assertThat(result.isPresent()).isTrue();
+        assertThat(result).isPresent();
         assertThat(result.get().getProfile()).isEqualTo(account.getProfile());
         assertThat(result.get().getEmail()).isEqualTo(account.getEmail());
         assertThat(result.get().getPassword()).isEqualTo(account.getPassword());

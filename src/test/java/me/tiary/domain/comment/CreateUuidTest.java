@@ -19,6 +19,6 @@ class CreateUuidTest {
 
         // Then
         assertThat(comment.getUuid()).isNotNull();
-        assertThat(comment.getUuid().length()).isEqualTo(36);
+        assertThat(comment.getUuid()).hasSize(36);
     }
 }

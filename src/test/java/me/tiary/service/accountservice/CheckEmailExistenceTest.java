@@ -16,7 +16,6 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doReturn;
 
 @ServiceTest
@@ -49,9 +48,9 @@ class CheckEmailExistenceTest {
         // Given
         final Account account = AccountFactory.createDefaultAccount(ProfileFactory.createDefaultProfile());
 
-        doReturn(Optional.ofNullable(account))
+        doReturn(Optional.of(account))
                 .when(accountRepository)
-                .findByEmail(eq(account.getEmail()));
+                .findByEmail(account.getEmail());
 
         // When
         final boolean result = accountService.checkEmailExistence(FactoryPreset.EMAIL);

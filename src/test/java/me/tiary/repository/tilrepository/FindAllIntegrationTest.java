@@ -79,7 +79,7 @@ class FindAllIntegrationTest {
 
         // Then
         assertThat(result.getTotalPages()).isEqualTo(1);
-        assertThat(result.getContent().size()).isEqualTo(3);
+        assertThat(result.getContent()).hasSize(3);
     }
 
     @Test
@@ -109,8 +109,8 @@ class FindAllIntegrationTest {
         assertThat(result1.getTotalPages()).isEqualTo(3);
         assertThat(result2.getTotalPages()).isEqualTo(3);
         assertThat(result3.getTotalPages()).isEqualTo(3);
-        assertThat(result1.getContent().size()).isEqualTo(5);
-        assertThat(result2.getContent().size()).isEqualTo(5);
-        assertThat(result3.getContent().size()).isEqualTo(3);
+        assertThat(result1.getContent()).hasSize(5);
+        assertThat(result2.getContent()).hasSize(5);
+        assertThat(result3.getContent()).hasSize(3);
     }
 }

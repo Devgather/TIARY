@@ -6,6 +6,8 @@ import me.tiary.utility.jwt.JwtProvider;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.security.authentication.BadCredentialsException;
 
 import java.lang.reflect.InvocationTargetException;
@@ -51,42 +53,16 @@ class CheckAccessTokenExpirationTest {
         assertThat(result.getCause().getClass()).isEqualTo(IllegalArgumentException.class);
     }
 
-    @Test
+    @ParameterizedTest
+    @ValueSource(strings = {
+            "a.b.c",
+            // Algorithm = HMAC512, Payload = { "uuid": "cbf0f220-97b8-4312-82ce-f98266c428d4" }, Secret Key = jwt-access-token-secret-key
+            "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiY2JmMGYyMjAtOTdiOC00MzEyLTgyY2UtZjk4MjY2YzQyOGQ0In0.cCJL6etYw6r7tlXpuJqEQ7LccTOSsKbBW3LzavvqSvLPSJRBt8w7yMAB6d53Bs_FXf7YRqF5F9xrWyKMr7_KZw",
+            // Algorithm = HMAC256, Payload = { "uuid": "cbf0f220-97b8-4312-82ce-f98266c428d4" }, Secret Key = invalid-secret-key
+            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiY2JmMGYyMjAtOTdiOC00MzEyLTgyY2UtZjk4MjY2YzQyOGQ0In0.ftqXO7VbB5rpAaJks-B9V2a43TmE23TOtTbVzzxAwg4"
+    })
     @DisplayName("[Fail] access token is invalid")
-    void failIfAccessTokenIsInvalid() {
-        // Given
-        final String accessToken = "a.b.c";
-
-        // When, Then
-        final InvocationTargetException result = assertThrows(InvocationTargetException.class, () -> checkAccessTokenExpirationMethod.invoke(
-                authenticationExceptionHandler, accessToken
-        ));
-
-        assertThat(result.getCause().getClass()).isEqualTo(BadCredentialsException.class);
-    }
-
-    @Test
-    @DisplayName("[Fail] access token algorithm is mismatch")
-    void failIfAccessTokenAlgorithmIsMismatch() {
-        // Given
-        // Algorithm = HMAC512, Payload = { "uuid": "cbf0f220-97b8-4312-82ce-f98266c428d4" }, Secret Key = jwt-access-token-secret-key
-        final String accessToken = "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiY2JmMGYyMjAtOTdiOC00MzEyLTgyY2UtZjk4MjY2YzQyOGQ0In0.cCJL6etYw6r7tlXpuJqEQ7LccTOSsKbBW3LzavvqSvLPSJRBt8w7yMAB6d53Bs_FXf7YRqF5F9xrWyKMr7_KZw";
-
-        // When, Then
-        final InvocationTargetException result = assertThrows(InvocationTargetException.class, () -> checkAccessTokenExpirationMethod.invoke(
-                authenticationExceptionHandler, accessToken
-        ));
-
-        assertThat(result.getCause().getClass()).isEqualTo(BadCredentialsException.class);
-    }
-
-    @Test
-    @DisplayName("[Fail] access token signature is invalid")
-    void failIfAccessTokenSignatureIsInvalid() {
-        // Given
-        // Algorithm = HMAC256, Payload = { "uuid": "cbf0f220-97b8-4312-82ce-f98266c428d4" }, Secret Key = invalid-secret-key
-        final String accessToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiY2JmMGYyMjAtOTdiOC00MzEyLTgyY2UtZjk4MjY2YzQyOGQ0In0.ftqXO7VbB5rpAaJks-B9V2a43TmE23TOtTbVzzxAwg4";
-
+    void failIfAccessTokenIsInvalid(final String accessToken) {
         // When, Then
         final InvocationTargetException result = assertThrows(InvocationTargetException.class, () -> checkAccessTokenExpirationMethod.invoke(
                 authenticationExceptionHandler, accessToken

@@ -78,14 +78,16 @@ class DeleteCommentTest {
         // Given
         final Comment comment = CommentFactory.createDefaultComment(profile, til);
 
+        final String commentUuid = comment.getUuid();
+
         doReturn(Optional.of(comment))
                 .when(commentRepository)
-                .findByUuidJoinFetchProfile(comment.getUuid());
+                .findByUuidJoinFetchProfile(commentUuid);
 
         final String profileUuid = UUID.randomUUID().toString();
 
         // When, Then
-        final CommentException result = assertThrows(CommentException.class, () -> commentService.deleteComment(profileUuid, comment.getUuid()));
+        final CommentException result = assertThrows(CommentException.class, () -> commentService.deleteComment(profileUuid, commentUuid));
 
         assertThat(result.getStatus()).isEqualTo(CommentStatus.NOT_AUTHORIZED_MEMBER);
     }

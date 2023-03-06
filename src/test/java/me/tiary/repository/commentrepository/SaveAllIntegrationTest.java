@@ -57,30 +57,30 @@ class SaveAllIntegrationTest {
     @DisplayName("[Fail] profile is null")
     void failIfProfileIsNull() {
         // Given
-        final Comment comment = CommentFactory.create(null, til, FactoryPreset.CONTENT);
+        final List<Comment> comments = List.of(CommentFactory.create(null, til, FactoryPreset.CONTENT));
 
         // When, Then
-        assertThrows(DataIntegrityViolationException.class, () -> commentRepository.saveAll(List.of(comment)));
+        assertThrows(DataIntegrityViolationException.class, () -> commentRepository.saveAll(comments));
     }
 
     @Test
     @DisplayName("[Fail] til is null")
     void failIfTilIsNull() {
         // Given
-        final Comment comment = CommentFactory.create(profile, null, FactoryPreset.CONTENT);
+        final List<Comment> comments = List.of(CommentFactory.create(profile, null, FactoryPreset.CONTENT));
 
         // When, Then
-        assertThrows(DataIntegrityViolationException.class, () -> commentRepository.saveAll(List.of(comment)));
+        assertThrows(DataIntegrityViolationException.class, () -> commentRepository.saveAll(comments));
     }
 
     @Test
     @DisplayName("[Fail] content is null")
     void failIfContentIsNull() {
         // Given
-        final Comment comment = CommentFactory.create(profile, til, null);
+        final List<Comment> comments = List.of(CommentFactory.create(profile, til, null));
 
         // When, Then
-        assertThrows(DataIntegrityViolationException.class, () -> commentRepository.saveAll(List.of(comment)));
+        assertThrows(DataIntegrityViolationException.class, () -> commentRepository.saveAll(comments));
     }
 
     @Test
@@ -96,7 +96,7 @@ class SaveAllIntegrationTest {
         assertThat(result.get(0).getId()).isNotNull();
         assertThat(result.get(0).getProfile()).isEqualTo(comment.getProfile());
         assertThat(result.get(0).getTil()).isEqualTo(comment.getTil());
-        assertThat(result.get(0).getUuid().length()).isEqualTo(36);
+        assertThat(result.get(0).getUuid()).hasSize(36);
         assertThat(result.get(0).getContent()).isEqualTo(comment.getContent());
     }
 }

@@ -25,7 +25,6 @@ import java.nio.charset.StandardCharsets;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doThrow;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -79,7 +78,7 @@ class SendVerificationMailTest {
 
         doThrow(new AccountException(AccountStatus.EXISTING_EMAIL))
                 .when(accountService)
-                .sendVerificationMail(eq(FactoryPreset.EMAIL));
+                .sendVerificationMail(FactoryPreset.EMAIL);
 
         // When
         final ResultActions resultActions = mockMvc.perform(
@@ -106,7 +105,7 @@ class SendVerificationMailTest {
 
         doNothing()
                 .when(accountService)
-                .sendVerificationMail(eq(FactoryPreset.EMAIL));
+                .sendVerificationMail(FactoryPreset.EMAIL);
 
         // When
         final ResultActions resultActions = mockMvc.perform(

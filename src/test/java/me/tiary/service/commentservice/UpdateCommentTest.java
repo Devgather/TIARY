@@ -102,14 +102,16 @@ class UpdateCommentTest {
         // Given
         final Comment comment = CommentFactory.createDefaultComment(profile, til);
 
+        final String commentUuid = comment.getUuid();
+
         doReturn(Optional.of(comment))
                 .when(commentRepository)
-                .findByUuidJoinFetchProfile(comment.getUuid());
+                .findByUuidJoinFetchProfile(commentUuid);
 
         final CommentEditRequestDto requestDto = CommentEditRequestDtoFactory.createDefaultCommentEditRequestDto();
 
         // When
-        final CommentEditResponseDto result = commentService.updateComment(profile.getUuid(), comment.getUuid(), requestDto);
+        final CommentEditResponseDto result = commentService.updateComment(profile.getUuid(), commentUuid, requestDto);
 
         // Then
         assertThat(result.getContent()).isEqualTo(requestDto.getContent());

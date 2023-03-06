@@ -38,7 +38,7 @@ public class Verification extends Timestamp {
     private void prePersist() {
         createUuid();
 
-        if (code == null && !state) {
+        if (code == null && Boolean.FALSE.equals(state)) {
             refreshCode();
         }
     }
@@ -48,7 +48,7 @@ public class Verification extends Timestamp {
     }
 
     public void refreshCode() {
-        if (this.state) {
+        if (Boolean.TRUE.equals(state)) {
             throw new IllegalStateException();
         }
 

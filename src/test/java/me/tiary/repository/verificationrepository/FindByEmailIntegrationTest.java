@@ -32,7 +32,7 @@ class FindByEmailIntegrationTest {
         final Optional<Verification> result = verificationRepository.findByEmail(FactoryPreset.EMAIL);
 
         // Then
-        assertThat(result.isEmpty()).isTrue();
+        assertThat(result).isNotPresent();
     }
 
     @Test
@@ -49,7 +49,7 @@ class FindByEmailIntegrationTest {
         final Optional<Verification> result = verificationRepository.findByEmail(FactoryPreset.EMAIL);
 
         // Then
-        assertThat(result.isPresent()).isTrue();
+        assertThat(result).isPresent();
         assertThat(result.get().getEmail()).isEqualTo(verification.getEmail());
         assertThat(result.get().getCode()).isEqualTo(verification.getCode());
         assertThat(result.get().getState()).isEqualTo(verification.getState());

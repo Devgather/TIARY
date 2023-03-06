@@ -39,7 +39,7 @@ class SaveIntegrationTest {
 
         // Then
         assertThat(result.getId()).isNotNull();
-        assertThat(result.getUuid().length()).isEqualTo(36);
+        assertThat(result.getUuid()).hasSize(36);
         assertThat(result.getName()).isEqualTo(tag.getName());
     }
 }

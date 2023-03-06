@@ -76,14 +76,16 @@ class DeleteTilTest {
         // Given
         final Til til = TilFactory.createDefaultTil(profile);
 
+        final String tilUuid = til.getUuid();
+
         doReturn(Optional.of(til))
                 .when(tilRepository)
-                .findByUuidJoinFetchProfile(til.getUuid());
+                .findByUuidJoinFetchProfile(tilUuid);
 
         final String profileUuid = UUID.randomUUID().toString();
 
         // When, Then
-        final TilException result = assertThrows(TilException.class, () -> tilService.deleteTil(profileUuid, til.getUuid()));
+        final TilException result = assertThrows(TilException.class, () -> tilService.deleteTil(profileUuid, tilUuid));
 
         assertThat(result.getStatus()).isEqualTo(TilStatus.NOT_AUTHORIZED_MEMBER);
     }

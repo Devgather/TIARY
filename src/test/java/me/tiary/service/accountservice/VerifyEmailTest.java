@@ -26,7 +26,6 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doReturn;
 
 @ServiceTest
@@ -72,9 +71,9 @@ class VerifyEmailTest {
         // Given
         final Verification verifiedVerification = VerificationFactory.createVerifiedVerification();
 
-        doReturn(Optional.ofNullable(verifiedVerification))
+        doReturn(Optional.of(verifiedVerification))
                 .when(verificationRepository)
-                .findByEmail(eq(verifiedVerification.getEmail()));
+                .findByEmail(verifiedVerification.getEmail());
 
         final AccountVerificationRequestDto requestDto = AccountVerificationRequestDtoFactory.createDefaultAccountVerificationRequestDto(
                 verifiedVerification.getCode()
@@ -92,9 +91,9 @@ class VerifyEmailTest {
         // Given
         final Verification unverifiedVerification = VerificationFactory.create(FactoryPreset.EMAIL, "000000", false);
 
-        doReturn(Optional.ofNullable(unverifiedVerification))
+        doReturn(Optional.of(unverifiedVerification))
                 .when(verificationRepository)
-                .findByEmail(eq(unverifiedVerification.getEmail()));
+                .findByEmail(unverifiedVerification.getEmail());
 
         final AccountVerificationRequestDto requestDto = AccountVerificationRequestDtoFactory.createDefaultAccountVerificationRequestDto(
                 "123456"
@@ -112,9 +111,9 @@ class VerifyEmailTest {
         // Given
         final Verification unverifiedVerification = VerificationFactory.createUnverifiedVerification();
 
-        doReturn(Optional.ofNullable(unverifiedVerification))
+        doReturn(Optional.of(unverifiedVerification))
                 .when(verificationRepository)
-                .findByEmail(eq(unverifiedVerification.getEmail()));
+                .findByEmail(unverifiedVerification.getEmail());
 
         final AccountVerificationRequestDto requestDto = AccountVerificationRequestDtoFactory.createDefaultAccountVerificationRequestDto(
                 unverifiedVerification.getCode()

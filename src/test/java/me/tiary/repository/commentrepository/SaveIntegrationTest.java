@@ -95,7 +95,7 @@ class SaveIntegrationTest {
         assertThat(result.getId()).isNotNull();
         assertThat(result.getProfile()).isEqualTo(comment.getProfile());
         assertThat(result.getTil()).isEqualTo(comment.getTil());
-        assertThat(result.getUuid().length()).isEqualTo(36);
+        assertThat(result.getUuid()).hasSize(36);
         assertThat(result.getContent()).isEqualTo(comment.getContent());
     }
 }

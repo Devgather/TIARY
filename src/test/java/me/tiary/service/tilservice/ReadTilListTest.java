@@ -58,14 +58,16 @@ class ReadTilListTest {
     @DisplayName("[Fail] profile does not exist")
     void failIfProfileDoesNotExist() {
         // Given
+        final String nickname = profile.getNickname();
+
         doReturn(Optional.empty())
                 .when(profileRepository)
-                .findByNickname(profile.getNickname());
+                .findByNickname(nickname);
 
         final Pageable pageable = PageRequest.of(0, 5, Sort.by("createdDate").descending());
 
         // When, Then
-        final TilException result = assertThrows(TilException.class, () -> tilService.readTilList(profile.getNickname(), pageable));
+        final TilException result = assertThrows(TilException.class, () -> tilService.readTilList(nickname, pageable));
 
         assertThat(result.getStatus()).isEqualTo(TilStatus.NOT_EXISTING_PROFILE);
     }

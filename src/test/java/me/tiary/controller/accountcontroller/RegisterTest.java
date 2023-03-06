@@ -17,6 +17,9 @@ import me.tiary.service.AccountService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.NullAndEmptySource;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.http.MediaType;
@@ -29,7 +32,6 @@ import java.nio.charset.StandardCharsets;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.doThrow;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -56,12 +58,14 @@ class RegisterTest {
         gson = new Gson();
     }
 
-    @Test
-    @DisplayName("[Fail] verification uuid is null")
-    void failIfVerificationUuidIsNull() throws Exception {
+    @ParameterizedTest
+    @NullAndEmptySource
+    @ValueSource(strings = {" "})
+    @DisplayName("[Fail] verification uuid is invalid")
+    void failIfVerificationUuidIsInvalid(final String verificationUuid) throws Exception {
         // Given
         final AccountCreationRequestDto requestDto = AccountCreationRequestDtoFactory.create(
-                null, UUID.randomUUID().toString(), FactoryPreset.EMAIL, FactoryPreset.PASSWORD
+                verificationUuid, UUID.randomUUID().toString(), FactoryPreset.EMAIL, FactoryPreset.PASSWORD
         );
 
         // When
@@ -75,12 +79,14 @@ class RegisterTest {
         resultActions.andExpect(status().isBadRequest());
     }
 
-    @Test
-    @DisplayName("[Fail] verification uuid is empty")
-    void failIfVerificationUuidIsEmpty() throws Exception {
+    @ParameterizedTest
+    @NullAndEmptySource
+    @ValueSource(strings = {" "})
+    @DisplayName("[Fail] profile uuid is invalid")
+    void failIfProfileUuidIsInvalid(final String profileUuid) throws Exception {
         // Given
         final AccountCreationRequestDto requestDto = AccountCreationRequestDtoFactory.create(
-                "", UUID.randomUUID().toString(), FactoryPreset.EMAIL, FactoryPreset.PASSWORD
+                UUID.randomUUID().toString(), profileUuid, FactoryPreset.EMAIL, FactoryPreset.PASSWORD
         );
 
         // When
@@ -94,12 +100,14 @@ class RegisterTest {
         resultActions.andExpect(status().isBadRequest());
     }
 
-    @Test
-    @DisplayName("[Fail] verification uuid is blank")
-    void failIfVerificationUuidIsBlank() throws Exception {
+    @ParameterizedTest
+    @NullAndEmptySource
+    @ValueSource(strings = {" ", "test"})
+    @DisplayName("[Fail] email is invalid")
+    void failIfEmailIsInvalid(final String email) throws Exception {
         // Given
         final AccountCreationRequestDto requestDto = AccountCreationRequestDtoFactory.create(
-                " ", UUID.randomUUID().toString(), FactoryPreset.EMAIL, FactoryPreset.PASSWORD
+                UUID.randomUUID().toString(), UUID.randomUUID().toString(), email, FactoryPreset.PASSWORD
         );
 
         // When
@@ -113,164 +121,13 @@ class RegisterTest {
         resultActions.andExpect(status().isBadRequest());
     }
 
-    @Test
-    @DisplayName("[Fail] profile uuid is null")
-    void failIfProfileUuidIsNull() throws Exception {
+    @ParameterizedTest
+    @NullAndEmptySource
+    @DisplayName("[Fail] password is invalid")
+    void failIfPasswordIsInvalid(final String password) throws Exception {
         // Given
         final AccountCreationRequestDto requestDto = AccountCreationRequestDtoFactory.create(
-                UUID.randomUUID().toString(), null, FactoryPreset.EMAIL, FactoryPreset.PASSWORD
-        );
-
-        // When
-        final ResultActions resultActions = mockMvc.perform(
-                MockMvcRequestBuilders.post(AccountApiUrl.REGISTER.getEntireUrl())
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(gson.toJson(requestDto))
-        );
-
-        // Then
-        resultActions.andExpect(status().isBadRequest());
-    }
-
-    @Test
-    @DisplayName("[Fail] profile uuid is empty")
-    void failIfProfileUuidIsEmpty() throws Exception {
-        // Given
-        final AccountCreationRequestDto requestDto = AccountCreationRequestDtoFactory.create(
-                UUID.randomUUID().toString(), "", FactoryPreset.EMAIL, FactoryPreset.PASSWORD
-        );
-
-        // When
-        final ResultActions resultActions = mockMvc.perform(
-                MockMvcRequestBuilders.post(AccountApiUrl.REGISTER.getEntireUrl())
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(gson.toJson(requestDto))
-        );
-
-        // Then
-        resultActions.andExpect(status().isBadRequest());
-    }
-
-    @Test
-    @DisplayName("[Fail] profile uuid is blank")
-    void failIfProfileUuidIsBlank() throws Exception {
-        // Given
-        final AccountCreationRequestDto requestDto = AccountCreationRequestDtoFactory.create(
-                UUID.randomUUID().toString(), " ", FactoryPreset.EMAIL, FactoryPreset.PASSWORD
-        );
-
-        // When
-        final ResultActions resultActions = mockMvc.perform(
-                MockMvcRequestBuilders.post(AccountApiUrl.REGISTER.getEntireUrl())
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(gson.toJson(requestDto))
-        );
-
-        // Then
-        resultActions.andExpect(status().isBadRequest());
-    }
-
-    @Test
-    @DisplayName("[Fail] email is null")
-    void failIfEmailIsNull() throws Exception {
-        // Given
-        final AccountCreationRequestDto requestDto = AccountCreationRequestDtoFactory.create(
-                UUID.randomUUID().toString(), UUID.randomUUID().toString(), null, FactoryPreset.PASSWORD
-        );
-
-        // When
-        final ResultActions resultActions = mockMvc.perform(
-                MockMvcRequestBuilders.post(AccountApiUrl.REGISTER.getEntireUrl())
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(gson.toJson(requestDto))
-        );
-
-        // Then
-        resultActions.andExpect(status().isBadRequest());
-    }
-
-    @Test
-    @DisplayName("[Fail] email is empty")
-    void failIfEmailIsEmpty() throws Exception {
-        // Given
-        final AccountCreationRequestDto requestDto = AccountCreationRequestDtoFactory.create(
-                UUID.randomUUID().toString(), UUID.randomUUID().toString(), "", FactoryPreset.PASSWORD
-        );
-
-        // When
-        final ResultActions resultActions = mockMvc.perform(
-                MockMvcRequestBuilders.post(AccountApiUrl.REGISTER.getEntireUrl())
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(gson.toJson(requestDto))
-        );
-
-        // Then
-        resultActions.andExpect(status().isBadRequest());
-    }
-
-    @Test
-    @DisplayName("[Fail] email is blank")
-    void failIfEmailIsBlank() throws Exception {
-        // Given
-        final AccountCreationRequestDto requestDto = AccountCreationRequestDtoFactory.create(
-                UUID.randomUUID().toString(), UUID.randomUUID().toString(), " ", FactoryPreset.PASSWORD
-        );
-
-        // When
-        final ResultActions resultActions = mockMvc.perform(
-                MockMvcRequestBuilders.post(AccountApiUrl.REGISTER.getEntireUrl())
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(gson.toJson(requestDto))
-        );
-
-        // Then
-        resultActions.andExpect(status().isBadRequest());
-    }
-
-    @Test
-    @DisplayName("[Fail] email is invalid format")
-    void failIfEmailIsInvalidFormat() throws Exception {
-        // Given
-        final AccountCreationRequestDto requestDto = AccountCreationRequestDtoFactory.create(
-                UUID.randomUUID().toString(), UUID.randomUUID().toString(), "test", FactoryPreset.PASSWORD
-        );
-
-        // When
-        final ResultActions resultActions = mockMvc.perform(
-                MockMvcRequestBuilders.post(AccountApiUrl.REGISTER.getEntireUrl())
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(gson.toJson(requestDto))
-        );
-
-        // Then
-        resultActions.andExpect(status().isBadRequest());
-    }
-
-    @Test
-    @DisplayName("[Fail] password is null")
-    void failIfPasswordIsNull() throws Exception {
-        // Given
-        final AccountCreationRequestDto requestDto = AccountCreationRequestDtoFactory.create(
-                UUID.randomUUID().toString(), UUID.randomUUID().toString(), FactoryPreset.EMAIL, null
-        );
-
-        // When
-        final ResultActions resultActions = mockMvc.perform(
-                MockMvcRequestBuilders.post(AccountApiUrl.REGISTER.getEntireUrl())
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(gson.toJson(requestDto))
-        );
-
-        // Then
-        resultActions.andExpect(status().isBadRequest());
-    }
-
-    @Test
-    @DisplayName("[Fail] password is empty")
-    void failIfPasswordIsEmpty() throws Exception {
-        // Given
-        final AccountCreationRequestDto requestDto = AccountCreationRequestDtoFactory.create(
-                UUID.randomUUID().toString(), UUID.randomUUID().toString(), FactoryPreset.EMAIL, ""
+                UUID.randomUUID().toString(), UUID.randomUUID().toString(), FactoryPreset.EMAIL, password
         );
 
         // When
@@ -294,7 +151,7 @@ class RegisterTest {
 
         doThrow(new AccountException(AccountStatus.EXISTING_EMAIL))
                 .when(accountService)
-                .register(eq(requestDto));
+                .register(requestDto);
 
         // When
         final ResultActions resultActions = mockMvc.perform(
@@ -325,7 +182,7 @@ class RegisterTest {
 
         doThrow(new AccountException(AccountStatus.UNREQUESTED_EMAIL_VERIFICATION))
                 .when(accountService)
-                .register(eq(requestDto));
+                .register(requestDto);
 
         // When
         final ResultActions resultActions = mockMvc.perform(
@@ -356,7 +213,7 @@ class RegisterTest {
 
         doThrow(new AccountException(AccountStatus.UNVERIFIED_EMAIL))
                 .when(accountService)
-                .register(eq(requestDto));
+                .register(requestDto);
 
         // When
         final ResultActions resultActions = mockMvc.perform(
@@ -387,7 +244,7 @@ class RegisterTest {
 
         doThrow(new AccountException(AccountStatus.NOT_EXISTING_PROFILE_UUID))
                 .when(accountService)
-                .register(eq(requestDto));
+                .register(requestDto);
 
         // When
         final ResultActions resultActions = mockMvc.perform(
@@ -418,7 +275,7 @@ class RegisterTest {
 
         doThrow(new AccountException(AccountStatus.EXISTING_ANOTHER_ACCOUNT_ON_PROFILE))
                 .when(accountService)
-                .register(eq(requestDto));
+                .register(requestDto);
 
         // When
         final ResultActions resultActions = mockMvc.perform(
@@ -451,7 +308,7 @@ class RegisterTest {
 
         doReturn(responseDto)
                 .when(accountService)
-                .register(eq(requestDto));
+                .register(requestDto);
 
         // When
         final ResultActions resultActions = mockMvc.perform(

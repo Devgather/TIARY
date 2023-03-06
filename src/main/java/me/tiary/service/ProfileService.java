@@ -15,14 +15,12 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
-import java.util.function.Function;
+import java.util.function.UnaryOperator;
 
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class ProfileService {
-    public static final String PROFILE_PICTURE_PATH = "/profile/picture";
-
     private final ProfileRepository profileRepository;
 
     private final AwsS3Manager awsS3Manager;
@@ -90,7 +88,7 @@ public class ProfileService {
             throw new ProfileException(ProfileStatus.NOT_SUPPORTING_CONTENT_TYPE);
         }
 
-        final Function<String, String> titleGenerator = createPictureTitleGenerator(profileUuid);
+        final UnaryOperator<String> titleGenerator = createPictureTitleGenerator(profileUuid);
 
         final String picturePath = awsS3Manager.uploadFiles(titleGenerator, List.of(pictureFile)).get(0);
 
@@ -121,7 +119,7 @@ public class ProfileService {
         return modelMapper.map(profile, ProfileUpdateResponseDto.class);
     }
 
-    public static Function<String, String> createPictureTitleGenerator(final String profileUuid) {
-        return (originalFileName) -> profileUuid + PROFILE_PICTURE_PATH + FileUtility.getFileExtension(originalFileName);
+    public static UnaryOperator<String> createPictureTitleGenerator(final String profileUuid) {
+        return originalFileName -> profileUuid + "/profile/picture" + FileUtility.getFileExtension(originalFileName);
     }
 }

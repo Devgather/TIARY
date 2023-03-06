@@ -19,6 +19,9 @@ import me.tiary.service.CommentService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.NullAndEmptySource;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.http.MediaType;
@@ -65,13 +68,15 @@ class WriteCommentTest {
         gson = new Gson();
     }
 
-    @Test
-    @DisplayName("[Fail] til uuid is null")
-    void failIfTilUuidIsNull() throws Exception {
+    @ParameterizedTest
+    @NullAndEmptySource
+    @ValueSource(strings = {" "})
+    @DisplayName("[Fail] til uuid is invalid")
+    void failIfTilUuidIsInvalid(final String tilUuid) throws Exception {
         // Given
         final String url = CommentApiUrl.COMMENT_WRITING.getEntireUrl();
 
-        final CommentWritingRequestDto requestDto = CommentWritingRequestDtoFactory.create(null, FactoryPreset.CONTENT);
+        final CommentWritingRequestDto requestDto = CommentWritingRequestDtoFactory.create(tilUuid, FactoryPreset.CONTENT);
 
         // When
         final ResultActions resultActions = mockMvc.perform(
@@ -84,95 +89,17 @@ class WriteCommentTest {
         resultActions.andExpect(status().isBadRequest());
     }
 
-    @Test
-    @DisplayName("[Fail] til uuid is empty")
-    void failIfTilUuidIsEmpty() throws Exception {
-        // Given
-        final String url = CommentApiUrl.COMMENT_WRITING.getEntireUrl();
-
-        final CommentWritingRequestDto requestDto = CommentWritingRequestDtoFactory.create("", FactoryPreset.CONTENT);
-
-        // When
-        final ResultActions resultActions = mockMvc.perform(
-                MockMvcRequestBuilders.post(url)
-                        .content(gson.toJson(requestDto))
-                        .contentType(MediaType.APPLICATION_JSON)
-        );
-
-        // Then
-        resultActions.andExpect(status().isBadRequest());
-    }
-
-    @Test
-    @DisplayName("[Fail] til uuid is blank")
-    void failIfTilUuidIsBlank() throws Exception {
-        // Given
-        final String url = CommentApiUrl.COMMENT_WRITING.getEntireUrl();
-
-        final CommentWritingRequestDto requestDto = CommentWritingRequestDtoFactory.create(" ", FactoryPreset.CONTENT);
-
-        // When
-        final ResultActions resultActions = mockMvc.perform(
-                MockMvcRequestBuilders.post(url)
-                        .content(gson.toJson(requestDto))
-                        .contentType(MediaType.APPLICATION_JSON)
-        );
-
-        // Then
-        resultActions.andExpect(status().isBadRequest());
-    }
-
-    @Test
-    @DisplayName("[Fail] content is null")
-    void failIfContentIsNull() throws Exception {
+    @ParameterizedTest
+    @NullAndEmptySource
+    @ValueSource(strings = {" "})
+    @DisplayName("[Fail] content is invalid")
+    void failIfContentIsInvalid(final String content) throws Exception {
         // Given
         final String url = CommentApiUrl.COMMENT_WRITING.getEntireUrl();
 
         final String tilUuid = UUID.randomUUID().toString();
 
-        final CommentWritingRequestDto requestDto = CommentWritingRequestDtoFactory.create(tilUuid, null);
-
-        // When
-        final ResultActions resultActions = mockMvc.perform(
-                MockMvcRequestBuilders.post(url)
-                        .content(gson.toJson(requestDto))
-                        .contentType(MediaType.APPLICATION_JSON)
-        );
-
-        // Then
-        resultActions.andExpect(status().isBadRequest());
-    }
-
-    @Test
-    @DisplayName("[Fail] content is empty")
-    void failIfContentIsEmpty() throws Exception {
-        // Given
-        final String url = CommentApiUrl.COMMENT_WRITING.getEntireUrl();
-
-        final String tilUuid = UUID.randomUUID().toString();
-
-        final CommentWritingRequestDto requestDto = CommentWritingRequestDtoFactory.create(tilUuid, "");
-
-        // When
-        final ResultActions resultActions = mockMvc.perform(
-                MockMvcRequestBuilders.post(url)
-                        .content(gson.toJson(requestDto))
-                        .contentType(MediaType.APPLICATION_JSON)
-        );
-
-        // Then
-        resultActions.andExpect(status().isBadRequest());
-    }
-
-    @Test
-    @DisplayName("[Fail] content is blank")
-    void failIfContentIsBlank() throws Exception {
-        // Given
-        final String url = CommentApiUrl.COMMENT_WRITING.getEntireUrl();
-
-        final String tilUuid = UUID.randomUUID().toString();
-
-        final CommentWritingRequestDto requestDto = CommentWritingRequestDtoFactory.create(tilUuid, " ");
+        final CommentWritingRequestDto requestDto = CommentWritingRequestDtoFactory.create(tilUuid, content);
 
         // When
         final ResultActions resultActions = mockMvc.perform(
@@ -279,6 +206,6 @@ class WriteCommentTest {
 
         // Then
         resultActions.andExpect(status().isCreated());
-        assertThat(response.getUuid().length()).isEqualTo(36);
+        assertThat(response.getUuid()).hasSize(36);
     }
 }
