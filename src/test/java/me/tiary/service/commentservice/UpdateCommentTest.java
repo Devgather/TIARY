@@ -82,16 +82,18 @@ class UpdateCommentTest {
         // Given
         final Comment comment = CommentFactory.createDefaultComment(profile, til);
 
+        final String commentUuid = comment.getUuid();
+
         doReturn(Optional.of(comment))
                 .when(commentRepository)
-                .findByUuidJoinFetchProfile(comment.getUuid());
+                .findByUuidJoinFetchProfile(commentUuid);
 
         final String profileUuid = UUID.randomUUID().toString();
 
         final CommentEditRequestDto requestDto = CommentEditRequestDtoFactory.createDefaultCommentEditRequestDto();
 
         // When, Then
-        final CommentException result = assertThrows(CommentException.class, () -> commentService.updateComment(profileUuid, comment.getUuid(), requestDto));
+        final CommentException result = assertThrows(CommentException.class, () -> commentService.updateComment(profileUuid, commentUuid, requestDto));
 
         assertThat(result.getStatus()).isEqualTo(CommentStatus.NOT_AUTHORIZED_MEMBER);
     }
