@@ -19,6 +19,6 @@ class CreateUuidTest {
 
         // Then
         assertThat(account.getUuid()).isNotNull();
-        assertThat(account.getUuid().length()).isEqualTo(36);
+        assertThat(account.getUuid()).hasSize(36);
     }
 }

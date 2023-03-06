@@ -32,7 +32,6 @@ import java.util.UUID;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doReturn;
 
 @ServiceTest
@@ -69,9 +68,9 @@ class RegisterTest {
         // Given
         final Account account = AccountFactory.createDefaultAccount(ProfileFactory.createDefaultProfile());
 
-        doReturn(Optional.ofNullable(account))
+        doReturn(Optional.of(account))
                 .when(accountRepository)
-                .findByEmail(eq(account.getEmail()));
+                .findByEmail(account.getEmail());
 
         final AccountCreationRequestDto requestDto = AccountCreationRequestDtoFactory.createDefaultAccountCreationRequestDto(
                 UUID.randomUUID().toString(), UUID.randomUUID().toString()
@@ -115,9 +114,9 @@ class RegisterTest {
 
         final Verification unverifiedVerification = VerificationFactory.createUnverifiedVerification();
 
-        doReturn(Optional.ofNullable(unverifiedVerification))
+        doReturn(Optional.of(unverifiedVerification))
                 .when(verificationRepository)
-                .findByUuidAndEmail(eq(unverifiedVerification.getUuid()), eq(unverifiedVerification.getEmail()));
+                .findByUuidAndEmail(unverifiedVerification.getUuid(), unverifiedVerification.getEmail());
 
         final AccountCreationRequestDto requestDto = AccountCreationRequestDtoFactory.createDefaultAccountCreationRequestDto(
                 unverifiedVerification.getUuid(), UUID.randomUUID().toString()
@@ -139,9 +138,9 @@ class RegisterTest {
 
         final Verification verifiedVerification = VerificationFactory.createVerifiedVerification();
 
-        doReturn(Optional.ofNullable(verifiedVerification))
+        doReturn(Optional.of(verifiedVerification))
                 .when(verificationRepository)
-                .findByUuidAndEmail(eq(verifiedVerification.getUuid()), eq(verifiedVerification.getEmail()));
+                .findByUuidAndEmail(verifiedVerification.getUuid(), verifiedVerification.getEmail());
 
         doReturn(Optional.empty())
                 .when(profileRepository)
@@ -167,17 +166,17 @@ class RegisterTest {
 
         final Verification verifiedVerification = VerificationFactory.createVerifiedVerification();
 
-        doReturn(Optional.ofNullable(verifiedVerification))
+        doReturn(Optional.of(verifiedVerification))
                 .when(verificationRepository)
-                .findByUuidAndEmail(eq(verifiedVerification.getUuid()), eq(verifiedVerification.getEmail()));
+                .findByUuidAndEmail(verifiedVerification.getUuid(), verifiedVerification.getEmail());
 
         final Profile profile = ProfileFactory.createDefaultProfile();
 
         AccountFactory.createDefaultAccount(profile);
 
-        doReturn(Optional.ofNullable(profile))
+        doReturn(Optional.of(profile))
                 .when(profileRepository)
-                .findByUuidLeftJoinFetchAccount(eq(profile.getUuid()));
+                .findByUuidLeftJoinFetchAccount(profile.getUuid());
 
         final AccountCreationRequestDto requestDto = AccountCreationRequestDtoFactory.createDefaultAccountCreationRequestDto(
                 verifiedVerification.getUuid(), profile.getUuid()
@@ -199,15 +198,15 @@ class RegisterTest {
 
         final Verification verifiedVerification = VerificationFactory.createVerifiedVerification();
 
-        doReturn(Optional.ofNullable(verifiedVerification))
+        doReturn(Optional.of(verifiedVerification))
                 .when(verificationRepository)
-                .findByUuidAndEmail(eq(verifiedVerification.getUuid()), eq(verifiedVerification.getEmail()));
+                .findByUuidAndEmail(verifiedVerification.getUuid(), verifiedVerification.getEmail());
 
         final Profile profile = ProfileFactory.createDefaultProfile();
 
-        doReturn(Optional.ofNullable(profile))
+        doReturn(Optional.of(profile))
                 .when(profileRepository)
-                .findByUuidLeftJoinFetchAccount(eq(profile.getUuid()));
+                .findByUuidLeftJoinFetchAccount(profile.getUuid());
 
         doReturn(AccountFactory.createDefaultAccount(ProfileFactory.createDefaultProfile()))
                 .when(accountRepository)

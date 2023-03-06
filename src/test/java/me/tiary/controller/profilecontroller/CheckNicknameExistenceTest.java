@@ -16,7 +16,6 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doReturn;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -65,7 +64,7 @@ class CheckNicknameExistenceTest {
 
         doReturn(true)
                 .when(profileService)
-                .checkNicknameExistence(eq(FactoryPreset.NICKNAME));
+                .checkNicknameExistence(FactoryPreset.NICKNAME);
 
         // When
         final ResultActions resultActions = mockMvc.perform(

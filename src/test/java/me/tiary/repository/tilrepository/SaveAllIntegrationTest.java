@@ -47,30 +47,30 @@ class SaveAllIntegrationTest {
     @DisplayName("[Fail] profile is null")
     void failIfProfileIsNull() {
         // Given
-        final Til til = TilFactory.create(null, FactoryPreset.TITLE, FactoryPreset.CONTENT);
+        final List<Til> tils = List.of(TilFactory.create(null, FactoryPreset.TITLE, FactoryPreset.CONTENT));
 
         // When, Then
-        assertThrows(DataIntegrityViolationException.class, () -> tilRepository.saveAll(List.of(til)));
+        assertThrows(DataIntegrityViolationException.class, () -> tilRepository.saveAll(tils));
     }
 
     @Test
     @DisplayName("[Fail] title is null")
     void failIfTitleIsNull() {
         // Given
-        final Til til = TilFactory.create(profile, null, FactoryPreset.CONTENT);
+        final List<Til> tils = List.of(TilFactory.create(profile, null, FactoryPreset.CONTENT));
 
         // When, Then
-        assertThrows(DataIntegrityViolationException.class, () -> tilRepository.saveAll(List.of(til)));
+        assertThrows(DataIntegrityViolationException.class, () -> tilRepository.saveAll(tils));
     }
 
     @Test
     @DisplayName("[Fail] content is null")
     void failIfContentIsNull() {
         // Given
-        final Til til = TilFactory.create(profile, FactoryPreset.TITLE, null);
+        final List<Til> tils = List.of(TilFactory.create(profile, FactoryPreset.TITLE, null));
 
         // When, Then
-        assertThrows(DataIntegrityViolationException.class, () -> tilRepository.saveAll(List.of(til)));
+        assertThrows(DataIntegrityViolationException.class, () -> tilRepository.saveAll(tils));
     }
 
     @Test
@@ -85,7 +85,7 @@ class SaveAllIntegrationTest {
         // Then
         assertThat(result.get(0).getId()).isNotNull();
         assertThat(result.get(0).getProfile()).isEqualTo(til.getProfile());
-        assertThat(result.get(0).getUuid().length()).isEqualTo(36);
+        assertThat(result.get(0).getUuid()).hasSize(36);
         assertThat(result.get(0).getTitle()).isEqualTo(til.getTitle());
         assertThat(result.get(0).getContent()).isEqualTo(til.getContent());
     }

@@ -91,14 +91,16 @@ class UpdateTilTest {
 
         final Til til = TilFactory.createDefaultTil(profile);
 
+        final String tilUuid = til.getUuid();
+
         doReturn(Optional.of(til))
                 .when(tilRepository)
-                .findByUuid(til.getUuid());
+                .findByUuid(tilUuid);
 
         final TilEditRequestDto requestDto = TilEditRequestDtoFactory.createDefaultTilEditRequestDto();
 
         // When, Then
-        final TilException result = assertThrows(TilException.class, () -> tilService.updateTil(profileUuid, til.getUuid(), requestDto));
+        final TilException result = assertThrows(TilException.class, () -> tilService.updateTil(profileUuid, tilUuid, requestDto));
 
         assertThat(result.getStatus()).isEqualTo(TilStatus.NOT_AUTHORIZED_MEMBER);
     }
@@ -145,6 +147,6 @@ class UpdateTilTest {
         final TilEditResponseDto result = tilService.updateTil(profile.getUuid(), til.getUuid(), requestDto);
 
         // Then
-        assertThat(result.getTilUuid().length()).isEqualTo(36);
+        assertThat(result.getTilUuid()).hasSize(36);
     }
 }

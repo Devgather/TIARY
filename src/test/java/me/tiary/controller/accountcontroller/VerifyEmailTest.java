@@ -18,6 +18,9 @@ import me.tiary.utility.common.StringUtility;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.NullAndEmptySource;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.http.MediaType;
@@ -29,7 +32,6 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import java.nio.charset.StandardCharsets;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.doThrow;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -56,12 +58,14 @@ class VerifyEmailTest {
         gson = new Gson();
     }
 
-    @Test
-    @DisplayName("[Fail] email is null")
-    void failIfEmailIsNull() throws Exception {
+    @ParameterizedTest
+    @NullAndEmptySource
+    @ValueSource(strings = {" ", "test"})
+    @DisplayName("[Fail] email is invalid")
+    void failIfEmailIsInvalid(final String email) throws Exception {
         // Given
         final AccountVerificationRequestDto requestDto = AccountVerificationRequestDtoFactory.create(
-                null, StringUtility.generateRandomString(Verification.CODE_MAX_LENGTH)
+                email, StringUtility.generateRandomString(Verification.CODE_MAX_LENGTH)
         );
 
         // When
@@ -75,107 +79,14 @@ class VerifyEmailTest {
         resultActions.andExpect(status().isBadRequest());
     }
 
-    @Test
-    @DisplayName("[Fail] email is empty")
-    void failIfEmailIsEmpty() throws Exception {
-        // Given
-        final AccountVerificationRequestDto requestDto = AccountVerificationRequestDtoFactory.create(
-                "", StringUtility.generateRandomString(Verification.CODE_MAX_LENGTH)
-        );
-
-        // When
-        final ResultActions resultActions = mockMvc.perform(
-                MockMvcRequestBuilders.patch(AccountApiUrl.EMAIL_VERIFICATION.getEntireUrl())
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(gson.toJson(requestDto))
-        );
-
-        // Then
-        resultActions.andExpect(status().isBadRequest());
-    }
-
-    @Test
-    @DisplayName("[Fail] email is blank")
-    void failIfEmailIsBlank() throws Exception {
-        // Given
-        final AccountVerificationRequestDto requestDto = AccountVerificationRequestDtoFactory.create(
-                " ", StringUtility.generateRandomString(Verification.CODE_MAX_LENGTH)
-        );
-
-        // When
-        final ResultActions resultActions = mockMvc.perform(
-                MockMvcRequestBuilders.patch(AccountApiUrl.EMAIL_VERIFICATION.getEntireUrl())
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(gson.toJson(requestDto))
-        );
-
-        // Then
-        resultActions.andExpect(status().isBadRequest());
-    }
-
-    @Test
-    @DisplayName("[Fail] email is invalid format")
-    void failIfEmailIsInvalidFormat() throws Exception {
-        // Given
-        final AccountVerificationRequestDto requestDto = AccountVerificationRequestDtoFactory.create(
-                "test", StringUtility.generateRandomString(Verification.CODE_MAX_LENGTH)
-        );
-
-        // When
-        final ResultActions resultActions = mockMvc.perform(
-                MockMvcRequestBuilders.patch(AccountApiUrl.EMAIL_VERIFICATION.getEntireUrl())
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(gson.toJson(requestDto))
-        );
-
-        // Then
-        resultActions.andExpect(status().isBadRequest());
-    }
-
-    @Test
-    @DisplayName("[Fail] code is null")
-    void failIfCodeIsNull() throws Exception {
+    @ParameterizedTest
+    @NullAndEmptySource
+    @ValueSource(strings = {" "})
+    @DisplayName("[Fail] code is invalid")
+    void failIfCodeIsInvalid(final String code) throws Exception {
         // Given
         final AccountVerificationRequestDto requestDto = AccountVerificationRequestDtoFactory.createDefaultAccountVerificationRequestDto(
-                null
-        );
-
-        // When
-        final ResultActions resultActions = mockMvc.perform(
-                MockMvcRequestBuilders.patch(AccountApiUrl.EMAIL_VERIFICATION.getEntireUrl())
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(gson.toJson(requestDto))
-        );
-
-        // Then
-        resultActions.andExpect(status().isBadRequest());
-    }
-
-    @Test
-    @DisplayName("[Fail] code is empty")
-    void failIfCodeIsEmpty() throws Exception {
-        // Given
-        final AccountVerificationRequestDto requestDto = AccountVerificationRequestDtoFactory.createDefaultAccountVerificationRequestDto(
-                ""
-        );
-
-        // When
-        final ResultActions resultActions = mockMvc.perform(
-                MockMvcRequestBuilders.patch(AccountApiUrl.EMAIL_VERIFICATION.getEntireUrl())
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(gson.toJson(requestDto))
-        );
-
-        // Then
-        resultActions.andExpect(status().isBadRequest());
-    }
-
-    @Test
-    @DisplayName("[Fail] code is blank")
-    void failIfCodeIsBlank() throws Exception {
-        // Given
-        final AccountVerificationRequestDto requestDto = AccountVerificationRequestDtoFactory.createDefaultAccountVerificationRequestDto(
-                " "
+                code
         );
 
         // When
@@ -237,7 +148,7 @@ class VerifyEmailTest {
 
         doThrow(new AccountException(AccountStatus.UNREQUESTED_EMAIL_VERIFICATION))
                 .when(accountService)
-                .verifyEmail(eq(requestDto));
+                .verifyEmail(requestDto);
 
         // When
         final ResultActions resultActions = mockMvc.perform(
@@ -268,7 +179,7 @@ class VerifyEmailTest {
 
         doThrow(new AccountException(AccountStatus.VERIFIED_EMAIL))
                 .when(accountService)
-                .verifyEmail(eq(requestDto));
+                .verifyEmail(requestDto);
 
         // When
         final ResultActions resultActions = mockMvc.perform(
@@ -299,7 +210,7 @@ class VerifyEmailTest {
 
         doThrow(new AccountException(AccountStatus.INCORRECT_CODE))
                 .when(accountService)
-                .verifyEmail(eq(requestDto));
+                .verifyEmail(requestDto);
 
         // When
         final ResultActions resultActions = mockMvc.perform(
@@ -332,7 +243,7 @@ class VerifyEmailTest {
 
         doReturn(responseDto)
                 .when(accountService)
-                .verifyEmail(eq(requestDto));
+                .verifyEmail(requestDto);
 
         // When
         final ResultActions resultActions = mockMvc.perform(

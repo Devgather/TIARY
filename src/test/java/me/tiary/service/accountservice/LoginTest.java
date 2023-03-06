@@ -1,9 +1,9 @@
 package me.tiary.service.accountservice;
 
+import common.annotation.service.ServiceTest;
 import common.factory.domain.AccountFactory;
 import common.factory.domain.ProfileFactory;
 import common.factory.dto.account.AccountLoginRequestDtoFactory;
-import common.factory.utility.jwt.JwtProviderFactory;
 import me.tiary.domain.Account;
 import me.tiary.dto.account.AccountLoginRequestDto;
 import me.tiary.dto.account.AccountLoginResponseDto;
@@ -18,10 +18,8 @@ import me.tiary.utility.jwt.JwtProvider;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.Spy;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.config.Configuration;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -32,12 +30,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doReturn;
 
-@ExtendWith(MockitoExtension.class)
+@ServiceTest
 @DisplayName("[AccountService] login")
-public class LoginTest {
+class LoginTest {
     private AccountService accountService;
 
     @Mock
@@ -100,9 +97,9 @@ public class LoginTest {
         // Given
         final Account account = AccountFactory.createDefaultAccount(ProfileFactory.createDefaultProfile());
 
-        doReturn(Optional.ofNullable(account))
+        doReturn(Optional.of(account))
                 .when(accountRepository)
-                .findByEmailJoinFetchProfile(eq(account.getEmail()));
+                .findByEmailJoinFetchProfile(account.getEmail());
 
         final AccountLoginRequestDto requestDto = AccountLoginRequestDtoFactory.create("test@example.com", "wrong password");
 
@@ -118,9 +115,9 @@ public class LoginTest {
         // Given
         final Account account = AccountFactory.createDefaultAccount(ProfileFactory.createDefaultProfile());
 
-        doReturn(Optional.ofNullable(account))
+        doReturn(Optional.of(account))
                 .when(accountRepository)
-                .findByEmailJoinFetchProfile(eq(account.getEmail()));
+                .findByEmailJoinFetchProfile(account.getEmail());
 
         final AccountLoginRequestDto requestDto = AccountLoginRequestDtoFactory.createDefaultAccountLoginRequestDto();
 

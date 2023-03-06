@@ -37,8 +37,10 @@ class SearchNicknameUsingUuidTest {
                 .when(profileRepository)
                 .findByUuidLeftJoinFetchAccount(any(String.class));
 
+        final String uuid = UUID.randomUUID().toString();
+
         // When, Then
-        final ProfileException result = assertThrows(ProfileException.class, () -> profileService.searchNicknameUsingUuid(UUID.randomUUID().toString()));
+        final ProfileException result = assertThrows(ProfileException.class, () -> profileService.searchNicknameUsingUuid(uuid));
 
         assertThat(result.getStatus()).isEqualTo(ProfileStatus.NOT_EXISTING_PROFILE);
     }

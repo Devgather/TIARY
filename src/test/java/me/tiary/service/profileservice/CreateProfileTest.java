@@ -24,7 +24,6 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doReturn;
 
 @ServiceTest
@@ -57,9 +56,9 @@ class CreateProfileTest {
         // Given
         final Profile profile = ProfileFactory.createDefaultProfile();
 
-        doReturn(Optional.ofNullable(profile))
+        doReturn(Optional.of(profile))
                 .when(profileRepository)
-                .findByNickname(eq(profile.getNickname()));
+                .findByNickname(profile.getNickname());
 
         final ProfileCreationRequestDto requestDto = ProfileCreationRequestDtoFactory.createDefaultProfileCreationRequestDto();
 
@@ -87,7 +86,7 @@ class CreateProfileTest {
         final ProfileCreationResponseDto result = profileService.createProfile(requestDto);
 
         // Then
-        assertThat(result.getUuid().length()).isEqualTo(36);
+        assertThat(result.getUuid()).hasSize(36);
         assertThat(result.getNickname()).isEqualTo(requestDto.getNickname());
     }
 }

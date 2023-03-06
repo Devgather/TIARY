@@ -20,6 +20,9 @@ import me.tiary.utility.common.StringUtility;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.NullAndEmptySource;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.http.MediaType;
@@ -66,45 +69,13 @@ class UpdateProfileTest {
         gson = new Gson();
     }
 
-    @Test
-    @DisplayName("[Fail] nickname is null")
-    void failIfNicknameIsNull() throws Exception {
+    @ParameterizedTest
+    @NullAndEmptySource
+    @ValueSource(strings = {" "})
+    @DisplayName("[Fail] nickname is invalid")
+    void failIfNicknameIsInvalid(final String nickname) throws Exception {
         // Given
-        final ProfileUpdateRequestDto requestDto = ProfileUpdateRequestDtoFactory.create(null);
-
-        // When
-        final ResultActions resultActions = mockMvc.perform(
-                MockMvcRequestBuilders.patch(ProfileApiUrl.PROFILE_UPDATE.getEntireUrl())
-                        .content(gson.toJson(requestDto))
-                        .contentType(MediaType.APPLICATION_JSON)
-        );
-
-        // Then
-        resultActions.andExpect(status().isBadRequest());
-    }
-
-    @Test
-    @DisplayName("[Fail] nickname is empty")
-    void failIfNicknameIsEmpty() throws Exception {
-        // Given
-        final ProfileUpdateRequestDto requestDto = ProfileUpdateRequestDtoFactory.create("");
-
-        // When
-        final ResultActions resultActions = mockMvc.perform(
-                MockMvcRequestBuilders.patch(ProfileApiUrl.PROFILE_UPDATE.getEntireUrl())
-                        .content(gson.toJson(requestDto))
-                        .contentType(MediaType.APPLICATION_JSON)
-        );
-
-        // Then
-        resultActions.andExpect(status().isBadRequest());
-    }
-
-    @Test
-    @DisplayName("[Fail] nickname is blank")
-    void failIfNicknameIsBlank() throws Exception {
-        // Given
-        final ProfileUpdateRequestDto requestDto = ProfileUpdateRequestDtoFactory.create(" ");
+        final ProfileUpdateRequestDto requestDto = ProfileUpdateRequestDtoFactory.create(nickname);
 
         // When
         final ResultActions resultActions = mockMvc.perform(

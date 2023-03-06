@@ -36,7 +36,6 @@ import java.util.UUID;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doReturn;
 
 @ServiceTest
@@ -75,7 +74,7 @@ class WriteTilTest {
 
         doReturn(Optional.empty())
                 .when(profileRepository)
-                .findByUuid(eq(profileUuid));
+                .findByUuid(profileUuid);
 
         final TilWritingRequestDto requestDto = TilWritingRequestDtoFactory.createDefaultWritingRequestDto();
 
@@ -95,7 +94,7 @@ class WriteTilTest {
 
         doReturn(Optional.of(profile))
                 .when(profileRepository)
-                .findByUuid(eq(profileUuid));
+                .findByUuid(profileUuid);
 
         final Til til = TilFactory.createDefaultTil(profile);
 
@@ -133,6 +132,6 @@ class WriteTilTest {
         final TilWritingResponseDto result = tilService.writeTil(profileUuid, requestDto);
 
         // Then
-        assertThat(result.getUuid().length()).isEqualTo(36);
+        assertThat(result.getUuid()).hasSize(36);
     }
 }

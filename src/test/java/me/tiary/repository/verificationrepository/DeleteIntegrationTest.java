@@ -47,6 +47,6 @@ class DeleteIntegrationTest {
         final Optional<Verification> result = verificationRepository.findById(verification.getId());
 
         // Then
-        assertThat(result.isEmpty()).isTrue();
+        assertThat(result).isNotPresent();
     }
 }

@@ -21,6 +21,9 @@ import me.tiary.utility.jwt.JwtProvider;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.NullAndEmptySource;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.http.MediaType;
@@ -34,7 +37,6 @@ import java.nio.charset.StandardCharsets;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.doThrow;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.cookie;
@@ -62,12 +64,14 @@ class LoginTest {
         gson = new Gson();
     }
 
-    @Test
-    @DisplayName("[Fail] email is null")
-    void failIfEmailIsNull() throws Exception {
+    @ParameterizedTest
+    @NullAndEmptySource
+    @ValueSource(strings = {" ", "test"})
+    @DisplayName("[Fail] email is invalid")
+    void failIfEmailIsInvalid(final String email) throws Exception {
         // Given
         final AccountLoginRequestDto requestDto = AccountLoginRequestDtoFactory.create(
-                null, FactoryPreset.PASSWORD
+                email, FactoryPreset.PASSWORD
         );
 
         // When
@@ -81,83 +85,12 @@ class LoginTest {
         resultActions.andExpect(status().isBadRequest());
     }
 
-    @Test
-    @DisplayName("[Fail] email is empty")
-    void failIfEmailIsEmpty() throws Exception {
+    @ParameterizedTest
+    @NullAndEmptySource
+    @DisplayName("[Fail] password is invalid")
+    void failIfPasswordIsInvalid(final String password) throws Exception {
         // Given
-        final AccountLoginRequestDto requestDto = AccountLoginRequestDtoFactory.create(
-                "", FactoryPreset.PASSWORD
-        );
-
-        // When
-        final ResultActions resultActions = mockMvc.perform(
-                MockMvcRequestBuilders.post(AccountApiUrl.LOGIN.getEntireUrl())
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(gson.toJson(requestDto))
-        );
-
-        // Then
-        resultActions.andExpect(status().isBadRequest());
-    }
-
-    @Test
-    @DisplayName("[Fail] email is blank")
-    void failIfEmailIsBlank() throws Exception {
-        // Given
-        final AccountLoginRequestDto requestDto = AccountLoginRequestDtoFactory.create(
-                " ", FactoryPreset.PASSWORD
-        );
-
-        // When
-        final ResultActions resultActions = mockMvc.perform(
-                MockMvcRequestBuilders.post(AccountApiUrl.LOGIN.getEntireUrl())
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(gson.toJson(requestDto))
-        );
-
-        // Then
-        resultActions.andExpect(status().isBadRequest());
-    }
-
-    @Test
-    @DisplayName("[Fail] email is invalid format")
-    void failIfEmailIsInvalidFormat() throws Exception {
-        // Given
-        final AccountLoginRequestDto requestDto = AccountLoginRequestDtoFactory.create("test", FactoryPreset.PASSWORD);
-
-        // When
-        final ResultActions resultActions = mockMvc.perform(
-                MockMvcRequestBuilders.post(AccountApiUrl.LOGIN.getEntireUrl())
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(gson.toJson(requestDto))
-        );
-
-        // Then
-        resultActions.andExpect(status().isBadRequest());
-    }
-
-    @Test
-    @DisplayName("[Fail] password is null")
-    void failIfPasswordIsNull() throws Exception {
-        // Given
-        final AccountLoginRequestDto requestDto = AccountLoginRequestDtoFactory.create(FactoryPreset.EMAIL, null);
-
-        // When
-        final ResultActions resultActions = mockMvc.perform(
-                MockMvcRequestBuilders.post(AccountApiUrl.LOGIN.getEntireUrl())
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(gson.toJson(requestDto))
-        );
-
-        // Then
-        resultActions.andExpect(status().isBadRequest());
-    }
-
-    @Test
-    @DisplayName("[Fail] password is empty")
-    void failIfPasswordIsEmpty() throws Exception {
-        // Given
-        final AccountLoginRequestDto requestDto = AccountLoginRequestDtoFactory.create(FactoryPreset.EMAIL, "");
+        final AccountLoginRequestDto requestDto = AccountLoginRequestDtoFactory.create(FactoryPreset.EMAIL, password);
 
         // When
         final ResultActions resultActions = mockMvc.perform(
@@ -178,7 +111,7 @@ class LoginTest {
 
         doThrow(new AccountException(AccountStatus.NOT_EXISTING_EMAIL))
                 .when(accountService)
-                .login(eq(requestDto));
+                .login(requestDto);
 
         // When
         final ResultActions resultActions = mockMvc.perform(
@@ -207,7 +140,7 @@ class LoginTest {
 
         doThrow(new AccountException(AccountStatus.NOT_MATCHING_PASSWORD))
                 .when(accountService)
-                .login(eq(requestDto));
+                .login(requestDto);
 
         // When
         final ResultActions resultActions = mockMvc.perform(
@@ -242,7 +175,7 @@ class LoginTest {
 
         doReturn(responseDto)
                 .when(accountService)
-                .login(eq(requestDto));
+                .login(requestDto);
 
         // When
         final ResultActions resultActions = mockMvc.perform(
