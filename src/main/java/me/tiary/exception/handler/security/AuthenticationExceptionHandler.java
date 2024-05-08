@@ -44,7 +44,7 @@ public class AuthenticationExceptionHandler implements AuthenticationEntryPoint 
         final String accessToken = (accessTokenCookie == null) ? (null) : (accessTokenCookie.getValue());
 
         try {
-            if (checkAccessTokenExpiration(accessToken)) {
+            if (isExpiredToken(accessToken, accessTokenProvider)) {
                 final Cookie refreshTokenCookie = WebUtils.getCookie(request, RefreshTokenProperties.COOKIE_NAME);
                 final String refreshToken = (refreshTokenCookie == null) ? (null) : (refreshTokenCookie.getValue());
 
@@ -94,20 +94,20 @@ public class AuthenticationExceptionHandler implements AuthenticationEntryPoint 
         }
     }
 
-    private boolean checkAccessTokenExpiration(final String accessToken) {
-        if (accessToken == null) {
+    private boolean isExpiredToken(final String token, final JwtProvider tokenProvider) {
+        if (token == null || tokenProvider == null) {
             throw new IllegalArgumentException();
         }
 
         try {
-            accessTokenProvider.verify(accessToken);
-
-            return false;
+            tokenProvider.verify(token);
         } catch (final TokenExpiredException tokenExpiredException) {
             return true;
         } catch (final JWTVerificationException jwtVerificationException) {
             throw new BadCredentialsException(jwtVerificationException.getMessage());
         }
+
+        return false;
     }
 
     private DecodedJWT verifyRefreshToken(final String refreshToken) {
