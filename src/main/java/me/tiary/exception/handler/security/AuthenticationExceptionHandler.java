@@ -48,7 +48,7 @@ public class AuthenticationExceptionHandler implements AuthenticationEntryPoint 
                 final Cookie refreshTokenCookie = WebUtils.getCookie(request, RefreshTokenProperties.COOKIE_NAME);
                 final String refreshToken = (refreshTokenCookie == null) ? (null) : (refreshTokenCookie.getValue());
 
-                final DecodedJWT decodedRefreshToken = verifyRefreshToken(refreshToken);
+                final DecodedJWT decodedRefreshToken = decodeToken(refreshToken, refreshTokenProvider);
 
                 String profileUuid = decodedRefreshToken.getClaim(RefreshTokenClaim.PROFILE_UUID.getClaim()).toString();
 
@@ -110,13 +110,13 @@ public class AuthenticationExceptionHandler implements AuthenticationEntryPoint 
         return false;
     }
 
-    private DecodedJWT verifyRefreshToken(final String refreshToken) {
-        if (refreshToken == null) {
+    private DecodedJWT decodeToken(final String token, final JwtProvider tokenProvider) {
+        if (token == null || tokenProvider == null) {
             throw new IllegalArgumentException();
         }
 
         try {
-            return refreshTokenProvider.verify(refreshToken);
+            return tokenProvider.verify(token);
         } catch (final JWTVerificationException ex) {
             throw new BadCredentialsException(ex.getMessage());
         }
