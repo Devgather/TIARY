@@ -4,14 +4,12 @@ import common.annotation.service.ServiceTest;
 import common.factory.domain.AccountFactory;
 import common.factory.domain.ProfileFactory;
 import common.factory.dto.account.AccountLoginRequestDtoFactory;
+import common.factory.utility.jwt.JwtProviderFactory;
 import me.tiary.domain.Account;
 import me.tiary.dto.account.AccountLoginRequestDto;
 import me.tiary.dto.account.AccountLoginResponseDto;
 import me.tiary.exception.AccountException;
 import me.tiary.exception.status.AccountStatus;
-import me.tiary.properties.jwt.AccessTokenProperties;
-import me.tiary.properties.jwt.JwtProperties;
-import me.tiary.properties.jwt.RefreshTokenProperties;
 import me.tiary.repository.AccountRepository;
 import me.tiary.service.AccountService;
 import me.tiary.utility.jwt.JwtProvider;
@@ -56,11 +54,9 @@ class LoginTest {
                 .setFieldMatchingEnabled(true)
                 .setFieldAccessLevel(Configuration.AccessLevel.PRIVATE);
 
-        final JwtProperties accessTokenProperties = new AccessTokenProperties("jwt-access-token-secret-key", 300);
-        final JwtProperties refreshTokenProperties = new RefreshTokenProperties("jwt-refresh-token-secret-key", 604800);
+        accessTokenProvider = JwtProviderFactory.createAccessTokenProvider();
 
-        accessTokenProvider = new JwtProvider(accessTokenProperties);
-        refreshTokenProvider = new JwtProvider(refreshTokenProperties);
+        refreshTokenProvider = JwtProviderFactory.createRefreshTokenProvider();
 
         accountService = new AccountService(
                 accountRepository,

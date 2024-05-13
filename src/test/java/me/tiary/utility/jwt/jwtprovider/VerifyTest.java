@@ -21,7 +21,7 @@ class VerifyTest {
 
     @BeforeEach
     void beforeEach() {
-        final JwtProperties properties = new TestTokenProperties("Test", 300);
+        final JwtProperties properties = new TestTokenProperties("Test");
 
         jwtProvider = JwtProviderFactory.create(properties);
     }
@@ -84,8 +84,8 @@ class VerifyTest {
     }
 
     static class TestTokenProperties extends JwtProperties {
-        public TestTokenProperties(final String secretKey, final int validSeconds) {
-            super(secretKey, validSeconds);
+        public TestTokenProperties(final String secretKey) {
+            super(secretKey);
         }
     }
 }
