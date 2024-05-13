@@ -74,8 +74,7 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
         CookieUtility.addCookie(
                 response,
                 RefreshTokenProperties.COOKIE_NAME,
-                refreshTokenProvider.generate(Map.of(RefreshTokenProperties.RefreshTokenClaim.PROFILE_UUID.getClaim(), profileUuid)),
-                refreshTokenProvider.getValidSeconds()
+                refreshTokenProvider.generate(Map.of(RefreshTokenProperties.RefreshTokenClaim.PROFILE_UUID.getClaim(), profileUuid))
         );
 
         final String provider = Character.toUpperCase(member.getRegistrationId().charAt(0)) + member.getRegistrationId().substring(1);
