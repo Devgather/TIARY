@@ -14,6 +14,7 @@ import me.tiary.security.oauth2.user.OAuth2MemberService;
 import me.tiary.security.web.authentication.MemberAuthenticationConverter;
 import me.tiary.security.web.authentication.MemberAuthenticationProvider;
 import me.tiary.security.web.userdetails.MemberDetailsService;
+import me.tiary.utility.jwt.FiniteJwtProvider;
 import me.tiary.utility.jwt.JwtProvider;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -220,12 +221,12 @@ public class WebSecurityConfig {
 
     @Bean(name = "accessTokenProvider")
     public JwtProvider accessTokenProvider(final AccessTokenProperties properties) {
-        return new JwtProvider(properties);
+        return new FiniteJwtProvider(properties);
     }
 
     @Bean(name = "refreshTokenProvider")
     public JwtProvider refreshTokenProvider(final RefreshTokenProperties properties) {
-        return new JwtProvider(properties);
+        return new FiniteJwtProvider(properties);
     }
 
     @Bean

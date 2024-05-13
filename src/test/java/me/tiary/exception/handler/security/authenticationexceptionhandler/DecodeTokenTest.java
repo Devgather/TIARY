@@ -45,7 +45,7 @@ class DecodeTokenTest {
 
         decodeTokenMethod.setAccessible(true);
 
-        tokenProvider = JwtProviderFactory.create(new TestTokenProperties("test", 0));
+        tokenProvider = JwtProviderFactory.create(new TestTokenProperties("test"));
     }
 
     @ParameterizedTest
@@ -60,7 +60,7 @@ class DecodeTokenTest {
     }
 
     static Stream<Arguments> failIfArgumentIsNullArguments() {
-        JwtProvider tokenProvider = JwtProviderFactory.create(new TestTokenProperties("test", 0));
+        JwtProvider tokenProvider = JwtProviderFactory.create(new TestTokenProperties("test"));
 
         return Stream.of(
                 Arguments.of(null, tokenProvider),
@@ -107,8 +107,8 @@ class DecodeTokenTest {
     }
 
     private final static class TestTokenProperties extends JwtProperties {
-        public TestTokenProperties(String secretKey, int validSeconds) {
-            super(secretKey, validSeconds);
+        public TestTokenProperties(String secretKey) {
+            super(secretKey);
         }
     }
 }

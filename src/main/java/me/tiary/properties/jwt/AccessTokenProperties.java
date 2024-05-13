@@ -7,7 +7,7 @@ import org.springframework.boot.context.properties.ConstructorBinding;
 
 @ConfigurationProperties(prefix = "jwt.access-token")
 @ConstructorBinding
-public class AccessTokenProperties extends JwtProperties {
+public class AccessTokenProperties extends FiniteJwtProperties {
     public static final String COOKIE_NAME = "access_token";
 
     public AccessTokenProperties(final String secretKey, final int validSeconds) {
