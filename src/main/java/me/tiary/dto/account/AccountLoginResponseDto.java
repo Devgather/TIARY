@@ -9,6 +9,6 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class AccountLoginResponseDto {
     private final String accessToken;
+
     private final String refreshToken;
-    private final int refreshTokenValidSeconds;
 }

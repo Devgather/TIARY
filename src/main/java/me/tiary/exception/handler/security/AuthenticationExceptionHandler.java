@@ -63,8 +63,7 @@ public class AuthenticationExceptionHandler implements AuthenticationEntryPoint 
                 CookieUtility.addCookie(
                         response,
                         RefreshTokenProperties.COOKIE_NAME,
-                        refreshTokenProvider.generate(Map.of(RefreshTokenClaim.PROFILE_UUID.getClaim(), profileUuid)),
-                        refreshTokenProvider.getValidSeconds()
+                        refreshTokenProvider.generate(Map.of(RefreshTokenClaim.PROFILE_UUID.getClaim(), profileUuid))
                 );
 
                 response.sendRedirect(request.getRequestURI());

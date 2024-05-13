@@ -18,18 +18,14 @@ public final class AccountLoginResponseDtoFactory {
 
         final String refreshToken = refreshTokenProvider.generate(payload);
 
-        final int refreshTokenValidSeconds = refreshTokenProvider.getValidSeconds();
-
-        return create(accessToken, refreshToken, refreshTokenValidSeconds);
+        return create(accessToken, refreshToken);
     }
 
     public static AccountLoginResponseDto create(final String accessToken,
-                                                 final String refreshToken,
-                                                 final int refreshTokenValidSeconds) {
+                                                 final String refreshToken) {
         return AccountLoginResponseDto.builder()
                 .accessToken(accessToken)
                 .refreshToken(refreshToken)
-                .refreshTokenValidSeconds(refreshTokenValidSeconds)
                 .build();
     }
 }

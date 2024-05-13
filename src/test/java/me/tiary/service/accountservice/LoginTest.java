@@ -127,6 +127,5 @@ class LoginTest {
         // Then
         assertDoesNotThrow(() -> accessTokenProvider.verify(result.getAccessToken()));
         assertDoesNotThrow(() -> refreshTokenProvider.verify(result.getRefreshToken()));
-        assertThat(result.getRefreshTokenValidSeconds()).isEqualTo(refreshTokenProvider.getValidSeconds());
     }
 }
