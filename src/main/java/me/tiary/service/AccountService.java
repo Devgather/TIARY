@@ -151,12 +151,9 @@ public class AccountService {
 
         final String refreshToken = refreshTokenProvider.generate(refreshTokenPayload);
 
-        final int refreshTokenValidSeconds = refreshTokenProvider.getValidSeconds();
-
         return AccountLoginResponseDto.builder()
                 .accessToken(accessToken)
                 .refreshToken(refreshToken)
-                .refreshTokenValidSeconds(refreshTokenValidSeconds)
                 .build();
     }
 

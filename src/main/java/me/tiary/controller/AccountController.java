@@ -55,7 +55,7 @@ public class AccountController {
         final AccountLoginResponseDto responseDto = accountService.login(requestDto);
 
         CookieUtility.addCookie(response, AccessTokenProperties.COOKIE_NAME, responseDto.getAccessToken());
-        CookieUtility.addCookie(response, RefreshTokenProperties.COOKIE_NAME, responseDto.getRefreshToken(), responseDto.getRefreshTokenValidSeconds());
+        CookieUtility.addCookie(response, RefreshTokenProperties.COOKIE_NAME, responseDto.getRefreshToken());
 
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
