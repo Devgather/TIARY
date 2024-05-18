@@ -4,8 +4,13 @@ $(function () {
         url: `/api/til/${uuid}`
     }).done(function (data) {
         $('#title').text(data.title);
-        $('#author').text(data.author);
+
+        $('#author')
+            .attr('href', `/profile/${data.author}?page=1&size=5`)
+            .text(data.author);
+
         $('#created-date').text(data.createdDate);
+
         $('#content').html(data.content);
 
         hljs.highlightAll();
