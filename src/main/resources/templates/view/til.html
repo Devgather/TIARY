@@ -43,7 +43,8 @@
 
             <div th:classappend="(${editPermission}) ? ('mb-4') : ('mb-5')" class="is-flex is-flex-direction-row">
                 <p>
-                    <a th:href="@{/profile/{nickname}?page=1&size=5(nickname=${memberNickname})}" id="author">작성자</a>
+                    <a th:href="@{/profile/{nickname}?page=1&size=5(nickname=${memberNickname})}" id="author"
+                       class="nickname">작성자</a>
                 </p>
 
                 <p>&nbsp;·&nbsp;</p>
