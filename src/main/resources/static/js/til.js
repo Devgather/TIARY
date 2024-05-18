@@ -24,7 +24,7 @@ $(function () {
                     <div class="is-flex is-justify-content-space-between mb-3">
                         <div class="is-flex is-flex-direction-row">
                             <p>
-                                <b>${comment.nickname}</b>
+                                <a href="/profile/${comment.nickname}?page=1&size=5" class="nickname">${comment.nickname}</a>
                             </p>
 
                             <p>&nbsp;·&nbsp;</p>
