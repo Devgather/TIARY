@@ -1,3 +1,12 @@
+#author {
+    color: #4A4A4A;
+    font-weight: bold;
+}
+
+#author:hover {
+    text-decoration: underline;
+}
+
 .box {
     padding: 2rem;
 }
