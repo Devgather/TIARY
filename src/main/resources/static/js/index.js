@@ -1,3 +1,5 @@
+const markdownToTextConverter = new marked.Marked({gfm: true}).use(markedPlaintify());
+
 $(function () {
     $.ajax({
         type: 'GET',
@@ -25,7 +27,7 @@ $(function () {
                             <div class="content">
                                 <h4 class="title is-4">${til.title}</h4>
                                 
-                                <p class="has-text-black">${til.content.substring(0, 30)}</p>
+                                <p class="has-text-black">${markdownToTextConverter.parse(til.content).substring(0, 30)}</p>
                             </div>
                         </div>
                     </a>
