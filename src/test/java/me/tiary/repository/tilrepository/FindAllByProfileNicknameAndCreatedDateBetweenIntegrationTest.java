@@ -12,10 +12,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -26,8 +22,8 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @RepositoryIntegrationTest
-@DisplayName("[TilRepository - Integration] findByProfileNicknameAndCreatedDateBetween")
-class FindByProfileNicknameAndCreatedDateBetweenIntegrationTest {
+@DisplayName("[TilRepository - Integration] findAllByProfileNicknameAndCreatedDateBetween")
+class FindAllByProfileNicknameAndCreatedDateBetweenIntegrationTest {
     @Autowired
     private TilRepository tilRepository;
 
@@ -52,10 +48,9 @@ class FindByProfileNicknameAndCreatedDateBetweenIntegrationTest {
         // Given
         final LocalDateTime startDate = LocalDateTime.now();
         final LocalDateTime endDate = LocalDateTime.now();
-        final Pageable pageable = PageRequest.of(0, 5, Sort.by("createdDate").descending());
 
         // When
-        final Page<Til> result = tilRepository.findByProfileNicknameAndCreatedDateBetween(profile.getNickname(), startDate, endDate, pageable);
+        final List<Til> result = tilRepository.findAllByProfileNicknameAndCreatedDateBetween(profile.getNickname(), startDate, endDate);
 
         // Then
         assertThat(result).isEmpty();
@@ -79,10 +74,9 @@ class FindByProfileNicknameAndCreatedDateBetweenIntegrationTest {
 
         final String thirdPartyProfileNickname = "ThirdParty" + profile.getNickname();
         final LocalDateTime endDate = LocalDateTime.now();
-        final Pageable pageable = PageRequest.of(0, 5, Sort.by("createdDate").descending());
 
         // When
-        final Page<Til> result = tilRepository.findByProfileNicknameAndCreatedDateBetween(thirdPartyProfileNickname, startDate, endDate, pageable);
+        final List<Til> result = tilRepository.findAllByProfileNicknameAndCreatedDateBetween(thirdPartyProfileNickname, startDate, endDate);
 
         // Then
         assertThat(result).isEmpty();
@@ -104,18 +98,17 @@ class FindByProfileNicknameAndCreatedDateBetweenIntegrationTest {
 
         final LocalDateTime startDate = LocalDateTime.now();
         final LocalDateTime endDate = LocalDateTime.now();
-        final Pageable pageable = PageRequest.of(0, 5, Sort.by("createdDate").descending());
 
         // When
-        final Page<Til> result = tilRepository.findByProfileNicknameAndCreatedDateBetween(profile.getNickname(), startDate, endDate, pageable);
+        final List<Til> result = tilRepository.findAllByProfileNicknameAndCreatedDateBetween(profile.getNickname(), startDate, endDate);
 
         // Then
         assertThat(result).isEmpty();
     }
 
     @Test
-    @DisplayName("[Success] til number does not meet request")
-    void successIfTilNumberDoesNotMeetRequest() {
+    @DisplayName("[Success] til does exist")
+    void successIfTilDoesExist() {
         // Given
         final List<Til> outPeriodTils = new ArrayList<>();
 
@@ -140,58 +133,11 @@ class FindByProfileNicknameAndCreatedDateBetweenIntegrationTest {
         JpaUtility.flushAndClear(em);
 
         final LocalDateTime endDate = LocalDateTime.now();
-        final Pageable pageable = PageRequest.of(0, 5, Sort.by("createdDate").descending());
 
         // When
-        final Page<Til> result = tilRepository.findByProfileNicknameAndCreatedDateBetween(profile.getNickname(), startDate, endDate, pageable);
+        final List<Til> result = tilRepository.findAllByProfileNicknameAndCreatedDateBetween(profile.getNickname(), startDate, endDate);
 
         // Then
-        assertThat(result.getTotalPages()).isEqualTo(1);
-        assertThat(result.getContent()).hasSize(3);
-    }
-
-    @Test
-    @DisplayName("[Success] til number does meet request")
-    void successIfTilNumberDoesMeetRequest() {
-        // Given
-        final List<Til> outPeriodTils = new ArrayList<>();
-
-        for (int i = 0; i < 3; i++) {
-            outPeriodTils.add(TilFactory.createDefaultTil(profile));
-        }
-
-        tilRepository.saveAll(outPeriodTils);
-
-        JpaUtility.flushAndClear(em);
-
-        final LocalDateTime startDate = LocalDateTime.now();
-
-        final List<Til> inPeriodTils = new ArrayList<>();
-
-        for (int i = 0; i < 13; i++) {
-            inPeriodTils.add(TilFactory.createDefaultTil(profile));
-        }
-
-        tilRepository.saveAll(inPeriodTils);
-
-        JpaUtility.flushAndClear(em);
-
-        final LocalDateTime endDate = LocalDateTime.now();
-        final Pageable pageable1 = PageRequest.of(0, 5, Sort.by("createdDate").descending());
-        final Pageable pageable2 = PageRequest.of(1, 5, Sort.by("createdDate").descending());
-        final Pageable pageable3 = PageRequest.of(2, 5, Sort.by("createdDate").descending());
-
-        // When
-        final Page<Til> result1 = tilRepository.findByProfileNicknameAndCreatedDateBetween(profile.getNickname(), startDate, endDate, pageable1);
-        final Page<Til> result2 = tilRepository.findByProfileNicknameAndCreatedDateBetween(profile.getNickname(), startDate, endDate, pageable2);
-        final Page<Til> result3 = tilRepository.findByProfileNicknameAndCreatedDateBetween(profile.getNickname(), startDate, endDate, pageable3);
-
-        // Then
-        assertThat(result1.getTotalPages()).isEqualTo(3);
-        assertThat(result2.getTotalPages()).isEqualTo(3);
-        assertThat(result3.getTotalPages()).isEqualTo(3);
-        assertThat(result1.getContent()).hasSize(5);
-        assertThat(result2.getContent()).hasSize(5);
-        assertThat(result3.getContent()).hasSize(3);
+        assertThat(result).hasSize(3);
     }
 }
