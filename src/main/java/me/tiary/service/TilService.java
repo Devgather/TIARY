@@ -12,6 +12,7 @@ import me.tiary.repository.ProfileRepository;
 import me.tiary.repository.TagRepository;
 import me.tiary.repository.TilRepository;
 import me.tiary.repository.TilTagRepository;
+import me.tiary.vo.til.TilStreakVo;
 import me.tiary.vo.til.TilVo;
 import me.tiary.vo.til.TilWithProfileVo;
 import org.commonmark.node.Node;
@@ -23,8 +24,12 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 @Service
 @Transactional(readOnly = true)
@@ -205,5 +210,40 @@ public class TilService {
         tilTagRepository.deleteAllByTilUuid(tilUuid);
 
         return modelMapper.map(til, TilDeletionResponseDto.class);
+    }
+
+    public TilStreakReadResponseDto readTilStreak(final String nickname, final LocalDate startDate, final LocalDate endDate) {
+        if (profileRepository.findByNickname(nickname).isEmpty()) {
+            throw new TilException(TilStatus.NOT_EXISTING_PROFILE);
+        }
+
+        final List<Til> tils = tilRepository.findAllByProfileNicknameAndCreatedDateBetween(nickname, startDate.atTime(LocalTime.MIN), endDate.atTime(LocalTime.MAX));
+
+        final Map<LocalDate, Integer> tilNumbers = new TreeMap<>();
+
+        for (final Til til : tils) {
+            final LocalDate date = til.getCreatedDate().toLocalDate();
+
+            if (tilNumbers.containsKey(date)) {
+                tilNumbers.replace(date, tilNumbers.get(date) + 1);
+            } else {
+                tilNumbers.put(date, 1);
+            }
+        }
+
+        final List<TilStreakVo> streaks = new ArrayList<>();
+
+        for (Map.Entry<LocalDate, Integer> entry : tilNumbers.entrySet()) {
+            final TilStreakVo tilStreakVo = TilStreakVo.builder()
+                    .date(entry.getKey())
+                    .tilNumber(entry.getValue())
+                    .build();
+
+            streaks.add(tilStreakVo);
+        }
+
+        return TilStreakReadResponseDto.builder()
+                .streaks(streaks)
+                .build();
     }
 }
