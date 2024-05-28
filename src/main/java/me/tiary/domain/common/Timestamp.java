@@ -21,4 +21,9 @@ public abstract class Timestamp {
     @Column(columnDefinition = "datetime", nullable = false)
     @LastModifiedDate
     private LocalDateTime lastModifiedDate;
+
+    protected Timestamp() {
+        this.createdDate = LocalDateTime.now();
+        this.lastModifiedDate = LocalDateTime.now();
+    }
 }
