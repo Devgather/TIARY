@@ -8,6 +8,7 @@ import me.tiary.service.TilService;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
+import java.time.LocalDate;
 
 @RestController
 @RequestMapping("/api/til")
@@ -78,6 +80,15 @@ public class TilController {
         final String profileUuid = memberDetails.getProfileUuid();
 
         final TilDeletionResponseDto result = tilService.deleteTil(profileUuid, uuid);
+
+        return ResponseEntity.ok(result);
+    }
+
+    @GetMapping("/streak/{nickname}")
+    public ResponseEntity<TilStreakReadResponseDto> readTilStreak(@PathVariable @NotBlank @Size(max = Profile.NICKNAME_MAX_LENGTH) final String nickname,
+                                                                  @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") final LocalDate startDate,
+                                                                  @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") final LocalDate endDate) {
+        final TilStreakReadResponseDto result = tilService.readTilStreak(nickname, startDate, endDate);
 
         return ResponseEntity.ok(result);
     }

@@ -40,6 +40,7 @@ import org.springframework.test.web.servlet.request.MockMultipartHttpServletRequ
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import javax.servlet.http.Cookie;
+import java.time.LocalDate;
 import java.util.UUID;
 
 import static org.hamcrest.Matchers.not;
@@ -1009,6 +1010,48 @@ class SecurityFilterChainIntegrationTest {
 
         // Then
         resultActions.andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    @DisplayName("[Success] member requests til streak read api")
+    void successIfMemberRequestsTilStreakReadApi() throws Exception {
+        // Given
+        final String nickname = FactoryPreset.NICKNAME;
+
+        final String url = TilApiUrl.TIL_STREAK_READ.getEntireUrl() + nickname;
+
+        // Algorithm = HMAC256, Payload = { "uuid": "cbf0f220-97b8-4312-82ce-f98266c428d4" }, Secret Key = jwt-access-token-secret-key
+        final String accessToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiY2JmMGYyMjAtOTdiOC00MzEyLTgyY2UtZjk4MjY2YzQyOGQ0In0.rftGC07wvthl89A-lHN4NzeP2gcVv9UxTTnST3Nhqz8";
+
+        // When
+        final ResultActions resultActions = mockMvc.perform(
+                MockMvcRequestBuilders.get(url)
+                        .cookie(new Cookie(AccessTokenProperties.COOKIE_NAME, accessToken))
+                        .param("startDate", LocalDate.now().toString())
+                        .param("endDate", LocalDate.now().toString())
+        );
+
+        // Then
+        resultActions.andExpect(status().is(not(HttpStatus.FORBIDDEN.value())));
+    }
+
+    @Test
+    @DisplayName("[Success] anonymous requests til streak read api")
+    void successIfAnonymousRequestsTilStreakReadApi() throws Exception {
+        // Given
+        final String nickname = FactoryPreset.NICKNAME;
+
+        final String url = TilApiUrl.TIL_STREAK_READ.getEntireUrl() + nickname;
+
+        // When
+        final ResultActions resultActions = mockMvc.perform(
+                MockMvcRequestBuilders.get(url)
+                        .param("startDate", LocalDate.now().toString())
+                        .param("endDate", LocalDate.now().toString())
+        );
+
+        // Then
+        resultActions.andExpect(status().is(not(HttpStatus.FORBIDDEN.value())));
     }
 
     @Test
