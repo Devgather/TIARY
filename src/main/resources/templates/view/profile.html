@@ -8,6 +8,10 @@
 
     <script src="https://code.jquery.com/jquery-3.6.3.min.js"
             integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU=" crossorigin="anonymous" defer></script>
+    <script src="https://d3js.org/d3.v7.min.js" defer></script>
+    <script src="https://unpkg.com/@popperjs/core@2" defer></script>
+    <script src="https://unpkg.com/cal-heatmap/dist/cal-heatmap.min.js" defer></script>
+    <script src="https://unpkg.com/cal-heatmap/dist/plugins/Tooltip.min.js" defer></script>
     <script src="https://cdn.jsdelivr.net/npm/marked@12.0.2/lib/marked.umd.min.js" defer></script>
     <script src="https://cdn.jsdelivr.net/npm/marked-plaintify@1.0.1/dist/index.umd.min.js" defer></script>
 
@@ -25,23 +29,28 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css"
           integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A=="
           crossorigin="anonymous" referrerpolicy="no-referrer"/>
+    <link rel="stylesheet" href="https://unpkg.com/cal-heatmap/dist/cal-heatmap.css"/>
 </head>
 <body>
 <header th:replace="view/fragments/header.html :: header"></header>
 
 <section class="section px-4">
     <div class="container is-max-desktop">
-        <div class="is-flex is-flex-direction-row mb-6">
-            <figure class="image is-96x96">
-                <img src="https://bulma.io/images/placeholders/96x96.png" id="picture">
-            </figure>
+        <div class="is-flex is-flex-direction-row is-justify-content-space-between mb-6">
+            <div class="is-flex is-flex-direction-row">
+                <figure class="image is-96x96">
+                    <img src="https://bulma.io/images/placeholders/96x96.png" id="picture">
+                </figure>
 
-            <div class="ml-5">
-                <h4 id="nickname" class="title is-4">닉네임</h4>
+                <div class="ml-5">
+                    <h4 id="nickname" class="title is-4">닉네임</h4>
 
-                <a th:if="${editPermission}" href="/profile/editor"
-                   class="button has-background-primary-dark has-text-white is-size-7">수정</a>
+                    <a th:if="${editPermission}" href="/profile/editor"
+                       class="button has-background-primary-dark has-text-white is-size-7">수정</a>
+                </div>
             </div>
+
+            <div id="streak-graph"></div>
         </div>
 
         <div class="is-flex is-align-content-center is-justify-content-space-between mb-5">
