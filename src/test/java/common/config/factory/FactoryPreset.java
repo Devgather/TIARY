@@ -19,6 +19,8 @@ public final class FactoryPreset {
 
     public static final String CONTENT = "test";
 
+    public static final String MARKDOWN = "test";
+
     public static final String TAG = "test";
 
     public static final List<String> TAGS = List.of("test1", "test2");
