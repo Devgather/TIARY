@@ -13,6 +13,19 @@ $(function () {
 
         $('#content').html(data.content);
 
+        $('#tags').empty();
+
+        if (data.tags.length != 0) {
+            let tagsHtml = '';
+
+            data.tags.forEach(tag => {
+                tagsHtml += `<span class="tag is-light mr-2">${tag}</span>`;
+            });
+
+            $('#tags').addClass('mb-6');
+            $('#tags').append(tagsHtml);
+        }
+
         hljs.highlightAll();
     });
 
