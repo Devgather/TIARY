@@ -13,7 +13,16 @@ $(function () {
             url: `/api/til/${uuid}`
         }).done(function (data) {
             $('#title-input').val(data.title);
+
             simpleMde.value(data.markdown);
+
+            let tags = '';
+
+            data.tags.forEach(tag => {
+                tags += tag + ', ';
+            });
+
+            $('#tags-input').val(tags.substring(0, tags.length - 2));
         });
     }
 });
