@@ -3,7 +3,6 @@ package me.tiary.controller.tilcontroller;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import common.annotation.controller.ControllerTest;
-import common.config.factory.FactoryPreset;
 import common.config.url.TilApiUrl;
 import common.factory.dto.til.TilReadResponseDtoFactory;
 import common.utility.GsonLocalDateTimeDeserializer;
@@ -28,7 +27,6 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -93,46 +91,8 @@ class ReadTilTest {
     }
 
     @Test
-    @DisplayName("[Success] til does exist and tags do not exist")
-    void successIfTilDoesExistAndTagsDoNotExist() throws Exception {
-        // Given
-        final String tilUuid = UUID.randomUUID().toString();
-
-        final String url = TilApiUrl.TIL_READ.getEntireUrl() + tilUuid;
-
-        final TilReadResponseDto responseDto = TilReadResponseDtoFactory.create(
-                FactoryPreset.TITLE, FactoryPreset.CONTENT, FactoryPreset.MARKDOWN, new ArrayList<>(), FactoryPreset.NICKNAME, LocalDateTime.now()
-        );
-
-        doReturn(responseDto)
-                .when(tilService)
-                .readTil(tilUuid);
-
-        // When
-        final ResultActions resultActions = mockMvc.perform(
-                MockMvcRequestBuilders.get(url)
-        );
-
-        final TilReadResponseDto response = gson.fromJson(
-                resultActions.andReturn()
-                        .getResponse()
-                        .getContentAsString(StandardCharsets.UTF_8),
-                TilReadResponseDto.class
-        );
-
-        // Then
-        resultActions.andExpect(status().isOk());
-        assertThat(response.getTitle()).isEqualTo(responseDto.getTitle());
-        assertThat(response.getContent()).isEqualTo(responseDto.getContent());
-        assertThat(response.getMarkdown()).isEqualTo(responseDto.getMarkdown());
-        assertThat(response.getTags()).isEmpty();
-        assertThat(response.getAuthor()).isEqualTo(responseDto.getAuthor());
-        assertThat(response.getCreatedDate()).isEqualTo(responseDto.getCreatedDate().truncatedTo(ChronoUnit.SECONDS));
-    }
-
-    @Test
-    @DisplayName("[Success] til does exist and tags do exist")
-    void successIfTilDoesExistAndTagsDoExist() throws Exception {
+    @DisplayName("[Success] til does exist")
+    void successIfTilDoesExist() throws Exception {
         // Given
         final String tilUuid = UUID.randomUUID().toString();
 
@@ -161,7 +121,6 @@ class ReadTilTest {
         assertThat(response.getTitle()).isEqualTo(responseDto.getTitle());
         assertThat(response.getContent()).isEqualTo(responseDto.getContent());
         assertThat(response.getMarkdown()).isEqualTo(responseDto.getMarkdown());
-        assertThat(response.getTags()).hasSize(responseDto.getTags().size());
         assertThat(response.getAuthor()).isEqualTo(responseDto.getAuthor());
         assertThat(response.getCreatedDate()).isEqualTo(responseDto.getCreatedDate().truncatedTo(ChronoUnit.SECONDS));
     }

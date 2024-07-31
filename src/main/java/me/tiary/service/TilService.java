@@ -101,18 +101,10 @@ public class TilService {
         final HtmlRenderer htmlRenderer = HtmlRenderer.builder().escapeHtml(true).build();
         final Node document = markdownParser.parse(til.getContent());
 
-        final List<TilTag> tilTags = tilTagRepository.findAllByTilUuid(tilUuid);
-        final List<String> tags = new ArrayList<>();
-
-        for (final TilTag tilTag : tilTags) {
-            tags.add(tilTag.getTag().getName());
-        }
-
         return TilReadResponseDto.builder()
                 .title(til.getTitle())
                 .content(htmlRenderer.render(document))
                 .markdown(til.getContent())
-                .tags(tags)
                 .author(til.getProfile().getNickname())
                 .createdDate(til.getCreatedDate())
                 .build();
