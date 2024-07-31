@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED, force = true)
 @RequiredArgsConstructor
@@ -16,8 +15,6 @@ public class TilReadResponseDto {
     private final String content;
 
     private final String markdown;
-
-    private final List<String> tags;
 
     private final String author;
 

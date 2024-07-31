@@ -13,6 +13,13 @@ $(function () {
 
         $('#content').html(data.content);
 
+        hljs.highlightAll();
+    });
+
+    $.ajax({
+        type: 'GET',
+        url: `/api/tag/list/${uuid}`
+    }).done(function (data) {
         $('#tags').empty();
 
         if (data.tags.length != 0) {
@@ -25,8 +32,6 @@ $(function () {
             $('#tags').addClass('mb-6');
             $('#tags').append(tagsHtml);
         }
-
-        hljs.highlightAll();
     });
 
     $.ajax({

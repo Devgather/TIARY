@@ -15,7 +15,12 @@ $(function () {
             $('#title-input').val(data.title);
 
             simpleMde.value(data.markdown);
+        });
 
+        $.ajax({
+            type: 'GET',
+            url: `/api/tag/list/${uuid}`
+        }).done(function (data) {
             let tags = '';
 
             data.tags.forEach(tag => {
