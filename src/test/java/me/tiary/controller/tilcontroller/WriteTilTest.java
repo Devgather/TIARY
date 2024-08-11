@@ -76,7 +76,7 @@ class WriteTilTest {
         // Given
         final String url = TilApiUrl.TIL_WRITING.getEntireUrl();
 
-        final TilWritingRequestDto requestDto = TilWritingRequestDtoFactory.create(title, FactoryPreset.CONTENT, FactoryPreset.TAGS);
+        final TilWritingRequestDto requestDto = TilWritingRequestDtoFactory.create(title, FactoryPreset.CONTENT);
 
         // When
         final ResultActions resultActions = mockMvc.perform(
@@ -97,7 +97,7 @@ class WriteTilTest {
         // Given
         final String url = TilApiUrl.TIL_WRITING.getEntireUrl();
 
-        final TilWritingRequestDto requestDto = TilWritingRequestDtoFactory.create(FactoryPreset.TITLE, content, FactoryPreset.TAGS);
+        final TilWritingRequestDto requestDto = TilWritingRequestDtoFactory.create(FactoryPreset.TITLE, content);
 
         // When
         final ResultActions resultActions = mockMvc.perform(
@@ -141,39 +141,8 @@ class WriteTilTest {
     }
 
     @Test
-    @DisplayName("[Success] til is acceptable with tags is null")
-    void successIfTilIsAcceptableWithTagsIsNull() throws Exception {
-        // Given
-        final String url = TilApiUrl.TIL_WRITING.getEntireUrl();
-
-        final TilWritingRequestDto requestDto = TilWritingRequestDtoFactory.create(FactoryPreset.TITLE, FactoryPreset.CONTENT, null);
-
-        final TilWritingResponseDto responseDto = TilWritingResponseDtoFactory.createDefaultTilWritingResponseDto();
-
-        doReturn(responseDto)
-                .when(tilService)
-                .writeTil(memberDetails.getProfileUuid(), requestDto);
-
-        // When
-        final ResultActions resultActions = mockMvc.perform(
-                MockMvcRequestBuilders.post(url)
-                        .content(gson.toJson(requestDto))
-                        .contentType(MediaType.APPLICATION_JSON)
-        );
-
-        final TilWritingResponseDto response = gson.fromJson(resultActions
-                .andReturn()
-                .getResponse()
-                .getContentAsString(StandardCharsets.UTF_8), TilWritingResponseDto.class);
-
-        // Then
-        resultActions.andExpect(status().isCreated());
-        assertThat(response.getUuid()).hasSize(36);
-    }
-
-    @Test
-    @DisplayName("[Success] til is acceptable with tags is not null")
-    void successIfTilIsAcceptableWithTagsIsNotNull() throws Exception {
+    @DisplayName("[Success] til is acceptable")
+    void successIfTilIsAcceptable() throws Exception {
         // Given
         final String url = TilApiUrl.TIL_WRITING.getEntireUrl();
 

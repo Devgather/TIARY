@@ -3,7 +3,6 @@ package me.tiary.dto.til;
 import lombok.*;
 
 import javax.validation.constraints.NotBlank;
-import java.util.List;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED, force = true)
 @Getter
@@ -16,6 +15,4 @@ public class TilWritingRequestDto {
 
     @NotBlank
     private final String content;
-
-    private final List<String> tags;
 }

@@ -69,27 +69,6 @@ public class TilService {
                         .build()
         );
 
-        final List<TilTag> tilTags = new ArrayList<>();
-
-        for (final String tagName : requestDto.getTags()) {
-            final Tag tag = tagRepository.findByName(tagName)
-                    .orElseGet(() -> tagRepository.save(
-                                    Tag.builder()
-                                            .name(tagName)
-                                            .build()
-                            )
-                    );
-
-            final TilTag tilTag = TilTag.builder()
-                    .til(til)
-                    .tag(tag)
-                    .build();
-
-            tilTags.add(tilTag);
-        }
-
-        tilTagRepository.saveAll(tilTags);
-
         return modelMapper.map(til, TilWritingResponseDto.class);
     }
 

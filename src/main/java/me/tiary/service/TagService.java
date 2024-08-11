@@ -1,11 +1,14 @@
 package me.tiary.service;
 
 import lombok.RequiredArgsConstructor;
+import me.tiary.domain.Tag;
 import me.tiary.domain.Til;
 import me.tiary.domain.TilTag;
 import me.tiary.dto.tag.TagListReadResponseDto;
+import me.tiary.dto.tag.TagListWritingRequestDto;
 import me.tiary.exception.TagException;
 import me.tiary.exception.status.TagStatus;
+import me.tiary.repository.TagRepository;
 import me.tiary.repository.TilRepository;
 import me.tiary.repository.TilTagRepository;
 import org.springframework.stereotype.Service;
@@ -19,9 +22,41 @@ import java.util.Optional;
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class TagService {
+    private final TagRepository tagRepository;
+
     private final TilRepository tilRepository;
 
     private final TilTagRepository tilTagRepository;
+
+    @Transactional
+    public void writeTagList(final String profileUuid, final String tilUuid, final TagListWritingRequestDto requestDto) {
+        final Til til = tilRepository.findByUuidJoinFetchProfile(tilUuid)
+                .orElseThrow(() -> new TagException(TagStatus.NOT_EXISTING_TIL));
+
+        if (!til.getProfile().getUuid().equals(profileUuid)) {
+            throw new TagException(TagStatus.NOT_AUTHORIZED_MEMBER);
+        }
+
+        final List<TilTag> tilTags = new ArrayList<>();
+
+        for (final String tagName : requestDto.getTags()) {
+            final Tag tag = tagRepository.findByName(tagName)
+                    .orElseGet(() -> tagRepository.save(
+                            Tag.builder()
+                                    .name(tagName)
+                                    .build()
+                    ));
+
+            final TilTag tilTag = TilTag.builder()
+                    .til(til)
+                    .tag(tag)
+                    .build();
+
+            tilTags.add(tilTag);
+        }
+
+        tilTagRepository.saveAll(tilTags);
+    }
 
     public TagListReadResponseDto readTagList(final String tilUuid) {
         final Optional<Til> til = tilRepository.findByUuid(tilUuid);
