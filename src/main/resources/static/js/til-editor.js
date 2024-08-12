@@ -78,9 +78,32 @@ function completeEdit() {
             contentType: 'application/json',
             data: JSON.stringify({
                 'title': title,
-                'content': content,
-                'tags': tags
+                'content': content
             })
+        }).then(function (data) {
+            if (!tags.length) {
+                return null;
+            }
+
+            return $.ajax({
+                type: 'POST',
+                url: `/api/tag/list/${data.uuid}`,
+                headers: {
+                    'X-XSRF-TOKEN': document.cookie.replace(/(?:(?:^|.*;\s*)XSRF-TOKEN\s*\=\s*([^;]*).*$)|^.*$/, '$1')
+                },
+                contentType: 'application/json',
+                data: JSON.stringify({
+                    'tags': tags
+                })
+            }).fail(function () {
+                $.ajax({
+                    type: 'DELETE',
+                    url: `/api/til/${data.uuid}`,
+                    headers: {
+                        'X-XSRF-TOKEN': document.cookie.replace(/(?:(?:^|.*;\s*)XSRF-TOKEN\s*\=\s*([^;]*).*$)|^.*$/, '$1')
+                    }
+                });
+            });
         }).done(function () {
             alert('TIL 작성을 성공했습니다.');
             window.location.replace(`/profile/${memberNickname}?page=1&size=5`);
