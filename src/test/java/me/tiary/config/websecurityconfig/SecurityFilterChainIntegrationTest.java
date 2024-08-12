@@ -12,6 +12,7 @@ import common.factory.dto.comment.CommentWritingRequestDtoFactory;
 import common.factory.dto.profile.ProfileCreationRequestDtoFactory;
 import common.factory.dto.profile.ProfilePictureUploadRequestDtoFactory;
 import common.factory.dto.profile.ProfileUpdateRequestDtoFactory;
+import common.factory.dto.tag.TagListWritingRequestDtoFactory;
 import common.factory.dto.til.TilEditRequestDtoFactory;
 import common.factory.dto.til.TilWritingRequestDtoFactory;
 import me.tiary.domain.Verification;
@@ -23,6 +24,7 @@ import me.tiary.dto.comment.CommentWritingRequestDto;
 import me.tiary.dto.profile.ProfileCreationRequestDto;
 import me.tiary.dto.profile.ProfilePictureUploadRequestDto;
 import me.tiary.dto.profile.ProfileUpdateRequestDto;
+import me.tiary.dto.tag.TagListWritingRequestDto;
 import me.tiary.dto.til.TilEditRequestDto;
 import me.tiary.dto.til.TilWritingRequestDto;
 import me.tiary.properties.jwt.AccessTokenProperties;
@@ -1052,6 +1054,54 @@ class SecurityFilterChainIntegrationTest {
 
         // Then
         resultActions.andExpect(status().is(not(HttpStatus.FORBIDDEN.value())));
+    }
+
+    @Test
+    @DisplayName("[Success] member requests tag list writing api")
+    void successIfMemberRequestsTagListWritingApi() throws Exception {
+        // Given
+        final String tilUuid = UUID.randomUUID().toString();
+
+        final String url = TagApiUrl.TAG_LIST_WRITING.getEntireUrl() + tilUuid;
+
+        // Algorithm = HMAC256, Payload = { "uuid": "cbf0f220-97b8-4312-82ce-f98266c428d4" }, Secret Key = jwt-access-token-secret-key
+        final String accessToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiY2JmMGYyMjAtOTdiOC00MzEyLTgyY2UtZjk4MjY2YzQyOGQ0In0.rftGC07wvthl89A-lHN4NzeP2gcVv9UxTTnST3Nhqz8";
+
+        final TagListWritingRequestDto requestDto = TagListWritingRequestDtoFactory.createDefaultTagListWritingRequestDto();
+
+        // When
+        final ResultActions resultActions = mockMvc.perform(
+                MockMvcRequestBuilders.post(url)
+                        .with(csrf())
+                        .cookie(new Cookie(AccessTokenProperties.COOKIE_NAME, accessToken))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(gson.toJson(requestDto))
+        );
+
+        // Then
+        resultActions.andExpect(status().is(not(HttpStatus.FORBIDDEN.value())));
+    }
+
+    @Test
+    @DisplayName("[Fail] anonymous requests tag list writing api")
+    void failIfAnonymousRequestsTagListWritingApi() throws Exception {
+        // Given
+        final String tilUuid = UUID.randomUUID().toString();
+
+        final String url = TagApiUrl.TAG_LIST_WRITING.getEntireUrl() + tilUuid;
+
+        final TagListWritingRequestDto requestDto = TagListWritingRequestDtoFactory.createDefaultTagListWritingRequestDto();
+
+        // When
+        final ResultActions resultActions = mockMvc.perform(
+                MockMvcRequestBuilders.post(url)
+                        .with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(gson.toJson(requestDto))
+        );
+
+        // Then
+        resultActions.andExpect(status().isUnauthorized());
     }
 
     @Test
