@@ -1,6 +1,7 @@
 package me.tiary.controller;
 
 import lombok.RequiredArgsConstructor;
+import me.tiary.dto.tag.TagListEditRequestDto;
 import me.tiary.dto.tag.TagListReadResponseDto;
 import me.tiary.dto.tag.TagListWritingRequestDto;
 import me.tiary.security.web.userdetails.MemberDetails;
@@ -37,5 +38,16 @@ public class TagController {
         final TagListReadResponseDto result = tagService.readTagList(tilUuid);
 
         return ResponseEntity.ok(result);
+    }
+
+    @PutMapping("/list/{tilUuid}")
+    public ResponseEntity<Void> updateTagList(@AuthenticationPrincipal final MemberDetails memberDetails,
+                                              @PathVariable @NotBlank final String tilUuid,
+                                              @RequestBody @Valid final TagListEditRequestDto requestDto) {
+        final String profileUuid = memberDetails.getProfileUuid();
+
+        tagService.updateTagList(profileUuid, tilUuid, requestDto);
+
+        return ResponseEntity.ok().build();
     }
 }
