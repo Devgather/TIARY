@@ -78,7 +78,7 @@ class UpdateTilTest {
 
         final String url = TilApiUrl.TIL_EDIT.getEntireUrl() + tilUuid;
 
-        final TilEditRequestDto requestDto = TilEditRequestDtoFactory.create(title, FactoryPreset.CONTENT, FactoryPreset.TAGS);
+        final TilEditRequestDto requestDto = TilEditRequestDtoFactory.create(title, FactoryPreset.CONTENT);
 
         // When
         final ResultActions resultActions = mockMvc.perform(
@@ -101,7 +101,7 @@ class UpdateTilTest {
 
         final String url = TilApiUrl.TIL_EDIT.getEntireUrl() + tilUuid;
 
-        final TilEditRequestDto requestDto = TilEditRequestDtoFactory.create(FactoryPreset.TITLE, content, FactoryPreset.TAGS);
+        final TilEditRequestDto requestDto = TilEditRequestDtoFactory.create(FactoryPreset.TITLE, content);
 
         // When
         final ResultActions resultActions = mockMvc.perform(

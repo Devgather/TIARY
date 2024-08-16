@@ -2,14 +2,11 @@ package me.tiary.service;
 
 import lombok.RequiredArgsConstructor;
 import me.tiary.domain.Profile;
-import me.tiary.domain.Tag;
 import me.tiary.domain.Til;
-import me.tiary.domain.TilTag;
 import me.tiary.dto.til.*;
 import me.tiary.exception.TilException;
 import me.tiary.exception.status.TilStatus;
 import me.tiary.repository.ProfileRepository;
-import me.tiary.repository.TagRepository;
 import me.tiary.repository.TilRepository;
 import me.tiary.repository.TilTagRepository;
 import me.tiary.vo.til.TilStreakVo;
@@ -36,8 +33,6 @@ import java.util.TreeMap;
 @RequiredArgsConstructor
 public class TilService {
     private final TilRepository tilRepository;
-
-    private final TagRepository tagRepository;
 
     private final TilTagRepository tilTagRepository;
 
@@ -148,29 +143,6 @@ public class TilService {
         }
 
         til.update(requestDto.getTitle(), requestDto.getContent());
-
-        tilTagRepository.deleteAllByTilUuid(tilUuid);
-
-        final List<TilTag> tilTags = new ArrayList<>();
-
-        for (final String tagName : requestDto.getTags()) {
-            final Tag tag = tagRepository.findByName(tagName)
-                    .orElseGet(() -> tagRepository.save(
-                                    Tag.builder()
-                                            .name(tagName)
-                                            .build()
-                            )
-                    );
-
-            final TilTag tilTag = TilTag.builder()
-                    .til(til)
-                    .tag(tag)
-                    .build();
-
-            tilTags.add(tilTag);
-        }
-
-        tilTagRepository.saveAll(tilTags);
 
         return modelMapper.map(til, TilEditResponseDto.class);
     }
