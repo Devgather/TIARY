@@ -1,21 +1,19 @@
-package me.tiary.controller.tilcontroller;
+package me.tiary.controller.tagcontroller;
 
 import com.google.gson.Gson;
 import common.annotation.controller.ControllerTest;
 import common.config.factory.FactoryPreset;
-import common.config.url.TilApiUrl;
-import common.factory.dto.til.TilEditRequestDtoFactory;
-import common.factory.dto.til.TilEditResponseDtoFactory;
+import common.config.url.TagApiUrl;
+import common.factory.dto.tag.TagListEditRequestDtoFactory;
 import common.resolver.argument.AuthenticationPrincipalArgumentResolver;
-import me.tiary.controller.TilController;
-import me.tiary.dto.til.TilEditRequestDto;
-import me.tiary.dto.til.TilEditResponseDto;
-import me.tiary.exception.TilException;
+import me.tiary.controller.TagController;
+import me.tiary.dto.tag.TagListEditRequestDto;
+import me.tiary.exception.TagException;
 import me.tiary.exception.handler.ExceptionResponse;
 import me.tiary.exception.handler.controller.GlobalExceptionHandler;
-import me.tiary.exception.status.TilStatus;
+import me.tiary.exception.status.TagStatus;
 import me.tiary.security.web.userdetails.MemberDetails;
-import me.tiary.service.TilService;
+import me.tiary.service.TagService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -31,21 +29,23 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doThrow;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ControllerTest
-@DisplayName("[TilController] updateTil")
-class UpdateTilTest {
+@DisplayName("[TagController] updateTagList")
+class UpdateTagListTest {
     @InjectMocks
-    private TilController tilController;
+    private TagController tagController;
 
     @Mock
-    private TilService tilService;
+    private TagService tagService;
 
     private MemberDetails memberDetails;
 
@@ -59,8 +59,7 @@ class UpdateTilTest {
                 .profileUuid(UUID.randomUUID().toString())
                 .build();
 
-        mockMvc = MockMvcBuilders
-                .standaloneSetup(tilController)
+        mockMvc = MockMvcBuilders.standaloneSetup(tagController)
                 .setCustomArgumentResolvers(new AuthenticationPrincipalArgumentResolver(memberDetails))
                 .setControllerAdvice(new GlobalExceptionHandler())
                 .build();
@@ -68,23 +67,21 @@ class UpdateTilTest {
         gson = new Gson();
     }
 
-    @ParameterizedTest
-    @NullAndEmptySource
-    @ValueSource(strings = {" "})
-    @DisplayName("[Fail] title is invalid")
-    void failIfTitleIsInvalid(final String title) throws Exception {
+    @Test
+    @DisplayName("[Fail] tags are empty")
+    void failIfTagsAreEmpty() throws Exception {
         // Given
         final String tilUuid = UUID.randomUUID().toString();
 
-        final String url = TilApiUrl.TIL_EDIT.getEntireUrl() + tilUuid;
+        final String url = TagApiUrl.TAG_LIST_EDIT.getEntireUrl() + tilUuid;
 
-        final TilEditRequestDto requestDto = TilEditRequestDtoFactory.create(title, FactoryPreset.CONTENT);
+        final TagListEditRequestDto requestDto = TagListEditRequestDtoFactory.create(null);
 
         // When
         final ResultActions resultActions = mockMvc.perform(
                 MockMvcRequestBuilders.put(url)
-                        .content(gson.toJson(requestDto))
                         .contentType(MediaType.APPLICATION_JSON)
+                        .content(gson.toJson(requestDto))
         );
 
         // Then
@@ -94,20 +91,23 @@ class UpdateTilTest {
     @ParameterizedTest
     @NullAndEmptySource
     @ValueSource(strings = {" "})
-    @DisplayName("[Fail] content is invalid")
-    void failIfContentIsInvalid(final String content) throws Exception {
+    @DisplayName("[Fail] tag is invalid")
+    void failIfTagIsInvalid(final String tag) throws Exception {
         // Given
         final String tilUuid = UUID.randomUUID().toString();
 
-        final String url = TilApiUrl.TIL_EDIT.getEntireUrl() + tilUuid;
+        final String url = TagApiUrl.TAG_LIST_EDIT.getEntireUrl() + tilUuid;
 
-        final TilEditRequestDto requestDto = TilEditRequestDtoFactory.create(FactoryPreset.TITLE, content);
+        final List<String> tags = new ArrayList<>(FactoryPreset.TAGS);
+        tags.add(tag);
+
+        final TagListEditRequestDto requestDto = TagListEditRequestDtoFactory.create(tags);
 
         // When
         final ResultActions resultActions = mockMvc.perform(
                 MockMvcRequestBuilders.put(url)
-                        .content(gson.toJson(requestDto))
                         .contentType(MediaType.APPLICATION_JSON)
+                        .content(gson.toJson(requestDto))
         );
 
         // Then
@@ -120,13 +120,13 @@ class UpdateTilTest {
         // Given
         final String tilUuid = UUID.randomUUID().toString();
 
-        final String url = TilApiUrl.TIL_EDIT.getEntireUrl() + tilUuid;
+        final String url = TagApiUrl.TAG_LIST_EDIT.getEntireUrl() + tilUuid;
 
-        final TilEditRequestDto requestDto = TilEditRequestDtoFactory.createDefaultTilEditRequestDto();
+        final TagListEditRequestDto requestDto = TagListEditRequestDtoFactory.createDefaultTagListEditRequestDto();
 
-        doThrow(new TilException(TilStatus.NOT_EXISTING_TIL))
-                .when(tilService)
-                .updateTil(memberDetails.getProfileUuid(), tilUuid, requestDto);
+        doThrow(new TagException(TagStatus.NOT_EXISTING_TIL))
+                .when(tagService)
+                .updateTagList(memberDetails.getProfileUuid(), tilUuid, requestDto);
 
         // When
         final ResultActions resultActions = mockMvc.perform(
@@ -143,9 +143,8 @@ class UpdateTilTest {
         );
 
         // Then
-        resultActions.andExpect(status().is(TilStatus.NOT_EXISTING_TIL.getHttpStatus().value()));
-
-        assertThat(response.getMessages()).contains(TilStatus.NOT_EXISTING_TIL.getMessage());
+        resultActions.andExpect(status().is(TagStatus.NOT_EXISTING_TIL.getHttpStatus().value()));
+        assertThat(response.getMessages()).contains(TagStatus.NOT_EXISTING_TIL.getMessage());
     }
 
     @Test
@@ -154,13 +153,13 @@ class UpdateTilTest {
         // Given
         final String tilUuid = UUID.randomUUID().toString();
 
-        final String url = TilApiUrl.TIL_EDIT.getEntireUrl() + tilUuid;
+        final String url = TagApiUrl.TAG_LIST_EDIT.getEntireUrl() + tilUuid;
 
-        final TilEditRequestDto requestDto = TilEditRequestDtoFactory.createDefaultTilEditRequestDto();
+        final TagListEditRequestDto requestDto = TagListEditRequestDtoFactory.createDefaultTagListEditRequestDto();
 
-        doThrow(new TilException(TilStatus.NOT_AUTHORIZED_MEMBER))
-                .when(tilService)
-                .updateTil(memberDetails.getProfileUuid(), tilUuid, requestDto);
+        doThrow(new TagException(TagStatus.NOT_AUTHORIZED_MEMBER))
+                .when(tagService)
+                .updateTagList(memberDetails.getProfileUuid(), tilUuid, requestDto);
 
         // When
         final ResultActions resultActions = mockMvc.perform(
@@ -177,26 +176,23 @@ class UpdateTilTest {
         );
 
         // Then
-        resultActions.andExpect(status().is(TilStatus.NOT_AUTHORIZED_MEMBER.getHttpStatus().value()));
-
-        assertThat(response.getMessages()).contains(TilStatus.NOT_AUTHORIZED_MEMBER.getMessage());
+        resultActions.andExpect(status().is(TagStatus.NOT_AUTHORIZED_MEMBER.getHttpStatus().value()));
+        assertThat(response.getMessages()).contains(TagStatus.NOT_AUTHORIZED_MEMBER.getMessage());
     }
 
     @Test
-    @DisplayName("[Success] til is acceptable")
-    void successIfTilIsAcceptable() throws Exception {
+    @DisplayName("[Success] tags are acceptable")
+    void successIfTagsAreAcceptable() throws Exception {
         // Given
         final String tilUuid = UUID.randomUUID().toString();
 
-        final String url = TilApiUrl.TIL_EDIT.getEntireUrl() + tilUuid;
+        final String url = TagApiUrl.TAG_LIST_EDIT.getEntireUrl() + tilUuid;
 
-        final TilEditRequestDto requestDto = TilEditRequestDtoFactory.createDefaultTilEditRequestDto();
+        final TagListEditRequestDto requestDto = TagListEditRequestDtoFactory.createDefaultTagListEditRequestDto();
 
-        final TilEditResponseDto responseDto = TilEditResponseDtoFactory.createDefaultTilEditResponseDto();
-
-        doReturn(responseDto)
-                .when(tilService)
-                .updateTil(memberDetails.getProfileUuid(), tilUuid, requestDto);
+        doNothing()
+                .when(tagService)
+                .updateTagList(memberDetails.getProfileUuid(), tilUuid, requestDto);
 
         // When
         final ResultActions resultActions = mockMvc.perform(
@@ -205,14 +201,7 @@ class UpdateTilTest {
                         .content(gson.toJson(requestDto))
         );
 
-        final TilEditResponseDto result = gson.fromJson(resultActions
-                        .andReturn()
-                        .getResponse()
-                        .getContentAsString(StandardCharsets.UTF_8),
-                TilEditResponseDto.class);
-
         // Then
         resultActions.andExpect(status().isOk());
-        assertThat(result.getTilUuid()).isEqualTo(responseDto.getTilUuid());
     }
 }

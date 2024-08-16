@@ -2,7 +2,8 @@ package common.config.url;
 
 public enum TagApiUrl {
     TAG_LIST_WRITING("/list/"),
-    TAG_LIST_READ("/list/");
+    TAG_LIST_READ("/list/"),
+    TAG_LIST_EDIT("/list/");
 
     public static final String COMMON_URL = "/api/tag";
 

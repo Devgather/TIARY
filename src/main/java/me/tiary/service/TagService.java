@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import me.tiary.domain.Tag;
 import me.tiary.domain.Til;
 import me.tiary.domain.TilTag;
+import me.tiary.dto.tag.TagListEditRequestDto;
 import me.tiary.dto.tag.TagListReadResponseDto;
 import me.tiary.dto.tag.TagListWritingRequestDto;
 import me.tiary.exception.TagException;
@@ -75,5 +76,37 @@ public class TagService {
         return TagListReadResponseDto.builder()
                 .tags(tags)
                 .build();
+    }
+
+    @Transactional
+    public void updateTagList(final String profileUuid, final String tilUuid, final TagListEditRequestDto requestDto) {
+        final Til til = tilRepository.findByUuidJoinFetchProfile(tilUuid)
+                .orElseThrow(() -> new TagException(TagStatus.NOT_EXISTING_TIL));
+
+        if (!til.getProfile().getUuid().equals(profileUuid)) {
+            throw new TagException(TagStatus.NOT_AUTHORIZED_MEMBER);
+        }
+
+        tilTagRepository.deleteAllByTilUuid(tilUuid);
+
+        final List<TilTag> tilTags = new ArrayList<>();
+
+        for (final String tagName : requestDto.getTags()) {
+            final Tag tag = tagRepository.findByName(tagName)
+                    .orElseGet(() -> tagRepository.save(
+                            Tag.builder()
+                                    .name(tagName)
+                                    .build()
+                    ));
+
+            final TilTag tilTag = TilTag.builder()
+                    .til(til)
+                    .tag(tag)
+                    .build();
+
+            tilTags.add(tilTag);
+        }
+
+        tilTagRepository.saveAll(tilTags);
     }
 }
