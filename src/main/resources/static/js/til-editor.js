@@ -76,7 +76,13 @@ function completeEdit() {
             })
         }).then(function (data) {
             if (!tags.length) {
-                return null;
+                return $.ajax({
+                    type: 'DELETE',
+                    url: `/api/tag/list/${data.tilUuid}`,
+                    headers: {
+                        'X-XSRF-TOKEN': document.cookie.replace(/(?:(?:^|.*;\s*)XSRF-TOKEN\s*\=\s*([^;]*).*$)|^.*$/, '$1')
+                    }
+                });
             }
 
             return $.ajax({

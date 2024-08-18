@@ -117,10 +117,18 @@ function hideCommentEditComponents(commentUuid) {
 function deleteTil() {
     $.ajax({
         type: 'DELETE',
-        url: `/api/til/${uuid}`,
+        url: `/api/tag/list/${uuid}`,
         headers: {
             'X-XSRF-TOKEN': document.cookie.replace(/(?:(?:^|.*;\s*)XSRF-TOKEN\s*\=\s*([^;]*).*$)|^.*$/, '$1')
         }
+    }).then(function () {
+        return $.ajax({
+            type: 'DELETE',
+            url: `/api/til/${uuid}`,
+            headers: {
+                'X-XSRF-TOKEN': document.cookie.replace(/(?:(?:^|.*;\s*)XSRF-TOKEN\s*\=\s*([^;]*).*$)|^.*$/, '$1')
+            }
+        });
     }).done(function () {
         alert('TIL 삭제를 성공했습니다.');
         window.location.replace(`/profile/${memberNickname}?page=1&size=5`);
