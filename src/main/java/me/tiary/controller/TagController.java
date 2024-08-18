@@ -50,4 +50,14 @@ public class TagController {
 
         return ResponseEntity.ok().build();
     }
+
+    @DeleteMapping("/list/{tilUuid}")
+    public ResponseEntity<Void> deleteTagList(@AuthenticationPrincipal final MemberDetails memberDetails,
+                                              @PathVariable @NotBlank final String tilUuid) {
+        final String profileUuid = memberDetails.getProfileUuid();
+
+        tagService.deleteTagList(profileUuid, tilUuid);
+
+        return ResponseEntity.ok().build();
+    }
 }

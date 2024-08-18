@@ -8,7 +8,6 @@ import me.tiary.exception.TilException;
 import me.tiary.exception.status.TilStatus;
 import me.tiary.repository.ProfileRepository;
 import me.tiary.repository.TilRepository;
-import me.tiary.repository.TilTagRepository;
 import me.tiary.vo.til.TilStreakVo;
 import me.tiary.vo.til.TilVo;
 import me.tiary.vo.til.TilWithProfileVo;
@@ -33,8 +32,6 @@ import java.util.TreeMap;
 @RequiredArgsConstructor
 public class TilService {
     private final TilRepository tilRepository;
-
-    private final TilTagRepository tilTagRepository;
 
     private final ProfileRepository profileRepository;
 
@@ -157,8 +154,6 @@ public class TilService {
         }
 
         tilRepository.deleteByUuid(tilUuid);
-
-        tilTagRepository.deleteAllByTilUuid(tilUuid);
 
         return modelMapper.map(til, TilDeletionResponseDto.class);
     }
