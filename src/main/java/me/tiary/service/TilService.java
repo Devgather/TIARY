@@ -2,16 +2,12 @@ package me.tiary.service;
 
 import lombok.RequiredArgsConstructor;
 import me.tiary.domain.Profile;
-import me.tiary.domain.Tag;
 import me.tiary.domain.Til;
-import me.tiary.domain.TilTag;
 import me.tiary.dto.til.*;
 import me.tiary.exception.TilException;
 import me.tiary.exception.status.TilStatus;
 import me.tiary.repository.ProfileRepository;
-import me.tiary.repository.TagRepository;
 import me.tiary.repository.TilRepository;
-import me.tiary.repository.TilTagRepository;
 import me.tiary.vo.til.TilStreakVo;
 import me.tiary.vo.til.TilVo;
 import me.tiary.vo.til.TilWithProfileVo;
@@ -36,10 +32,6 @@ import java.util.TreeMap;
 @RequiredArgsConstructor
 public class TilService {
     private final TilRepository tilRepository;
-
-    private final TagRepository tagRepository;
-
-    private final TilTagRepository tilTagRepository;
 
     private final ProfileRepository profileRepository;
 
@@ -69,27 +61,6 @@ public class TilService {
                         .build()
         );
 
-        final List<TilTag> tilTags = new ArrayList<>();
-
-        for (final String tagName : requestDto.getTags()) {
-            final Tag tag = tagRepository.findByName(tagName)
-                    .orElseGet(() -> tagRepository.save(
-                                    Tag.builder()
-                                            .name(tagName)
-                                            .build()
-                            )
-                    );
-
-            final TilTag tilTag = TilTag.builder()
-                    .til(til)
-                    .tag(tag)
-                    .build();
-
-            tilTags.add(tilTag);
-        }
-
-        tilTagRepository.saveAll(tilTags);
-
         return modelMapper.map(til, TilWritingResponseDto.class);
     }
 
@@ -101,18 +72,10 @@ public class TilService {
         final HtmlRenderer htmlRenderer = HtmlRenderer.builder().escapeHtml(true).build();
         final Node document = markdownParser.parse(til.getContent());
 
-        final List<TilTag> tilTags = tilTagRepository.findAllByTilUuid(tilUuid);
-        final List<String> tags = new ArrayList<>();
-
-        for (final TilTag tilTag : tilTags) {
-            tags.add(tilTag.getTag().getName());
-        }
-
         return TilReadResponseDto.builder()
                 .title(til.getTitle())
                 .content(htmlRenderer.render(document))
                 .markdown(til.getContent())
-                .tags(tags)
                 .author(til.getProfile().getNickname())
                 .createdDate(til.getCreatedDate())
                 .build();
@@ -178,29 +141,6 @@ public class TilService {
 
         til.update(requestDto.getTitle(), requestDto.getContent());
 
-        tilTagRepository.deleteAllByTilUuid(tilUuid);
-
-        final List<TilTag> tilTags = new ArrayList<>();
-
-        for (final String tagName : requestDto.getTags()) {
-            final Tag tag = tagRepository.findByName(tagName)
-                    .orElseGet(() -> tagRepository.save(
-                                    Tag.builder()
-                                            .name(tagName)
-                                            .build()
-                            )
-                    );
-
-            final TilTag tilTag = TilTag.builder()
-                    .til(til)
-                    .tag(tag)
-                    .build();
-
-            tilTags.add(tilTag);
-        }
-
-        tilTagRepository.saveAll(tilTags);
-
         return modelMapper.map(til, TilEditResponseDto.class);
     }
 
@@ -214,8 +154,6 @@ public class TilService {
         }
 
         tilRepository.deleteByUuid(tilUuid);
-
-        tilTagRepository.deleteAllByTilUuid(tilUuid);
 
         return modelMapper.map(til, TilDeletionResponseDto.class);
     }

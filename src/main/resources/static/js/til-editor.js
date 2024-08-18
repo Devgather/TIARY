@@ -6,6 +6,12 @@ const simpleMde = new SimpleMDE({
     tabSize: 4
 });
 
+const til = {
+    title: '',
+    content: '',
+    load: false
+};
+
 $(function () {
     if (uuid) {
         $.ajax({
@@ -13,9 +19,17 @@ $(function () {
             url: `/api/til/${uuid}`
         }).done(function (data) {
             $('#title-input').val(data.title);
-
             simpleMde.value(data.markdown);
 
+            til.title = data.title;
+            til.content = data.markdown;
+            til.load = true;
+        });
+
+        $.ajax({
+            type: 'GET',
+            url: `/api/tag/list/${uuid}`
+        }).done(function (data) {
             let tags = '';
 
             data.tags.forEach(tag => {
@@ -45,6 +59,10 @@ function completeEdit() {
     }
 
     if (uuid) {
+        if (!til.load) {
+            return;
+        }
+
         $.ajax({
             type: 'PUT',
             url: `/api/til/${uuid}`,
@@ -54,9 +72,43 @@ function completeEdit() {
             contentType: 'application/json',
             data: JSON.stringify({
                 'title': title,
-                'content': content,
-                'tags': tags
+                'content': content
             })
+        }).then(function (data) {
+            if (!tags.length) {
+                return $.ajax({
+                    type: 'DELETE',
+                    url: `/api/tag/list/${data.tilUuid}`,
+                    headers: {
+                        'X-XSRF-TOKEN': document.cookie.replace(/(?:(?:^|.*;\s*)XSRF-TOKEN\s*\=\s*([^;]*).*$)|^.*$/, '$1')
+                    }
+                });
+            }
+
+            return $.ajax({
+                type: 'PUT',
+                url: `/api/tag/list/${data.tilUuid}`,
+                headers: {
+                    'X-XSRF-TOKEN': document.cookie.replace(/(?:(?:^|.*;\s*)XSRF-TOKEN\s*\=\s*([^;]*).*$)|^.*$/, '$1')
+                },
+                contentType: 'application/json',
+                data: JSON.stringify({
+                    'tags': tags
+                })
+            }).fail(function () {
+                $.ajax({
+                    type: 'PUT',
+                    url: `/api/til/${uuid}`,
+                    headers: {
+                        'X-XSRF-TOKEN': document.cookie.replace(/(?:(?:^|.*;\s*)XSRF-TOKEN\s*\=\s*([^;]*).*$)|^.*$/, '$1')
+                    },
+                    contentType: 'application/json',
+                    data: JSON.stringify({
+                        'title': til.title,
+                        'content': til.content
+                    })
+                });
+            });
         }).done(function () {
             alert('TIL 수정을 성공했습니다.');
             window.location.replace(`/til/${uuid}?page=1&size=5`);
@@ -73,9 +125,32 @@ function completeEdit() {
             contentType: 'application/json',
             data: JSON.stringify({
                 'title': title,
-                'content': content,
-                'tags': tags
+                'content': content
             })
+        }).then(function (data) {
+            if (!tags.length) {
+                return null;
+            }
+
+            return $.ajax({
+                type: 'POST',
+                url: `/api/tag/list/${data.uuid}`,
+                headers: {
+                    'X-XSRF-TOKEN': document.cookie.replace(/(?:(?:^|.*;\s*)XSRF-TOKEN\s*\=\s*([^;]*).*$)|^.*$/, '$1')
+                },
+                contentType: 'application/json',
+                data: JSON.stringify({
+                    'tags': tags
+                })
+            }).fail(function () {
+                $.ajax({
+                    type: 'DELETE',
+                    url: `/api/til/${data.uuid}`,
+                    headers: {
+                        'X-XSRF-TOKEN': document.cookie.replace(/(?:(?:^|.*;\s*)XSRF-TOKEN\s*\=\s*([^;]*).*$)|^.*$/, '$1')
+                    }
+                });
+            });
         }).done(function () {
             alert('TIL 작성을 성공했습니다.');
             window.location.replace(`/profile/${memberNickname}?page=1&size=5`);

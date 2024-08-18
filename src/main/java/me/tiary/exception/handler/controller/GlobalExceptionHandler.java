@@ -1,15 +1,9 @@
 package me.tiary.exception.handler.controller;
 
 import lombok.extern.slf4j.Slf4j;
-import me.tiary.exception.AccountException;
-import me.tiary.exception.CommentException;
-import me.tiary.exception.ProfileException;
-import me.tiary.exception.TilException;
+import me.tiary.exception.*;
 import me.tiary.exception.handler.ExceptionResponse;
-import me.tiary.exception.status.AccountStatus;
-import me.tiary.exception.status.CommentStatus;
-import me.tiary.exception.status.ProfileStatus;
-import me.tiary.exception.status.TilStatus;
+import me.tiary.exception.status.*;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -84,6 +78,15 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         final TilStatus status = ex.getStatus();
 
         log.warn("TIL exception occurrence: {}", status.getMessage());
+
+        return ResponseEntity.status(status.getHttpStatus()).body(new ExceptionResponse(List.of(status.getMessage())));
+    }
+
+    @ExceptionHandler({TagException.class})
+    public ResponseEntity<Object> handleTagException(final TagException ex) {
+        final TagStatus status = ex.getStatus();
+
+        log.warn("Tag exception occurrence: {}", status.getMessage());
 
         return ResponseEntity.status(status.getHttpStatus()).body(new ExceptionResponse(List.of(status.getMessage())));
     }
