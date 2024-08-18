@@ -9,7 +9,6 @@ import me.tiary.dto.til.TilDeletionResponseDto;
 import me.tiary.exception.TilException;
 import me.tiary.exception.status.TilStatus;
 import me.tiary.repository.TilRepository;
-import me.tiary.repository.TilTagRepository;
 import me.tiary.service.TilService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -34,9 +33,6 @@ class DeleteTilTest {
 
     @Mock
     private TilRepository tilRepository;
-
-    @Mock
-    private TilTagRepository tilTagRepository;
 
     @Spy
     private ModelMapper modelMapper;

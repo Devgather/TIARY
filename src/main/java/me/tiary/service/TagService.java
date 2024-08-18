@@ -109,4 +109,16 @@ public class TagService {
 
         tilTagRepository.saveAll(tilTags);
     }
+
+    @Transactional
+    public void deleteTagList(final String profileUuid, final String tilUuid) {
+        final Til til = tilRepository.findByUuidJoinFetchProfile(tilUuid)
+                .orElseThrow(() -> new TagException(TagStatus.NOT_EXISTING_TIL));
+
+        if (!til.getProfile().getUuid().equals(profileUuid)) {
+            throw new TagException(TagStatus.NOT_AUTHORIZED_MEMBER);
+        }
+
+        tilTagRepository.deleteAllByTilUuid(tilUuid);
+    }
 }
