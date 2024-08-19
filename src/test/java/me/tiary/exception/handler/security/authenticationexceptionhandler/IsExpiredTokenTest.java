@@ -116,7 +116,7 @@ class IsExpiredTokenTest {
         assertThat(result).isTrue();
     }
 
-    private final static class TestTokenProperties extends JwtProperties {
+    private static final class TestTokenProperties extends JwtProperties {
         public TestTokenProperties(String secretKey) {
             super(secretKey);
         }
