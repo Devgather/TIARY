@@ -179,7 +179,7 @@ public class TilService {
 
         final List<TilStreakVo> streaks = new ArrayList<>();
 
-        for (Map.Entry<LocalDate, Integer> entry : tilNumbers.entrySet()) {
+        for (final Map.Entry<LocalDate, Integer> entry : tilNumbers.entrySet()) {
             final TilStreakVo tilStreakVo = TilStreakVo.builder()
                     .date(entry.getKey())
                     .tilNumber(entry.getValue())
