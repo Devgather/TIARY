@@ -106,7 +106,7 @@ class DecodeTokenTest {
         assertThat(profileUuid).isEqualTo("cbf0f220-97b8-4312-82ce-f98266c428d4");
     }
 
-    private final static class TestTokenProperties extends JwtProperties {
+    private static final class TestTokenProperties extends JwtProperties {
         public TestTokenProperties(String secretKey) {
             super(secretKey);
         }
