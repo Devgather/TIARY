@@ -16,5 +16,8 @@ public interface TilTagRepository extends JpaRepository<TilTag, TilTagId> {
     @Query("select tt from TilTag tt join fetch tt.tag where tt.til.uuid = :tilUuid")
     List<TilTag> findAllByTilUuidJoinFetchTag(@Param("tilUuid") final String tilUuid);
 
+    @Query("select tt from TilTag tt join fetch tt.tag where tt.til.profile.nickname = :tilProfileNickname")
+    List<TilTag> findAllByTilProfileNicknameJoinFetchTag(@Param("tilProfileNickname") final String tilProfileNickname);
+
     void deleteAllByTilUuid(final String tilUuid);
 }
