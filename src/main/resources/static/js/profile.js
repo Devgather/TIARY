@@ -134,6 +134,15 @@ $(function () {
 
     $.ajax({
         type: 'GET',
+        url: `/api/tag/list/profile/${nickname}`
+    }).done(function (data) {
+        data.tags.forEach(tag => {
+            $('#tags').append(`<a>${tag}</a>`);
+        });
+    });
+
+    $.ajax({
+        type: 'GET',
         url: `/api/til/list/${nickname}?page=${page - 1}&size=${size}`
     }).done(function (data) {
         const tils = data.tils;
