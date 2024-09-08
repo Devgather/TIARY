@@ -56,8 +56,8 @@ class ReadTilListTest {
     }
 
     @Test
-    @DisplayName("[Fail] profile does not exist")
-    void failIfProfileDoesNotExist() throws Exception {
+    @DisplayName("[Fail] profile does not exist when tag is not provided")
+    void failIfProfileDoesNotExistWhenTagIsNotProvided() throws Exception {
         // Given
         final String nickname = FactoryPreset.NICKNAME;
 
@@ -89,8 +89,8 @@ class ReadTilListTest {
     }
 
     @Test
-    @DisplayName("[Success] tils do not exist")
-    void successIfTilsDoNotExist() throws Exception {
+    @DisplayName("[Success] tils do not exist when tag is not provided")
+    void successIfTilsDoNotExistWhenTagIsNotProvided() throws Exception {
         // Given
         final String nickname = FactoryPreset.NICKNAME;
 
@@ -125,8 +125,8 @@ class ReadTilListTest {
     }
 
     @Test
-    @DisplayName("[Success] tils do exist")
-    void successIfTilsDoExist() throws Exception {
+    @DisplayName("[Success] tils do exist when tag is not provided")
+    void successIfTilsDoExistWhenTagIsNotProvided() throws Exception {
         // Given
         final String nickname = FactoryPreset.NICKNAME;
 
@@ -143,6 +143,119 @@ class ReadTilListTest {
         // When
         final ResultActions resultActions = mockMvc.perform(
                 MockMvcRequestBuilders.get(url)
+                        .param("page", "0")
+                        .param("size", "5")
+        );
+
+        final TilListReadResponseDto response = gson.fromJson(
+                resultActions.andReturn()
+                        .getResponse()
+                        .getContentAsString(StandardCharsets.UTF_8),
+                TilListReadResponseDto.class
+        );
+
+        // Then
+        resultActions.andExpect(status().isOk());
+        assertThat(response.getTils().get(0).getUuid()).hasSize(36);
+        assertThat(response.getTils().get(0).getTitle()).isEqualTo(responseDto.getTils().get(0).getTitle());
+        assertThat(response.getTils().get(0).getContent()).isEqualTo(responseDto.getTils().get(0).getContent());
+        assertThat(response.getTotalPages()).isEqualTo(responseDto.getTotalPages());
+    }
+
+    @Test
+    @DisplayName("[Fail] profile does not exist when tag is provided")
+    void failIfProfileDoesNotExistWhenTagIsProvided() throws Exception {
+        // Given
+        final String nickname = FactoryPreset.NICKNAME;
+
+        final String url = TilApiUrl.TIL_LIST_READ.getEntireUrl() + nickname;
+
+        final String tag = FactoryPreset.TAG;
+
+        final Pageable pageable = PageRequest.of(0, 5, Sort.by("createdDate").descending());
+
+        doThrow(new TilException(TilStatus.NOT_EXISTING_PROFILE))
+                .when(tilService)
+                .readTilListByTag(nickname, tag, pageable);
+
+        // When
+        final ResultActions resultActions = mockMvc.perform(
+                MockMvcRequestBuilders.get(url)
+                        .param("tag", tag)
+                        .param("page", "0")
+                        .param("size", "5")
+        );
+
+        final ExceptionResponse response = gson.fromJson(
+                resultActions.andReturn()
+                        .getResponse()
+                        .getContentAsString(StandardCharsets.UTF_8),
+                ExceptionResponse.class
+        );
+
+        // Then
+        resultActions.andExpect(status().is(TilStatus.NOT_EXISTING_PROFILE.getHttpStatus().value()));
+        assertThat(response.getMessages()).contains(TilStatus.NOT_EXISTING_PROFILE.getMessage());
+    }
+
+    @Test
+    @DisplayName("[Fail] tag does not exist when tag is provided")
+    void failIfTagDoesNotExistWhenTagIsProvided() throws Exception {
+        // Given
+        final String nickname = FactoryPreset.NICKNAME;
+
+        final String url = TilApiUrl.TIL_LIST_READ.getEntireUrl() + nickname;
+
+        final String tag = FactoryPreset.TAG;
+
+        final Pageable pageable = PageRequest.of(0, 5, Sort.by("createdDate").descending());
+
+        doThrow(new TilException(TilStatus.NOT_EXISTING_TAG))
+                .when(tilService)
+                .readTilListByTag(nickname, tag, pageable);
+
+        // When
+        final ResultActions resultActions = mockMvc.perform(
+                MockMvcRequestBuilders.get(url)
+                        .param("tag", tag)
+                        .param("page", "0")
+                        .param("size", "5")
+        );
+
+        final ExceptionResponse response = gson.fromJson(
+                resultActions.andReturn()
+                        .getResponse()
+                        .getContentAsString(StandardCharsets.UTF_8),
+                ExceptionResponse.class
+        );
+
+        // Then
+        resultActions.andExpect(status().is(TilStatus.NOT_EXISTING_TAG.getHttpStatus().value()));
+        assertThat(response.getMessages()).contains(TilStatus.NOT_EXISTING_TAG.getMessage());
+    }
+
+    @Test
+    @DisplayName("[Success] tils do exist when tag is provided")
+    void successIfTilsDoExistWhenTagIsProvided() throws Exception {
+        // Given
+        final String nickname = FactoryPreset.NICKNAME;
+
+        final String url = TilApiUrl.TIL_LIST_READ.getEntireUrl() + nickname;
+
+        final String tag = FactoryPreset.TAG;
+
+        final Pageable pageable = PageRequest.of(0, 5, Sort.by("createdDate").descending());
+
+        final TilListReadResponseDto responseDto = TilListReadResponseDtoFactory.createDefaultTilListReadResponseDto();
+
+        doReturn(responseDto)
+                .when(tilService)
+                .readTilListByTag(nickname, tag, pageable);
+
+        // When
+        final ResultActions resultActions = mockMvc.perform(
+                MockMvcRequestBuilders.get(url)
+                        .param("tag", tag)
                         .param("page", "0")
                         .param("size", "5")
         );

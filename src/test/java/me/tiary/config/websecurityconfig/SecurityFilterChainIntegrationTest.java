@@ -34,6 +34,9 @@ import me.tiary.utility.common.StringUtility;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.NullSource;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -850,9 +853,11 @@ class SecurityFilterChainIntegrationTest {
         resultActions.andExpect(status().is(not(HttpStatus.FORBIDDEN.value())));
     }
 
-    @Test
+    @ParameterizedTest
+    @NullSource
+    @ValueSource(strings = {FactoryPreset.TAG})
     @DisplayName("[Success] member requests til list read api")
-    void successIfMemberRequestsTilListReadApi() throws Exception {
+    void successIfMemberRequestsTilListReadApi(final String tag) throws Exception {
         // Given
         final String nickname = FactoryPreset.NICKNAME;
 
@@ -864,6 +869,7 @@ class SecurityFilterChainIntegrationTest {
         // When
         final ResultActions resultActions = mockMvc.perform(
                 MockMvcRequestBuilders.get(url)
+                        .param("tag", tag)
                         .param("page", "0")
                         .param("size", "5")
                         .cookie(new Cookie(AccessTokenProperties.COOKIE_NAME, accessToken))
@@ -873,9 +879,11 @@ class SecurityFilterChainIntegrationTest {
         resultActions.andExpect(status().is(not(HttpStatus.FORBIDDEN.value())));
     }
 
-    @Test
+    @ParameterizedTest
+    @NullSource
+    @ValueSource(strings = {FactoryPreset.TAG})
     @DisplayName("[Success] anonymous requests til list read api")
-    void successIfAnonymousRequestsTilListReadApi() throws Exception {
+    void successIfAnonymousRequestsTilListReadApi(final String tag) throws Exception {
         // Given
         final String nickname = FactoryPreset.NICKNAME;
 
@@ -884,12 +892,13 @@ class SecurityFilterChainIntegrationTest {
         // When
         final ResultActions resultActions = mockMvc.perform(
                 MockMvcRequestBuilders.get(url)
+                        .param("tag", tag)
                         .param("page", "0")
                         .param("size", "5")
         );
 
         // Then
-        resultActions.andExpect(status().is(not(HttpStatus.FORBIDDEN.value())));
+        resultActions.andExpect(status().is(not(HttpStatus.UNAUTHORIZED.value())));
     }
 
     @Test

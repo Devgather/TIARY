@@ -45,11 +45,12 @@ public class TilController {
 
     @GetMapping("/list/{nickname}")
     public ResponseEntity<TilListReadResponseDto> readTilList(@PathVariable @NotBlank @Size(max = Profile.NICKNAME_MAX_LENGTH) final String nickname,
+                                                              @RequestParam(required = false) final String tag,
                                                               @RequestParam final int page,
                                                               @RequestParam final int size) {
         final Pageable pageable = PageRequest.of(page, size, Sort.by("createdDate").descending());
 
-        final TilListReadResponseDto result = tilService.readTilList(nickname, pageable);
+        final TilListReadResponseDto result = (tag == null) ? (tilService.readTilList(nickname, pageable)) : (tilService.readTilListByTag(nickname, tag, pageable));
 
         return ResponseEntity.ok(result);
     }

@@ -1,13 +1,16 @@
 package me.tiary.controller.tilcontroller;
 
 import common.annotation.controller.ControllerIntegrationTest;
+import common.config.factory.FactoryPreset;
 import common.config.url.TilApiUrl;
 import me.tiary.controller.TilController;
 import me.tiary.domain.Profile;
 import me.tiary.service.TilService;
 import me.tiary.utility.common.StringUtility;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.NullSource;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
@@ -25,15 +28,18 @@ class ReadTilListIntegrationTest {
     @MockBean
     private TilService tilService;
 
-    @Test
+    @ParameterizedTest
+    @NullSource
+    @ValueSource(strings = {FactoryPreset.TAG})
     @DisplayName("[Fail] nickname is blank")
-    void failIfNicknameIsBlank() throws Exception {
+    void failIfNicknameIsBlank(final String tag) throws Exception {
         // Given
         final String url = TilApiUrl.TIL_LIST_READ.getEntireUrl() + " ";
 
         // When
         final ResultActions resultActions = mockMvc.perform(
                 MockMvcRequestBuilders.get(url)
+                        .param("tag", tag)
                         .param("page", "0")
                         .param("size", "5")
         );
@@ -42,9 +48,11 @@ class ReadTilListIntegrationTest {
         resultActions.andExpect(status().isBadRequest());
     }
 
-    @Test
+    @ParameterizedTest
+    @NullSource
+    @ValueSource(strings = {FactoryPreset.TAG})
     @DisplayName("[Fail] nickname exceeds max length")
-    void failIfNicknameExceedsMaxLength() throws Exception {
+    void failIfNicknameExceedsMaxLength(final String tag) throws Exception {
         // Given
         final String nickname = StringUtility.generateRandomString(Profile.NICKNAME_MAX_LENGTH + 1);
 
@@ -53,6 +61,7 @@ class ReadTilListIntegrationTest {
         // When
         final ResultActions resultActions = mockMvc.perform(
                 MockMvcRequestBuilders.get(url)
+                        .param("tag", tag)
                         .param("page", "0")
                         .param("size", "5")
         );
