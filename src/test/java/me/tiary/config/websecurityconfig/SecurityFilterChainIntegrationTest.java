@@ -169,9 +169,11 @@ class SecurityFilterChainIntegrationTest {
         resultActions.andExpect(status().is(not(HttpStatus.FORBIDDEN.value())));
     }
 
-    @Test
+    @ParameterizedTest
+    @NullSource
+    @ValueSource(strings = {FactoryPreset.TAG})
     @DisplayName("[Success] member requests profile view")
-    void successIfMemberRequestsProfileView() throws Exception {
+    void successIfMemberRequestsProfileView(final String tag) throws Exception {
         // Given
         final String url = ViewUrl.PROFILE.getEntireUrl() + FactoryPreset.NICKNAME;
 
@@ -181,6 +183,7 @@ class SecurityFilterChainIntegrationTest {
         // When
         final ResultActions resultActions = mockMvc.perform(
                 MockMvcRequestBuilders.get(url)
+                        .param("tag", tag)
                         .param("page", "1")
                         .param("size", "5")
                         .cookie(new Cookie(AccessTokenProperties.COOKIE_NAME, accessToken))
@@ -190,21 +193,24 @@ class SecurityFilterChainIntegrationTest {
         resultActions.andExpect(status().is(not(HttpStatus.FORBIDDEN.value())));
     }
 
-    @Test
+    @ParameterizedTest
+    @NullSource
+    @ValueSource(strings = {FactoryPreset.TAG})
     @DisplayName("[Success] anonymous requests profile view")
-    void successIfAnonymousRequestsProfileView() throws Exception {
+    void successIfAnonymousRequestsProfileView(final String tag) throws Exception {
         // Given
         final String url = ViewUrl.PROFILE.getEntireUrl() + FactoryPreset.NICKNAME;
 
         // When
         final ResultActions resultActions = mockMvc.perform(
                 MockMvcRequestBuilders.get(url)
+                        .param("tag", tag)
                         .param("page", "1")
                         .param("size", "5")
         );
 
         // Then
-        resultActions.andExpect(status().is(not(HttpStatus.FORBIDDEN.value())));
+        resultActions.andExpect(status().is(not(HttpStatus.UNAUTHORIZED.value())));
     }
 
     @Test

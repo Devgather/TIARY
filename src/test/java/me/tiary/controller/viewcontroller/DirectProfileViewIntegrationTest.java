@@ -10,7 +10,9 @@ import me.tiary.service.ProfileService;
 import me.tiary.service.TilService;
 import me.tiary.utility.common.StringUtility;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.NullSource;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
@@ -35,15 +37,18 @@ class DirectProfileViewIntegrationTest {
     @MockBean
     private TilService tilService;
 
-    @Test
+    @ParameterizedTest
+    @NullSource
+    @ValueSource(strings = {FactoryPreset.TAG})
     @DisplayName("[Fail] nickname is blank")
-    void failIfNicknameIsBlank() throws Exception {
+    void failIfNicknameIsBlank(final String tag) throws Exception {
         // Given
         final String url = ViewUrl.PROFILE.getEntireUrl() + " ";
 
         // When
         final ResultActions resultActions = mockMvc.perform(
                 MockMvcRequestBuilders.get(url)
+                        .param("tag", tag)
                         .param("page", "1")
                         .param("size", "5")
         );
@@ -52,9 +57,11 @@ class DirectProfileViewIntegrationTest {
         resultActions.andExpect(status().isBadRequest());
     }
 
-    @Test
+    @ParameterizedTest
+    @NullSource
+    @ValueSource(strings = {FactoryPreset.TAG})
     @DisplayName("[Fail] nickname exceeds max length")
-    void failIfNicknameExceedsMaxLength() throws Exception {
+    void failIfNicknameExceedsMaxLength(final String tag) throws Exception {
         // Given
         final String nickname = StringUtility.generateRandomString(Profile.NICKNAME_MAX_LENGTH + 1);
 
@@ -63,6 +70,7 @@ class DirectProfileViewIntegrationTest {
         // When
         final ResultActions resultActions = mockMvc.perform(
                 MockMvcRequestBuilders.get(url)
+                        .param("tag", tag)
                         .param("page", "1")
                         .param("size", "5")
         );
@@ -71,9 +79,11 @@ class DirectProfileViewIntegrationTest {
         resultActions.andExpect(status().isBadRequest());
     }
 
-    @Test
+    @ParameterizedTest
+    @NullSource
+    @ValueSource(strings = {FactoryPreset.TAG})
     @DisplayName("[Fail] nickname does not exist")
-    void failIfNicknameDoesNotExist() throws Exception {
+    void failIfNicknameDoesNotExist(final String tag) throws Exception {
         // Given
         final String url = ViewUrl.PROFILE.getEntireUrl() + FactoryPreset.NICKNAME;
 
@@ -84,6 +94,7 @@ class DirectProfileViewIntegrationTest {
         // When
         final ResultActions resultActions = mockMvc.perform(
                 MockMvcRequestBuilders.get(url)
+                        .param("tag", tag)
                         .param("page", "1")
                         .param("size", "5")
         );
@@ -92,9 +103,11 @@ class DirectProfileViewIntegrationTest {
         resultActions.andExpect(status().isFound());
     }
 
-    @Test
+    @ParameterizedTest
+    @NullSource
+    @ValueSource(strings = {FactoryPreset.TAG})
     @DisplayName("[Success] anonymous views someone else profile")
-    void successIfAnonymousViewsSomeoneElseProfile() throws Exception {
+    void successIfAnonymousViewsSomeoneElseProfile(final String tag) throws Exception {
         // Given
         final String url = ViewUrl.PROFILE.getEntireUrl() + FactoryPreset.NICKNAME;
 
@@ -105,6 +118,7 @@ class DirectProfileViewIntegrationTest {
         // When
         final ResultActions resultActions = mockMvc.perform(
                 MockMvcRequestBuilders.get(url)
+                        .param("tag", tag)
                         .param("page", "1")
                         .param("size", "5")
         );
@@ -114,9 +128,11 @@ class DirectProfileViewIntegrationTest {
         resultActions.andExpect(content().contentType("text/html;charset=UTF-8"));
     }
 
-    @Test
+    @ParameterizedTest
+    @NullSource
+    @ValueSource(strings = {FactoryPreset.TAG})
     @DisplayName("[Success] member views someone else profile")
-    void successIfMemberViewsSomeoneElseProfile() throws Exception {
+    void successIfMemberViewsSomeoneElseProfile(final String tag) throws Exception {
         // Given
         final String nickname = StringUtility.generateRandomString(Profile.NICKNAME_MAX_LENGTH);
 
@@ -136,6 +152,7 @@ class DirectProfileViewIntegrationTest {
         // When
         final ResultActions resultActions = mockMvc.perform(
                 MockMvcRequestBuilders.get(url)
+                        .param("tag", tag)
                         .param("page", "1")
                         .param("size", "5")
                         .cookie(new Cookie(AccessTokenProperties.COOKIE_NAME, accessToken))
@@ -146,9 +163,11 @@ class DirectProfileViewIntegrationTest {
         resultActions.andExpect(content().contentType("text/html;charset=UTF-8"));
     }
 
-    @Test
+    @ParameterizedTest
+    @NullSource
+    @ValueSource(strings = {FactoryPreset.TAG})
     @DisplayName("[Success] member views own profile")
-    void successIfMemberViewsOwnProfile() throws Exception {
+    void successIfMemberViewsOwnProfile(final String tag) throws Exception {
         // Given
         final String url = ViewUrl.PROFILE.getEntireUrl() + FactoryPreset.NICKNAME;
 
@@ -166,6 +185,7 @@ class DirectProfileViewIntegrationTest {
         // When
         final ResultActions resultActions = mockMvc.perform(
                 MockMvcRequestBuilders.get(url)
+                        .param("tag", tag)
                         .param("page", "1")
                         .param("size", "5")
                         .cookie(new Cookie(AccessTokenProperties.COOKIE_NAME, accessToken))
