@@ -137,13 +137,13 @@ $(function () {
         url: `/api/tag/list/profile/${nickname}`
     }).done(function (data) {
         data.tags.forEach(tag => {
-            $('#tags').append(`<a>${tag}</a>`);
+            $('#tags').append(`<a href="/profile/${nickname}?tag=${tag}&page=1&size=5">${tag}</a>`);
         });
     });
 
     $.ajax({
         type: 'GET',
-        url: `/api/til/list/${nickname}?page=${page - 1}&size=${size}`
+        url: `/api/til/list/${nickname}?${(tag == null) ? ("") : ("tag=" + tag + "&")}page=${page - 1}&size=${size}`
     }).done(function (data) {
         const tils = data.tils;
         const totalPages = data.totalPages;

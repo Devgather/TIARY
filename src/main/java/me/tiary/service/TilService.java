@@ -3,11 +3,13 @@ package me.tiary.service;
 import lombok.RequiredArgsConstructor;
 import me.tiary.domain.Profile;
 import me.tiary.domain.Til;
+import me.tiary.domain.TilTag;
 import me.tiary.dto.til.*;
 import me.tiary.exception.TilException;
 import me.tiary.exception.status.TilStatus;
 import me.tiary.repository.ProfileRepository;
 import me.tiary.repository.TilRepository;
+import me.tiary.repository.TilTagRepository;
 import me.tiary.vo.til.TilStreakVo;
 import me.tiary.vo.til.TilVo;
 import me.tiary.vo.til.TilWithProfileVo;
@@ -32,6 +34,8 @@ import java.util.TreeMap;
 @RequiredArgsConstructor
 public class TilService {
     private final TilRepository tilRepository;
+
+    private final TilTagRepository tilTagRepository;
 
     private final ProfileRepository profileRepository;
 
@@ -96,6 +100,35 @@ public class TilService {
 
         for (final Til til : tilContent) {
             final TilVo tilVo = modelMapper.map(til, TilVo.class);
+
+            tils.add(tilVo);
+        }
+
+        return TilListReadResponseDto.builder()
+                .tils(tils)
+                .totalPages(totalPages)
+                .build();
+    }
+
+    public TilListReadResponseDto readTilListByTag(final String nickname, final String tag, final Pageable pageable) {
+        if (profileRepository.findByNickname(nickname).isEmpty()) {
+            throw new TilException(TilStatus.NOT_EXISTING_PROFILE);
+        }
+
+        final Page<TilTag> tilTagPage = tilTagRepository.findByTilProfileNicknameAndTagNameJoinFetchTil(nickname, tag, pageable);
+
+        final int totalPages = tilTagPage.getTotalPages();
+
+        if (totalPages == 0) {
+            throw new TilException(TilStatus.NOT_EXISTING_TAG);
+        }
+
+        final List<TilTag> tilTagContent = tilTagPage.getContent();
+
+        final List<TilVo> tils = new ArrayList<>();
+
+        for (final TilTag tilTag : tilTagContent) {
+            final TilVo tilVo = modelMapper.map(tilTag.getTil(), TilVo.class);
 
             tils.add(tilVo);
         }

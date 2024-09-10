@@ -57,6 +57,7 @@ public class ViewController {
 
     @GetMapping("/profile/{nickname}")
     public String directProfileView(@PathVariable @NotBlank @Size(max = Profile.NICKNAME_MAX_LENGTH) final String nickname,
+                                    @RequestParam(required = false) final String tag,
                                     @RequestParam final int page,
                                     @RequestParam final int size,
                                     @AuthenticationPrincipal final MemberDetails memberDetails,
@@ -69,6 +70,8 @@ public class ViewController {
 
         model.addAttribute(ModelParameterAttribute.PROFILE_NICKNAME.getName(), nickname);
         model.addAttribute(ModelParameterAttribute.EDIT_PERMISSION.getName(), false);
+
+        model.addAttribute(ModelParameterAttribute.TAG.getName(), tag);
 
         model.addAttribute(ModelParameterAttribute.PAGE.getName(), page);
         model.addAttribute(ModelParameterAttribute.SIZE.getName(), size);
@@ -176,6 +179,7 @@ public class ViewController {
         PROFILE_NICKNAME("nickname"),
         TIL_UUID("uuid"),
         EDIT_PERMISSION("editPermission"),
+        TAG("tag"),
         PAGE("page"),
         SIZE("size");
 
