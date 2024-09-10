@@ -1,6 +1,7 @@
 package me.tiary.controller;
 
 import lombok.RequiredArgsConstructor;
+import me.tiary.domain.Profile;
 import me.tiary.dto.tag.TagListEditRequestDto;
 import me.tiary.dto.tag.TagListReadResponseDto;
 import me.tiary.dto.tag.TagListWritingRequestDto;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 
 @RestController
 @RequestMapping("/api/tag")
@@ -36,6 +38,13 @@ public class TagController {
     @GetMapping("/list/{tilUuid}")
     public ResponseEntity<TagListReadResponseDto> readTagList(@PathVariable @NotBlank final String tilUuid) {
         final TagListReadResponseDto result = tagService.readTagList(tilUuid);
+
+        return ResponseEntity.ok(result);
+    }
+
+    @GetMapping("/list/profile/{nickname}")
+    public ResponseEntity<TagListReadResponseDto> readTagListByProfile(@PathVariable @NotBlank @Size(max = Profile.NICKNAME_MAX_LENGTH) final String nickname) {
+        final TagListReadResponseDto result = tagService.readTagListByProfile(nickname);
 
         return ResponseEntity.ok(result);
     }

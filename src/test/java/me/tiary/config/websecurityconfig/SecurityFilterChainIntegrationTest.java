@@ -34,6 +34,9 @@ import me.tiary.utility.common.StringUtility;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.NullSource;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -166,9 +169,11 @@ class SecurityFilterChainIntegrationTest {
         resultActions.andExpect(status().is(not(HttpStatus.FORBIDDEN.value())));
     }
 
-    @Test
+    @ParameterizedTest
+    @NullSource
+    @ValueSource(strings = {FactoryPreset.TAG})
     @DisplayName("[Success] member requests profile view")
-    void successIfMemberRequestsProfileView() throws Exception {
+    void successIfMemberRequestsProfileView(final String tag) throws Exception {
         // Given
         final String url = ViewUrl.PROFILE.getEntireUrl() + FactoryPreset.NICKNAME;
 
@@ -178,6 +183,7 @@ class SecurityFilterChainIntegrationTest {
         // When
         final ResultActions resultActions = mockMvc.perform(
                 MockMvcRequestBuilders.get(url)
+                        .param("tag", tag)
                         .param("page", "1")
                         .param("size", "5")
                         .cookie(new Cookie(AccessTokenProperties.COOKIE_NAME, accessToken))
@@ -187,21 +193,24 @@ class SecurityFilterChainIntegrationTest {
         resultActions.andExpect(status().is(not(HttpStatus.FORBIDDEN.value())));
     }
 
-    @Test
+    @ParameterizedTest
+    @NullSource
+    @ValueSource(strings = {FactoryPreset.TAG})
     @DisplayName("[Success] anonymous requests profile view")
-    void successIfAnonymousRequestsProfileView() throws Exception {
+    void successIfAnonymousRequestsProfileView(final String tag) throws Exception {
         // Given
         final String url = ViewUrl.PROFILE.getEntireUrl() + FactoryPreset.NICKNAME;
 
         // When
         final ResultActions resultActions = mockMvc.perform(
                 MockMvcRequestBuilders.get(url)
+                        .param("tag", tag)
                         .param("page", "1")
                         .param("size", "5")
         );
 
         // Then
-        resultActions.andExpect(status().is(not(HttpStatus.FORBIDDEN.value())));
+        resultActions.andExpect(status().is(not(HttpStatus.UNAUTHORIZED.value())));
     }
 
     @Test
@@ -850,9 +859,11 @@ class SecurityFilterChainIntegrationTest {
         resultActions.andExpect(status().is(not(HttpStatus.FORBIDDEN.value())));
     }
 
-    @Test
+    @ParameterizedTest
+    @NullSource
+    @ValueSource(strings = {FactoryPreset.TAG})
     @DisplayName("[Success] member requests til list read api")
-    void successIfMemberRequestsTilListReadApi() throws Exception {
+    void successIfMemberRequestsTilListReadApi(final String tag) throws Exception {
         // Given
         final String nickname = FactoryPreset.NICKNAME;
 
@@ -864,6 +875,7 @@ class SecurityFilterChainIntegrationTest {
         // When
         final ResultActions resultActions = mockMvc.perform(
                 MockMvcRequestBuilders.get(url)
+                        .param("tag", tag)
                         .param("page", "0")
                         .param("size", "5")
                         .cookie(new Cookie(AccessTokenProperties.COOKIE_NAME, accessToken))
@@ -873,9 +885,11 @@ class SecurityFilterChainIntegrationTest {
         resultActions.andExpect(status().is(not(HttpStatus.FORBIDDEN.value())));
     }
 
-    @Test
+    @ParameterizedTest
+    @NullSource
+    @ValueSource(strings = {FactoryPreset.TAG})
     @DisplayName("[Success] anonymous requests til list read api")
-    void successIfAnonymousRequestsTilListReadApi() throws Exception {
+    void successIfAnonymousRequestsTilListReadApi(final String tag) throws Exception {
         // Given
         final String nickname = FactoryPreset.NICKNAME;
 
@@ -884,12 +898,13 @@ class SecurityFilterChainIntegrationTest {
         // When
         final ResultActions resultActions = mockMvc.perform(
                 MockMvcRequestBuilders.get(url)
+                        .param("tag", tag)
                         .param("page", "0")
                         .param("size", "5")
         );
 
         // Then
-        resultActions.andExpect(status().is(not(HttpStatus.FORBIDDEN.value())));
+        resultActions.andExpect(status().is(not(HttpStatus.UNAUTHORIZED.value())));
     }
 
     @Test
@@ -1142,6 +1157,44 @@ class SecurityFilterChainIntegrationTest {
 
         // Then
         resultActions.andExpect(status().is(not(HttpStatus.FORBIDDEN.value())));
+    }
+
+    @Test
+    @DisplayName("[Success] member requests tag list read by profile api")
+    void successIfMemberRequestsTagListReadByProfileApi() throws Exception {
+        // Given
+        final String nickname = FactoryPreset.NICKNAME;
+
+        final String url = TagApiUrl.TAG_LIST_READ_BY_PROFILE.getEntireUrl() + nickname;
+
+        // Algorithm = HMAC256, Payload = { "uuid": "cbf0f220-97b8-4312-82ce-f98266c428d4" }, Secret Key = jwt-access-token-secret-key
+        final String accessToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiY2JmMGYyMjAtOTdiOC00MzEyLTgyY2UtZjk4MjY2YzQyOGQ0In0.rftGC07wvthl89A-lHN4NzeP2gcVv9UxTTnST3Nhqz8";
+
+        // When
+        final ResultActions resultActions = mockMvc.perform(
+                MockMvcRequestBuilders.get(url)
+                        .cookie(new Cookie(AccessTokenProperties.COOKIE_NAME, accessToken))
+        );
+
+        // Then
+        resultActions.andExpect(status().is(not(HttpStatus.FORBIDDEN.value())));
+    }
+
+    @Test
+    @DisplayName("[Success] anonymous requests tag list read by profile api")
+    void successIfAnonymousRequestsTagListReadByProfileApi() throws Exception {
+        // Given
+        final String nickname = FactoryPreset.NICKNAME;
+
+        final String url = TagApiUrl.TAG_LIST_READ_BY_PROFILE.getEntireUrl() + nickname;
+
+        // When
+        final ResultActions resultActions = mockMvc.perform(
+                MockMvcRequestBuilders.get(url)
+        );
+
+        // Then
+        resultActions.andExpect(status().is(not(HttpStatus.UNAUTHORIZED.value())));
     }
 
     @Test

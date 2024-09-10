@@ -9,15 +9,14 @@ import me.tiary.dto.tag.TagListReadResponseDto;
 import me.tiary.dto.tag.TagListWritingRequestDto;
 import me.tiary.exception.TagException;
 import me.tiary.exception.status.TagStatus;
+import me.tiary.repository.ProfileRepository;
 import me.tiary.repository.TagRepository;
 import me.tiary.repository.TilRepository;
 import me.tiary.repository.TilTagRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @Transactional(readOnly = true)
@@ -28,6 +27,8 @@ public class TagService {
     private final TilRepository tilRepository;
 
     private final TilTagRepository tilTagRepository;
+
+    private final ProfileRepository profileRepository;
 
     @Transactional
     public void writeTagList(final String profileUuid, final String tilUuid, final TagListWritingRequestDto requestDto) {
@@ -75,6 +76,23 @@ public class TagService {
 
         return TagListReadResponseDto.builder()
                 .tags(tags)
+                .build();
+    }
+
+    public TagListReadResponseDto readTagListByProfile(final String nickname) {
+        if (profileRepository.findByNickname(nickname).isEmpty()) {
+            throw new TagException(TagStatus.NOT_EXISTING_PROFILE);
+        }
+
+        final List<TilTag> tilTags = tilTagRepository.findAllByTilProfileNicknameJoinFetchTag(nickname);
+        final Set<String> tags = new HashSet<>();
+
+        for (final TilTag tilTag : tilTags) {
+            tags.add(tilTag.getTag().getName());
+        }
+
+        return TagListReadResponseDto.builder()
+                .tags(new ArrayList<>(tags))
                 .build();
     }
 

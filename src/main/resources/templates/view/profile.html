@@ -18,6 +18,8 @@
     <script th:inline="javascript">
         const nickname = [[${nickname}]];
 
+        const tag = [[${tag}]];
+
         const page = [[${page}]];
         const size = [[${size}]];
     </script>
@@ -30,6 +32,8 @@
           integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A=="
           crossorigin="anonymous" referrerpolicy="no-referrer"/>
     <link rel="stylesheet" href="https://unpkg.com/cal-heatmap/dist/cal-heatmap.css"/>
+
+    <link rel="stylesheet" href="/css/profile.css"/>
 </head>
 <body>
 <header th:replace="view/fragments/header.html :: header"></header>
@@ -53,18 +57,28 @@
             <div id="streak-graph"></div>
         </div>
 
-        <div class="is-flex is-align-content-center is-justify-content-space-between mb-5">
-            <h4 class="title is-4 mb-0">TIL</h4>
+        <div class="columns">
+            <aside class="column is-one-fifth is-hidden-mobile">
+                <h5 class="title is-5 mt-6 mb-4">태그 목록</h5>
 
-            <a th:if="${editPermission}" href="/til/editor"
-               class="button has-background-primary-dark has-text-white is-size-7">작성</a>
+                <div id="tags" class="is-flex is-flex-direction-column"></div>
+            </aside>
+
+            <div class="column">
+                <div class="is-flex is-align-content-center is-justify-content-space-between mb-5">
+                    <h4 class="title is-4 mb-0">TIL</h4>
+
+                    <a th:if="${editPermission}" href="/til/editor"
+                       class="button has-background-primary-dark has-text-white is-size-7">작성</a>
+                </div>
+
+                <div id="til" class="is-flex is-flex-direction-column"></div>
+
+                <nav class="pagination is-centered">
+                    <ul id="pagination-list" class="pagination-list"></ul>
+                </nav>
+            </div>
         </div>
-
-        <div id="til" class="is-flex is-flex-direction-column"></div>
-
-        <nav class="pagination is-centered">
-            <ul id="pagination-list" class="pagination-list"></ul>
-        </nav>
     </div>
 </section>
 </body>
