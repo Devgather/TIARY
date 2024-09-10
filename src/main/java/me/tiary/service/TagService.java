@@ -16,9 +16,7 @@ import me.tiary.repository.TilTagRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @Transactional(readOnly = true)
@@ -87,14 +85,14 @@ public class TagService {
         }
 
         final List<TilTag> tilTags = tilTagRepository.findAllByTilProfileNicknameJoinFetchTag(nickname);
-        final List<String> tags = new ArrayList<>();
+        final Set<String> tags = new HashSet<>();
 
         for (final TilTag tilTag : tilTags) {
             tags.add(tilTag.getTag().getName());
         }
 
         return TagListReadResponseDto.builder()
-                .tags(tags)
+                .tags(new ArrayList<>(tags))
                 .build();
     }
 

@@ -93,11 +93,14 @@ class ReadTagListByProfileTest {
                 .when(profileRepository)
                 .findByNickname(nickname);
 
-        final Til til = TilFactory.createDefaultTil(profile);
+        final Til til1 = TilFactory.createDefaultTil(profile);
+        final Til til2 = TilFactory.createDefaultTil(profile);
 
         final List<TilTag> tilTags = List.of(
-                TilTagFactory.create(til, TagFactory.create(FactoryPreset.TAGS.get(0))),
-                TilTagFactory.create(til, TagFactory.create(FactoryPreset.TAGS.get(1)))
+                TilTagFactory.create(til1, TagFactory.create(FactoryPreset.TAGS.get(0))),
+                TilTagFactory.create(til1, TagFactory.create(FactoryPreset.TAGS.get(1))),
+                TilTagFactory.create(til2, TagFactory.create(FactoryPreset.TAGS.get(0))),
+                TilTagFactory.create(til2, TagFactory.create(FactoryPreset.TAGS.get(1)))
         );
 
         doReturn(tilTags)
@@ -109,7 +112,5 @@ class ReadTagListByProfileTest {
 
         // Then
         assertThat(result.getTags()).hasSize(2);
-        assertThat(result.getTags().get(0)).isEqualTo(tilTags.get(0).getTag().getName());
-        assertThat(result.getTags().get(1)).isEqualTo(tilTags.get(1).getTag().getName());
     }
 }
