@@ -1,0 +1,17 @@
+.nickname {
+    color: #4A4A4A;
+    font-weight: bold;
+}
+
+.nickname:hover {
+    text-decoration: underline;
+}
+
+.box {
+    padding: 2rem;
+}
+
+#comment .box {
+    padding: 1.25rem;
+    border: 1px solid #DBDBDB;
+}

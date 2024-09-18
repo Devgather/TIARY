@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+
+    <title>TIARY</title>
+
+    <script src="https://code.jquery.com/jquery-3.6.3.min.js"
+            integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU=" crossorigin="anonymous" defer></script>
+    <script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.7.0/build/highlight.min.js" defer></script>
+
+    <script th:inline="javascript">
+        const memberNickname = [[${memberNickname}]];
+
+        const uuid = [[${uuid}]];
+
+        const page = [[${page}]];
+        const size = [[${size}]];
+    </script>
+
+    <script src="/js/fragments/header.js" defer></script>
+    <script src="/js/til.js" defer></script>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css"
+          integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A=="
+          crossorigin="anonymous" referrerpolicy="no-referrer"/>
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.7.0/build/styles/default.min.css"/>
+
+    <link rel="stylesheet" href="/css/til.css"/>
+</head>
+<body>
+<header th:replace="view/fragments/header.html :: header"></header>
+
+<section class="section px-4">
+    <div class="container is-max-desktop">
+        <div class="box">
+            <div class="mb-4">
+                <h3 id="title" class="title is-3">제목</h3>
+            </div>
+
+            <div th:classappend="(${editPermission}) ? ('mb-4') : ('mb-5')" class="is-flex is-flex-direction-row">
+                <p>
+                    <a id="author" class="nickname">작성자</a>
+                </p>
+
+                <p>&nbsp;·&nbsp;</p>
+
+                <p id="created-date">작성일자</p>
+            </div>
+
+            <div th:if="${editPermission}" class="mb-5">
+                <div class="buttons">
+                    <a th:href="@{/til/editor/{uuid}(uuid=${uuid})}"
+                       class="button has-background-primary-dark has-text-white is-size-7">수정</a>
+                    <button class="button is-size-7" onclick="deleteTil()">삭제</button>
+                </div>
+            </div>
+
+            <div id="content" class="content mb-6 is-size-5">내용</div>
+
+            <div id="tags" class="is-flex is-flex-direction-row">태그 목록</div>
+
+            <div class="mb-4">
+                <h5 class="title is-5">댓글</h5>
+            </div>
+
+            <div class="field has-addons mb-5">
+                <div class="control is-expanded">
+                    <input type="text" placeholder="댓글" id="comment-input" class="input">
+                </div>
+
+                <div class="control">
+                    <button class="button has-background-primary-dark has-text-white" onclick="writeComment()">작성
+                    </button>
+                </div>
+            </div>
+
+            <div id="comment" class="is-flex is-flex-direction-column"></div>
+
+            <nav class="pagination is-centered">
+                <ul id="pagination-list" class="pagination-list"></ul>
+            </nav>
+        </div>
+    </div>
+</section>
+</body>
+</html>
