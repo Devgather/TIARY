@@ -1,0 +1,25 @@
+name: Main Branch
+
+on:
+  push:
+    branches:
+      - main
+
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  sonarcloud:
+    name: SonarCloud
+    uses: ./.github/workflows/sonarcloud.yml
+
+  amazon-ecs:
+    if: github.event_name == 'push'
+    needs: sonarcloud
+
+    name: Amazon ECS
+    uses: ./.github/workflows/amazon-ecs.yml
+    with:
+      environment: production
+    secrets: inherit
