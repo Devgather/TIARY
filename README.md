@@ -1,6 +1,6 @@
 # TIARY
 
-![Release](https://img.shields.io/badge/release-1.0.0-red.svg)
+![Release](https://img.shields.io/badge/version-1.1.0--SNAPSHOT-red.svg)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=TIARY&metric=alert_status)](https://sonarcloud.io/project/overview?id=TIARY)
 [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=TIARY&metric=coverage)](https://sonarcloud.io/project/overview?id=TIARY)
 
