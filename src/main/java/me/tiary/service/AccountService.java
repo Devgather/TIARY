@@ -9,6 +9,7 @@ import me.tiary.exception.AccountException;
 import me.tiary.exception.status.AccountStatus;
 import me.tiary.properties.jwt.AccessTokenProperties;
 import me.tiary.properties.jwt.RefreshTokenProperties;
+import me.tiary.properties.mail.MailProperties;
 import me.tiary.repository.AccountRepository;
 import me.tiary.repository.ProfileRepository;
 import me.tiary.repository.VerificationRepository;
@@ -44,6 +45,8 @@ public class AccountService {
     private final PasswordEncoder passwordEncoder;
 
     private final JavaMailSender mailSender;
+
+    private final MailProperties mailProperties;
 
     private final JwtProvider accessTokenProvider;
 
@@ -107,6 +110,7 @@ public class AccountService {
         final MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, true);
 
         mimeMessageHelper.setSubject("[TIARY] Verify your email address");
+        mimeMessageHelper.setFrom(mailProperties.getUsername());
         mimeMessageHelper.setTo(email);
         mimeMessageHelper.setText(templateEngine.process("mail/verification", context), true);
 
