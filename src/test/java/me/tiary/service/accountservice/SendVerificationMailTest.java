@@ -9,12 +9,13 @@ import me.tiary.domain.Account;
 import me.tiary.domain.Verification;
 import me.tiary.exception.AccountException;
 import me.tiary.exception.status.AccountStatus;
+import me.tiary.properties.mail.MailProperties;
 import me.tiary.repository.AccountRepository;
 import me.tiary.repository.VerificationRepository;
 import me.tiary.service.AccountService;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -37,7 +38,6 @@ import static org.mockito.Mockito.*;
 @ServiceTest
 @DisplayName("[AccountService] sendVerificationMail")
 class SendVerificationMailTest {
-    @InjectMocks
     private AccountService accountService;
 
     @Mock
@@ -51,6 +51,24 @@ class SendVerificationMailTest {
 
     @Mock
     private JavaMailSender mailSender;
+
+    @BeforeEach
+    void beforeEach() {
+        final MailProperties mailProperties = new MailProperties(FactoryPreset.EMAIL);
+
+        accountService = new AccountService(
+                accountRepository,
+                null,
+                verificationRepository,
+                templateEngine,
+                null,
+                null,
+                mailSender,
+                mailProperties,
+                null,
+                null
+        );
+    }
 
     @Test
     @DisplayName("[Fail] email does exist")

@@ -66,6 +66,7 @@ class LoginTest {
                 modelMapper,
                 passwordEncoder,
                 null,
+                null,
                 accessTokenProvider,
                 refreshTokenProvider
         );
