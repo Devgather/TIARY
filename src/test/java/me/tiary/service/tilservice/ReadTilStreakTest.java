@@ -97,6 +97,10 @@ class ReadTilStreakTest {
                 .findByNickname(profile.getNickname());
 
         final Til til = TilFactory.createDefaultTil(profile);
+
+        til.markCreated();
+        til.markModified();
+
         final List<Til> tils = List.of(til, til, til);
         final LocalDate startDate = LocalDate.now();
         final LocalDate endDate = LocalDate.now();

@@ -22,8 +22,11 @@ public abstract class Timestamp {
     @LastModifiedDate
     private LocalDateTime lastModifiedDate;
 
-    protected Timestamp() {
+    public void markCreated() {
         this.createdDate = LocalDateTime.now();
+    }
+
+    public void markModified() {
         this.lastModifiedDate = LocalDateTime.now();
     }
 }
