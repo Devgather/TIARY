@@ -76,7 +76,7 @@ class ReadTagListByProfileTest {
 
         doReturn(new ArrayList<>())
                 .when(tilTagRepository)
-                .findAllByTilProfileNicknameJoinFetchTag(nickname);
+                .findAllJoinFetchTagByTilProfileNickname(nickname);
 
         // When
         final TagListReadResponseDto result = tagService.readTagListByProfile(nickname);
@@ -105,7 +105,7 @@ class ReadTagListByProfileTest {
 
         doReturn(tilTags)
                 .when(tilTagRepository)
-                .findAllByTilProfileNicknameJoinFetchTag(nickname);
+                .findAllJoinFetchTagByTilProfileNickname(nickname);
 
         // When
         final TagListReadResponseDto result = tagService.readTagListByProfile(nickname);

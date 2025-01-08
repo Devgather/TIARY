@@ -47,7 +47,7 @@ class ReadRecentTilListTest {
 
         doReturn(tilPage)
                 .when(tilRepository)
-                .findAll(pageable);
+                .findJoinFetchProfile(pageable);
 
         // When
         final RecentTilListReadResponseDto result = tilService.readRecentTilList(pageable);
@@ -68,7 +68,7 @@ class ReadRecentTilListTest {
 
         doReturn(tilPage)
                 .when(tilRepository)
-                .findAll(pageable);
+                .findJoinFetchProfile(pageable);
 
         // When
         final RecentTilListReadResponseDto result = tilService.readRecentTilList(pageable);

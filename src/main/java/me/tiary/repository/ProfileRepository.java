@@ -13,7 +13,7 @@ public interface ProfileRepository extends JpaRepository<Profile, Long> {
     Optional<Profile> findByUuid(final String uuid);
 
     @Query("select p from Profile p left join fetch p.account where p.uuid = :uuid")
-    Optional<Profile> findByUuidLeftJoinFetchAccount(@Param("uuid") final String uuid);
+    Optional<Profile> findLeftJoinFetchAccountByUuid(@Param("uuid") final String uuid);
 
     Optional<Profile> findByNickname(final String nickname);
 }

@@ -35,7 +35,7 @@ class SearchNicknameUsingUuidTest {
         // Given
         doReturn(Optional.empty())
                 .when(profileRepository)
-                .findByUuidLeftJoinFetchAccount(any(String.class));
+                .findLeftJoinFetchAccountByUuid(any(String.class));
 
         final String uuid = UUID.randomUUID().toString();
 
@@ -53,7 +53,7 @@ class SearchNicknameUsingUuidTest {
 
         doReturn(Optional.of(profile))
                 .when(profileRepository)
-                .findByUuidLeftJoinFetchAccount(profile.getUuid());
+                .findLeftJoinFetchAccountByUuid(profile.getUuid());
 
         // When
         final String result = profileService.searchNicknameUsingUuid(profile.getUuid());

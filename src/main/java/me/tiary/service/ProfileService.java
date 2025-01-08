@@ -34,7 +34,7 @@ public class ProfileService {
     }
 
     public String searchNicknameUsingUuid(final String uuid) {
-        final Profile profile = profileRepository.findByUuidLeftJoinFetchAccount(uuid)
+        final Profile profile = profileRepository.findLeftJoinFetchAccountByUuid(uuid)
                 .orElseThrow(() -> new ProfileException(ProfileStatus.NOT_EXISTING_PROFILE));
 
         return profile.getNickname();

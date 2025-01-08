@@ -58,7 +58,7 @@ class WriteTagListTest {
 
         doReturn(Optional.empty())
                 .when(tilRepository)
-                .findByUuidJoinFetchProfile(tilUuid);
+                .findJoinFetchProfileByUuid(tilUuid);
 
         final TagListWritingRequestDto requestDto = TagListWritingRequestDtoFactory.createDefaultTagListWritingRequestDto();
 
@@ -82,7 +82,7 @@ class WriteTagListTest {
 
         doReturn(Optional.of(til))
                 .when(tilRepository)
-                .findByUuidJoinFetchProfile(tilUuid);
+                .findJoinFetchProfileByUuid(tilUuid);
 
         final TagListWritingRequestDto requestDto = TagListWritingRequestDtoFactory.createDefaultTagListWritingRequestDto();
 
@@ -106,7 +106,7 @@ class WriteTagListTest {
 
         doReturn(Optional.of(til))
                 .when(tilRepository)
-                .findByUuidJoinFetchProfile(tilUuid);
+                .findJoinFetchProfileByUuid(tilUuid);
 
         final Tag tag1 = TagFactory.create(FactoryPreset.TAGS.get(0));
 

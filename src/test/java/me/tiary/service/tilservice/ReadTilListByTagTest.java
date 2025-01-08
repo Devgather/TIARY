@@ -88,7 +88,7 @@ class ReadTilListByTagTest {
 
         doReturn(tilTagPage)
                 .when(tilTagRepository)
-                .findByTilProfileNicknameAndTagNameJoinFetchTil(nickname, FactoryPreset.TAG, pageable);
+                .findJoinFetchTilByTilProfileNicknameAndTagName(nickname, FactoryPreset.TAG, pageable);
 
         // When, Then
         final TilException result = assertThrows(TilException.class, () -> tilService.readTilListByTag(nickname, FactoryPreset.TAG, pageable));
@@ -119,7 +119,7 @@ class ReadTilListByTagTest {
 
         doReturn(tilTagPage)
                 .when(tilTagRepository)
-                .findByTilProfileNicknameAndTagNameJoinFetchTil(nickname, tagName, pageable);
+                .findJoinFetchTilByTilProfileNicknameAndTagName(nickname, tagName, pageable);
 
         // When
         final TilListReadResponseDto result = tilService.readTilListByTag(nickname, tagName, pageable);

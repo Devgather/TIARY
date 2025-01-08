@@ -70,7 +70,7 @@ class ReadTagListTest {
 
         doReturn(new ArrayList<>())
                 .when(tilTagRepository)
-                .findAllByTilUuidJoinFetchTag(tilUuid);
+                .findAllJoinFetchTagByTilUuid(tilUuid);
 
         // When
         final TagListReadResponseDto result = tagService.readTagList(tilUuid);
@@ -98,7 +98,7 @@ class ReadTagListTest {
 
         doReturn(tilTags)
                 .when(tilTagRepository)
-                .findAllByTilUuidJoinFetchTag(tilUuid);
+                .findAllJoinFetchTagByTilUuid(tilUuid);
 
         // When
         final TagListReadResponseDto result = tagService.readTagList(tilUuid);

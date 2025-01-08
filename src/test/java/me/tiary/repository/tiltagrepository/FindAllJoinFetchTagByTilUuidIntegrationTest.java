@@ -28,8 +28,8 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @RepositoryIntegrationTest
-@DisplayName("[TilTagRepository - Integration] findAllByTilProfileNicknameJoinFetchTag")
-class FindAllByTilProfileNicknameJoinFetchTagIntegrationTest {
+@DisplayName("[TilTagRepository - Integration] findAllJoinFetchTagByTilUuid")
+class FindAllJoinFetchTagByTilUuidIntegrationTest {
     @Autowired
     private TilTagRepository tilTagRepository;
 
@@ -45,11 +45,13 @@ class FindAllByTilProfileNicknameJoinFetchTagIntegrationTest {
     @PersistenceContext
     private EntityManager em;
 
-    private Profile profile;
+    private Til til;
 
     @BeforeEach
     void beforeEach() {
-        profile = profileRepository.save(ProfileFactory.createDefaultProfile());
+        final Profile profile = profileRepository.save(ProfileFactory.createDefaultProfile());
+
+        til = tilRepository.save(TilFactory.createDefaultTil(profile));
 
         JpaUtility.flushAndClear(em);
     }
@@ -58,7 +60,7 @@ class FindAllByTilProfileNicknameJoinFetchTagIntegrationTest {
     @DisplayName("[Success] til tags do not exist")
     void successIfTilTagsDoNotExist() {
         // When
-        final List<TilTag> result = tilTagRepository.findAllByTilProfileNicknameJoinFetchTag(profile.getNickname());
+        final List<TilTag> result = tilTagRepository.findAllJoinFetchTagByTilUuid(til.getUuid());
 
         // Then
         assertThat(result).isEmpty();
@@ -68,12 +70,10 @@ class FindAllByTilProfileNicknameJoinFetchTagIntegrationTest {
     @DisplayName("[Success] til tags do exist")
     void successIfTilTagsDoExist() {
         // Given
-        final Til til = tilRepository.save(TilFactory.createDefaultTil(profile));
+        final List<TilTag> tilTags = new ArrayList<>();
 
         final Tag tag1 = tagRepository.save(TagFactory.create(FactoryPreset.TAGS.get(0)));
         final Tag tag2 = tagRepository.save(TagFactory.create(FactoryPreset.TAGS.get(1)));
-
-        final List<TilTag> tilTags = new ArrayList<>();
 
         tilTags.add(TilTagFactory.create(til, tag1));
         tilTags.add(TilTagFactory.create(til, tag2));
@@ -83,7 +83,7 @@ class FindAllByTilProfileNicknameJoinFetchTagIntegrationTest {
         JpaUtility.flushAndClear(em);
 
         // When
-        final List<TilTag> result = tilTagRepository.findAllByTilProfileNicknameJoinFetchTag(profile.getNickname());
+        final List<TilTag> result = tilTagRepository.findAllJoinFetchTagByTilUuid(til.getUuid());
 
         // Then
         assertThat(result).hasSize(2);
