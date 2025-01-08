@@ -62,7 +62,7 @@ class DeleteCommentTest {
 
         doReturn(Optional.empty())
                 .when(commentRepository)
-                .findByUuidJoinFetchProfile(commentUuid);
+                .findJoinFetchProfileByUuid(commentUuid);
 
         final String profileUuid = UUID.randomUUID().toString();
 
@@ -82,7 +82,7 @@ class DeleteCommentTest {
 
         doReturn(Optional.of(comment))
                 .when(commentRepository)
-                .findByUuidJoinFetchProfile(commentUuid);
+                .findJoinFetchProfileByUuid(commentUuid);
 
         final String profileUuid = UUID.randomUUID().toString();
 
@@ -100,7 +100,7 @@ class DeleteCommentTest {
 
         doReturn(Optional.of(comment))
                 .when(commentRepository)
-                .findByUuidJoinFetchProfile(comment.getUuid());
+                .findJoinFetchProfileByUuid(comment.getUuid());
 
         // When
         final CommentDeletionResponseDto result = commentService.deleteComment(profile.getUuid(), comment.getUuid());

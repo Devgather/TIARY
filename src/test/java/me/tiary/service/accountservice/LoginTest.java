@@ -78,7 +78,7 @@ class LoginTest {
         // Given
         doReturn(Optional.empty())
                 .when(accountRepository)
-                .findByEmailJoinFetchProfile(any(String.class));
+                .findJoinFetchProfileByEmail(any(String.class));
 
         final AccountLoginRequestDto requestDto = AccountLoginRequestDtoFactory.createDefaultAccountLoginRequestDto();
 
@@ -96,7 +96,7 @@ class LoginTest {
 
         doReturn(Optional.of(account))
                 .when(accountRepository)
-                .findByEmailJoinFetchProfile(account.getEmail());
+                .findJoinFetchProfileByEmail(account.getEmail());
 
         final AccountLoginRequestDto requestDto = AccountLoginRequestDtoFactory.create("test@example.com", "wrong password");
 
@@ -114,7 +114,7 @@ class LoginTest {
 
         doReturn(Optional.of(account))
                 .when(accountRepository)
-                .findByEmailJoinFetchProfile(account.getEmail());
+                .findJoinFetchProfileByEmail(account.getEmail());
 
         final AccountLoginRequestDto requestDto = AccountLoginRequestDtoFactory.createDefaultAccountLoginRequestDto();
 

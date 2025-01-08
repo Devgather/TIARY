@@ -46,7 +46,7 @@ public class TilService {
     }
 
     public String searchAuthorUsingUuid(final String uuid) {
-        final Til til = tilRepository.findByUuidJoinFetchProfile(uuid)
+        final Til til = tilRepository.findJoinFetchProfileByUuid(uuid)
                 .orElseThrow(() -> new TilException(TilStatus.NOT_EXISTING_TIL));
 
         return til.getProfile().getNickname();
@@ -69,7 +69,7 @@ public class TilService {
     }
 
     public TilReadResponseDto readTil(final String tilUuid) {
-        final Til til = tilRepository.findByUuidJoinFetchProfile(tilUuid)
+        final Til til = tilRepository.findJoinFetchProfileByUuid(tilUuid)
                 .orElseThrow(() -> new TilException(TilStatus.NOT_EXISTING_TIL));
 
         final Parser markdownParser = Parser.builder().build();
@@ -115,7 +115,7 @@ public class TilService {
             throw new TilException(TilStatus.NOT_EXISTING_PROFILE);
         }
 
-        final Page<TilTag> tilTagPage = tilTagRepository.findByTilProfileNicknameAndTagNameJoinFetchTil(nickname, tag, pageable);
+        final Page<TilTag> tilTagPage = tilTagRepository.findJoinFetchTilByTilProfileNicknameAndTagName(nickname, tag, pageable);
 
         final int totalPages = tilTagPage.getTotalPages();
 
@@ -140,7 +140,7 @@ public class TilService {
     }
 
     public RecentTilListReadResponseDto readRecentTilList(final Pageable pageable) {
-        final Page<Til> tilPage = tilRepository.findAll(pageable);
+        final Page<Til> tilPage = tilRepository.findJoinFetchProfile(pageable);
 
         final List<Til> tilContent = tilPage.getContent();
 
@@ -165,7 +165,7 @@ public class TilService {
 
     @Transactional
     public TilEditResponseDto updateTil(final String profileUuid, final String tilUuid, final TilEditRequestDto requestDto) {
-        final Til til = tilRepository.findByUuid(tilUuid)
+        final Til til = tilRepository.findJoinFetchProfileByUuid(tilUuid)
                 .orElseThrow(() -> new TilException(TilStatus.NOT_EXISTING_TIL));
 
         if (!til.getProfile().getUuid().equals(profileUuid)) {
@@ -179,7 +179,7 @@ public class TilService {
 
     @Transactional
     public TilDeletionResponseDto deleteTil(final String profileUuid, final String tilUuid) {
-        final Til til = tilRepository.findByUuidJoinFetchProfile(tilUuid)
+        final Til til = tilRepository.findJoinFetchProfileByUuid(tilUuid)
                 .orElseThrow(() -> new TilException(TilStatus.NOT_EXISTING_TIL));
 
         if (!til.getProfile().getUuid().equals(profileUuid)) {

@@ -18,8 +18,8 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @RepositoryIntegrationTest
-@DisplayName("[ProfileRepository - Integration] findByUuidLeftJoinFetchAccount")
-class FindByUuidLeftJoinFetchAccountIntegrationTest {
+@DisplayName("[ProfileRepository - Integration] findLeftJoinFetchAccountByUuid")
+class FindLeftJoinFetchAccountByUuidIntegrationTest {
     @Autowired
     private ProfileRepository profileRepository;
 
@@ -33,7 +33,7 @@ class FindByUuidLeftJoinFetchAccountIntegrationTest {
     @DisplayName("[Success] uuid does not exist")
     void successIfUuidDoesNotExist() {
         // When
-        final Optional<Profile> result = profileRepository.findByUuidLeftJoinFetchAccount("45b2e8bc-df75-4c56-8148-ee03643c11b5");
+        final Optional<Profile> result = profileRepository.findLeftJoinFetchAccountByUuid("45b2e8bc-df75-4c56-8148-ee03643c11b5");
 
         // Then
         assertThat(result).isNotPresent();
@@ -48,7 +48,7 @@ class FindByUuidLeftJoinFetchAccountIntegrationTest {
         JpaUtility.flushAndClear(em);
 
         // When
-        final Optional<Profile> result = profileRepository.findByUuidLeftJoinFetchAccount(profile.getUuid());
+        final Optional<Profile> result = profileRepository.findLeftJoinFetchAccountByUuid(profile.getUuid());
 
         // Then
         assertThat(result).isPresent();
@@ -68,7 +68,7 @@ class FindByUuidLeftJoinFetchAccountIntegrationTest {
         JpaUtility.flushAndClear(em);
 
         // When
-        final Optional<Profile> result = profileRepository.findByUuidLeftJoinFetchAccount(profile.getUuid());
+        final Optional<Profile> result = profileRepository.findLeftJoinFetchAccountByUuid(profile.getUuid());
 
         // Then
         assertThat(result).isPresent();

@@ -24,8 +24,8 @@ import java.util.UUID;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @RepositoryIntegrationTest
-@DisplayName("[CommentRepository - Integration] findByUuidJoinFetchProfile")
-class FindByUuidJoinFetchProfileIntegrationTest {
+@DisplayName("[CommentRepository - Integration] findJoinFetchProfileByUuid")
+class FindJoinFetchProfileByUuidIntegrationTest {
     @Autowired
     private CommentRepository commentRepository;
 
@@ -55,7 +55,7 @@ class FindByUuidJoinFetchProfileIntegrationTest {
     @DisplayName("[Success] uuid does not exist")
     void successIfUuidDoesNotExist() {
         // When
-        final Optional<Comment> result = commentRepository.findByUuidJoinFetchProfile(UUID.randomUUID().toString());
+        final Optional<Comment> result = commentRepository.findJoinFetchProfileByUuid(UUID.randomUUID().toString());
 
         // Then
         assertThat(result).isEmpty();
@@ -72,7 +72,7 @@ class FindByUuidJoinFetchProfileIntegrationTest {
         JpaUtility.flushAndClear(em);
 
         // When
-        final Optional<Comment> result = commentRepository.findByUuidJoinFetchProfile(comment.getUuid());
+        final Optional<Comment> result = commentRepository.findJoinFetchProfileByUuid(comment.getUuid());
 
         // Then
         assertThat(result).isPresent();

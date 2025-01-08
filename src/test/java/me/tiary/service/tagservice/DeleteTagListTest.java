@@ -46,7 +46,7 @@ class DeleteTagListTest {
 
         doReturn(Optional.empty())
                 .when(tilRepository)
-                .findByUuidJoinFetchProfile(tilUuid);
+                .findJoinFetchProfileByUuid(tilUuid);
 
         // When, Then
         final TagException result = assertThrows(TagException.class, () -> tagService.deleteTagList(profileUuid, tilUuid));
@@ -68,7 +68,7 @@ class DeleteTagListTest {
 
         doReturn(Optional.of(til))
                 .when(tilRepository)
-                .findByUuidJoinFetchProfile(tilUuid);
+                .findJoinFetchProfileByUuid(tilUuid);
 
         // When, Then
         final TagException result = assertThrows(TagException.class, () -> tagService.deleteTagList(profileUuid, tilUuid));
@@ -90,7 +90,7 @@ class DeleteTagListTest {
 
         doReturn(Optional.of(til))
                 .when(tilRepository)
-                .findByUuidJoinFetchProfile(tilUuid);
+                .findJoinFetchProfileByUuid(tilUuid);
 
         doNothing()
                 .when(tilTagRepository)

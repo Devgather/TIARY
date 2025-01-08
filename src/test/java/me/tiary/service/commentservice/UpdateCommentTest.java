@@ -64,7 +64,7 @@ class UpdateCommentTest {
 
         doReturn(Optional.empty())
                 .when(commentRepository)
-                .findByUuidJoinFetchProfile(commentUuid);
+                .findJoinFetchProfileByUuid(commentUuid);
 
         final String profileUuid = UUID.randomUUID().toString();
 
@@ -86,7 +86,7 @@ class UpdateCommentTest {
 
         doReturn(Optional.of(comment))
                 .when(commentRepository)
-                .findByUuidJoinFetchProfile(commentUuid);
+                .findJoinFetchProfileByUuid(commentUuid);
 
         final String profileUuid = UUID.randomUUID().toString();
 
@@ -108,7 +108,7 @@ class UpdateCommentTest {
 
         doReturn(Optional.of(comment))
                 .when(commentRepository)
-                .findByUuidJoinFetchProfile(commentUuid);
+                .findJoinFetchProfileByUuid(commentUuid);
 
         final CommentEditRequestDto requestDto = CommentEditRequestDtoFactory.createDefaultCommentEditRequestDto();
 

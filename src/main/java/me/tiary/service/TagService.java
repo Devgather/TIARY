@@ -32,7 +32,7 @@ public class TagService {
 
     @Transactional
     public void writeTagList(final String profileUuid, final String tilUuid, final TagListWritingRequestDto requestDto) {
-        final Til til = tilRepository.findByUuidJoinFetchProfile(tilUuid)
+        final Til til = tilRepository.findJoinFetchProfileByUuid(tilUuid)
                 .orElseThrow(() -> new TagException(TagStatus.NOT_EXISTING_TIL));
 
         if (!til.getProfile().getUuid().equals(profileUuid)) {
@@ -67,7 +67,7 @@ public class TagService {
             throw new TagException(TagStatus.NOT_EXISTING_TIL);
         }
 
-        final List<TilTag> tilTags = tilTagRepository.findAllByTilUuidJoinFetchTag(tilUuid);
+        final List<TilTag> tilTags = tilTagRepository.findAllJoinFetchTagByTilUuid(tilUuid);
         final List<String> tags = new ArrayList<>();
 
         for (final TilTag tilTag : tilTags) {
@@ -84,7 +84,7 @@ public class TagService {
             throw new TagException(TagStatus.NOT_EXISTING_PROFILE);
         }
 
-        final List<TilTag> tilTags = tilTagRepository.findAllByTilProfileNicknameJoinFetchTag(nickname);
+        final List<TilTag> tilTags = tilTagRepository.findAllJoinFetchTagByTilProfileNickname(nickname);
         final Set<String> tags = new HashSet<>();
 
         for (final TilTag tilTag : tilTags) {
@@ -98,7 +98,7 @@ public class TagService {
 
     @Transactional
     public void updateTagList(final String profileUuid, final String tilUuid, final TagListEditRequestDto requestDto) {
-        final Til til = tilRepository.findByUuidJoinFetchProfile(tilUuid)
+        final Til til = tilRepository.findJoinFetchProfileByUuid(tilUuid)
                 .orElseThrow(() -> new TagException(TagStatus.NOT_EXISTING_TIL));
 
         if (!til.getProfile().getUuid().equals(profileUuid)) {
@@ -130,7 +130,7 @@ public class TagService {
 
     @Transactional
     public void deleteTagList(final String profileUuid, final String tilUuid) {
-        final Til til = tilRepository.findByUuidJoinFetchProfile(tilUuid)
+        final Til til = tilRepository.findJoinFetchProfileByUuid(tilUuid)
                 .orElseThrow(() -> new TagException(TagStatus.NOT_EXISTING_TIL));
 
         if (!til.getProfile().getUuid().equals(profileUuid)) {
