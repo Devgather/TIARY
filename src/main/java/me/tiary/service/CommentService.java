@@ -83,7 +83,7 @@ public class CommentService {
 
     @Transactional
     public CommentEditResponseDto updateComment(final String profileUuid, final String commentUuid, final CommentEditRequestDto requestDto) {
-        final Comment comment = commentRepository.findByUuidJoinFetchProfile(commentUuid)
+        final Comment comment = commentRepository.findJoinFetchProfileByUuid(commentUuid)
                 .orElseThrow(() -> new CommentException(CommentStatus.NOT_EXISTING_COMMENT));
 
         if (!comment.getProfile().getUuid().equals(profileUuid)) {
@@ -99,7 +99,7 @@ public class CommentService {
 
     @Transactional
     public CommentDeletionResponseDto deleteComment(final String profileUuid, final String commentUuid) {
-        final Comment comment = commentRepository.findByUuidJoinFetchProfile(commentUuid)
+        final Comment comment = commentRepository.findJoinFetchProfileByUuid(commentUuid)
                 .orElseThrow(() -> new CommentException(CommentStatus.NOT_EXISTING_COMMENT));
 
         if (!comment.getProfile().getUuid().equals(profileUuid)) {

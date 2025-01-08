@@ -144,7 +144,7 @@ class RegisterTest {
 
         doReturn(Optional.empty())
                 .when(profileRepository)
-                .findByUuidLeftJoinFetchAccount(any(String.class));
+                .findLeftJoinFetchAccountByUuid(any(String.class));
 
         final AccountCreationRequestDto requestDto = AccountCreationRequestDtoFactory.createDefaultAccountCreationRequestDto(
                 verifiedVerification.getUuid(), UUID.randomUUID().toString()
@@ -176,7 +176,7 @@ class RegisterTest {
 
         doReturn(Optional.of(profile))
                 .when(profileRepository)
-                .findByUuidLeftJoinFetchAccount(profile.getUuid());
+                .findLeftJoinFetchAccountByUuid(profile.getUuid());
 
         final AccountCreationRequestDto requestDto = AccountCreationRequestDtoFactory.createDefaultAccountCreationRequestDto(
                 verifiedVerification.getUuid(), profile.getUuid()
@@ -206,7 +206,7 @@ class RegisterTest {
 
         doReturn(Optional.of(profile))
                 .when(profileRepository)
-                .findByUuidLeftJoinFetchAccount(profile.getUuid());
+                .findLeftJoinFetchAccountByUuid(profile.getUuid());
 
         doReturn(AccountFactory.createDefaultAccount(ProfileFactory.createDefaultProfile()))
                 .when(accountRepository)

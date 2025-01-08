@@ -37,7 +37,7 @@ class SearchAuthorUsingUuidTest {
         // Given
         doReturn(Optional.empty())
                 .when(tilRepository)
-                .findByUuidJoinFetchProfile(any(String.class));
+                .findJoinFetchProfileByUuid(any(String.class));
 
         final String uuid = UUID.randomUUID().toString();
 
@@ -57,7 +57,7 @@ class SearchAuthorUsingUuidTest {
 
         doReturn(Optional.of(til))
                 .when(tilRepository)
-                .findByUuidJoinFetchProfile(til.getUuid());
+                .findJoinFetchProfileByUuid(til.getUuid());
 
         // When
         final String result = tilService.searchAuthorUsingUuid(til.getUuid());

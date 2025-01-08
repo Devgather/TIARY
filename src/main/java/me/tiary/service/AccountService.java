@@ -69,7 +69,7 @@ public class AccountService {
             throw new AccountException(AccountStatus.UNVERIFIED_EMAIL);
         }
 
-        final Profile profile = profileRepository.findByUuidLeftJoinFetchAccount(requestDto.getProfileUuid())
+        final Profile profile = profileRepository.findLeftJoinFetchAccountByUuid(requestDto.getProfileUuid())
                 .orElseThrow(() -> new AccountException(AccountStatus.NOT_EXISTING_PROFILE_UUID));
 
         if (profile.getAccount() != null) {
@@ -136,7 +136,7 @@ public class AccountService {
     }
 
     public AccountLoginResponseDto login(final AccountLoginRequestDto requestDto) {
-        final Account account = accountRepository.findByEmailJoinFetchProfile(requestDto.getEmail())
+        final Account account = accountRepository.findJoinFetchProfileByEmail(requestDto.getEmail())
                 .orElseThrow(() -> new AccountException(AccountStatus.NOT_EXISTING_EMAIL));
 
         if (!passwordEncoder.matches(requestDto.getPassword(), account.getPassword())) {

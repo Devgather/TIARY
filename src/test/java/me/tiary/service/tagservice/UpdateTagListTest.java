@@ -59,7 +59,7 @@ class UpdateTagListTest {
 
         doReturn(Optional.empty())
                 .when(tilRepository)
-                .findByUuidJoinFetchProfile(tilUuid);
+                .findJoinFetchProfileByUuid(tilUuid);
 
         final TagListEditRequestDto requestDto = TagListEditRequestDtoFactory.createDefaultTagListEditRequestDto();
 
@@ -83,7 +83,7 @@ class UpdateTagListTest {
 
         doReturn(Optional.of(til))
                 .when(tilRepository)
-                .findByUuidJoinFetchProfile(tilUuid);
+                .findJoinFetchProfileByUuid(tilUuid);
 
         final TagListEditRequestDto requestDto = TagListEditRequestDtoFactory.createDefaultTagListEditRequestDto();
 
@@ -107,7 +107,7 @@ class UpdateTagListTest {
 
         doReturn(Optional.of(til))
                 .when(tilRepository)
-                .findByUuidJoinFetchProfile(tilUuid);
+                .findJoinFetchProfileByUuid(tilUuid);
 
         doNothing()
                 .when(tilTagRepository)

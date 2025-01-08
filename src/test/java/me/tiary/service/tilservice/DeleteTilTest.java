@@ -56,7 +56,7 @@ class DeleteTilTest {
 
         doReturn(Optional.empty())
                 .when(tilRepository)
-                .findByUuidJoinFetchProfile(tilUuid);
+                .findJoinFetchProfileByUuid(tilUuid);
 
         final String profileUuid = UUID.randomUUID().toString();
 
@@ -76,7 +76,7 @@ class DeleteTilTest {
 
         doReturn(Optional.of(til))
                 .when(tilRepository)
-                .findByUuidJoinFetchProfile(tilUuid);
+                .findJoinFetchProfileByUuid(tilUuid);
 
         final String profileUuid = UUID.randomUUID().toString();
 
@@ -94,7 +94,7 @@ class DeleteTilTest {
 
         doReturn(Optional.of(til))
                 .when(tilRepository)
-                .findByUuidJoinFetchProfile(til.getUuid());
+                .findJoinFetchProfileByUuid(til.getUuid());
 
         // When
         final TilDeletionResponseDto result = tilService.deleteTil(profile.getUuid(), til.getUuid());

@@ -19,7 +19,7 @@ public interface TilRepository extends JpaRepository<Til, Long> {
     Page<Til> findByProfileNickname(final String profileNickname, final Pageable pageable);
 
     @Query("select t from Til t join fetch t.profile where t.uuid = :uuid")
-    Optional<Til> findByUuidJoinFetchProfile(@Param("uuid") final String uuid);
+    Optional<Til> findJoinFetchProfileByUuid(@Param("uuid") final String uuid);
 
     List<Til> findAllByProfileNicknameAndCreatedDateBetween(final String profileNickname, final LocalDateTime startDate, final LocalDateTime endDate);
 
