@@ -140,7 +140,7 @@ public class TilService {
     }
 
     public RecentTilListReadResponseDto readRecentTilList(final Pageable pageable) {
-        final Page<Til> tilPage = tilRepository.findAll(pageable);
+        final Page<Til> tilPage = tilRepository.findJoinFetchProfile(pageable);
 
         final List<Til> tilContent = tilPage.getContent();
 
@@ -165,7 +165,7 @@ public class TilService {
 
     @Transactional
     public TilEditResponseDto updateTil(final String profileUuid, final String tilUuid, final TilEditRequestDto requestDto) {
-        final Til til = tilRepository.findByUuid(tilUuid)
+        final Til til = tilRepository.findJoinFetchProfileByUuid(tilUuid)
                 .orElseThrow(() -> new TilException(TilStatus.NOT_EXISTING_TIL));
 
         if (!til.getProfile().getUuid().equals(profileUuid)) {

@@ -56,7 +56,7 @@ class UpdateTilTest {
 
         doReturn(Optional.empty())
                 .when(tilRepository)
-                .findByUuid(tilUuid);
+                .findJoinFetchProfileByUuid(tilUuid);
 
         final TilEditRequestDto requestDto = TilEditRequestDtoFactory.createDefaultTilEditRequestDto();
 
@@ -80,7 +80,7 @@ class UpdateTilTest {
 
         doReturn(Optional.of(til))
                 .when(tilRepository)
-                .findByUuid(tilUuid);
+                .findJoinFetchProfileByUuid(tilUuid);
 
         final TilEditRequestDto requestDto = TilEditRequestDtoFactory.createDefaultTilEditRequestDto();
 
@@ -104,7 +104,7 @@ class UpdateTilTest {
 
         doReturn(Optional.of(til))
                 .when(tilRepository)
-                .findByUuid(tilUuid);
+                .findJoinFetchProfileByUuid(tilUuid);
 
         final TilEditRequestDto requestDto = TilEditRequestDtoFactory.createDefaultTilEditRequestDto();
 

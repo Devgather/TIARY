@@ -15,5 +15,7 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
     @Query("select c from Comment c join fetch c.profile where c.uuid = :uuid")
     Optional<Comment> findJoinFetchProfileByUuid(@Param("uuid") final String uuid);
 
-    Page<Comment> findByTilUuid(final String tilUuid, final Pageable pageable);
+    @Query(value = "select c from Comment c join fetch c.profile where c.til.uuid = :tilUuid",
+            countQuery = "select count(c) from Comment c where c.til.uuid = :tilUuid")
+    Page<Comment> findJoinFetchProfileByTilUuid(@Param("tilUuid") final String tilUuid, final Pageable pageable);
 }

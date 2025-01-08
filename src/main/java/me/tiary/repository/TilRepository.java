@@ -21,6 +21,10 @@ public interface TilRepository extends JpaRepository<Til, Long> {
     @Query("select t from Til t join fetch t.profile where t.uuid = :uuid")
     Optional<Til> findJoinFetchProfileByUuid(@Param("uuid") final String uuid);
 
+    @Query(value = "select t from Til t join fetch t.profile",
+            countQuery = "select count(t) from Til t")
+    Page<Til> findJoinFetchProfile(final Pageable pageable);
+
     List<Til> findAllByProfileNicknameAndCreatedDateBetween(final String profileNickname, final LocalDateTime startDate, final LocalDateTime endDate);
 
     void deleteByUuid(final String uuid);

@@ -56,7 +56,7 @@ public class CommentService {
             throw new CommentException(CommentStatus.NOT_EXISTING_TIL);
         }
 
-        final Page<Comment> commentPage = commentRepository.findByTilUuid(tilUuid, pageable);
+        final Page<Comment> commentPage = commentRepository.findJoinFetchProfileByTilUuid(tilUuid, pageable);
 
         final List<Comment> commentContent = commentPage.getContent();
 
