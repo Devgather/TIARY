@@ -51,7 +51,7 @@ jobs:
         run: aws ecs describe-task-definition --task-definition ${{ secrets.AWS_ECS_TASK_DEFINITION }} --query taskDefinition > task-definition.json
 
       - name: Deploy to Amazon ECS service
-        uses: aws-actions/amazon-ecs-deploy-task-definition@v1
+        uses: aws-actions/amazon-ecs-deploy-task-definition@v2
         with:
           task-definition: ./task-definition.json
           service: ${{ secrets.AWS_ECS_SERVICE }}
