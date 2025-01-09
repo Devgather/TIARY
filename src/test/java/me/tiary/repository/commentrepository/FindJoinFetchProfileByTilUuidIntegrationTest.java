@@ -1,11 +1,14 @@
-package me.tiary.repository.tilrepository;
+package me.tiary.repository.commentrepository;
 
 import common.annotation.repository.RepositoryIntegrationTest;
+import common.factory.domain.CommentFactory;
 import common.factory.domain.ProfileFactory;
 import common.factory.domain.TilFactory;
 import common.utility.JpaUtility;
+import me.tiary.domain.Comment;
 import me.tiary.domain.Profile;
 import me.tiary.domain.Til;
+import me.tiary.repository.CommentRepository;
 import me.tiary.repository.ProfileRepository;
 import me.tiary.repository.TilRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -25,57 +28,64 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @RepositoryIntegrationTest
-@DisplayName("[TilRepository - Integration] findAll")
-class FindAllIntegrationTest {
+@DisplayName("[CommentRepository - Integration] findJoinFetchProfileByTilUuid")
+class FindJoinFetchProfileByTilUuidIntegrationTest {
     @Autowired
-    private TilRepository tilRepository;
+    private CommentRepository commentRepository;
 
     @Autowired
     private ProfileRepository profileRepository;
+
+    @Autowired
+    private TilRepository tilRepository;
 
     @PersistenceContext
     private EntityManager em;
 
     private Profile profile;
 
+    private Til til;
+
     @BeforeEach
     void beforeEach() {
         profile = profileRepository.save(ProfileFactory.createDefaultProfile());
 
+        til = tilRepository.save(TilFactory.createDefaultTil(profile));
+
         JpaUtility.flushAndClear(em);
     }
 
     @Test
-    @DisplayName("[Success] til does not exist")
-    void successIfTilDoesNotExist() {
+    @DisplayName("[Success] comment does not exist")
+    void successIfCommentDoesNotExist() {
         // Given
         final Pageable pageable = PageRequest.of(0, 5, Sort.by("createdDate").descending());
 
         // When
-        final Page<Til> result = tilRepository.findAll(pageable);
+        final Page<Comment> result = commentRepository.findJoinFetchProfileByTilUuid(til.getUuid(), pageable);
 
         // Then
-        assertThat(result).isEmpty();
+        assertThat(result.isEmpty()).isTrue();
     }
 
     @Test
-    @DisplayName("[Success] til number does not meet request")
-    void successIfTilNumberDoesNotMeetRequest() {
+    @DisplayName("[Success] comment number does not meet request")
+    void successIfCommentNumberDoesNotMeetRequest() {
         // Given
-        final List<Til> tils = new ArrayList<>();
+        final List<Comment> comments = new ArrayList<>();
 
         for (int i = 0; i < 3; i++) {
-            tils.add(TilFactory.createDefaultTil(profile));
+            comments.add(CommentFactory.createDefaultComment(profile, til));
         }
 
-        tilRepository.saveAll(tils);
+        commentRepository.saveAll(comments);
 
         JpaUtility.flushAndClear(em);
 
         final Pageable pageable = PageRequest.of(0, 5, Sort.by("createdDate").descending());
 
         // When
-        final Page<Til> result = tilRepository.findAll(pageable);
+        final Page<Comment> result = commentRepository.findJoinFetchProfileByTilUuid(til.getUuid(), pageable);
 
         // Then
         assertThat(result.getTotalPages()).isEqualTo(1);
@@ -83,16 +93,16 @@ class FindAllIntegrationTest {
     }
 
     @Test
-    @DisplayName("[Success] til number does meet request")
-    void successIfTilNumberDoesMeetRequest() {
+    @DisplayName("[Success] comment number does meet request")
+    void successIfCommentNumberDoesMeetRequest() {
         // Given
-        final List<Til> tils = new ArrayList<>();
+        final List<Comment> comments = new ArrayList<>();
 
         for (int i = 0; i < 13; i++) {
-            tils.add(TilFactory.createDefaultTil(profile));
+            comments.add(CommentFactory.createDefaultComment(profile, til));
         }
 
-        tilRepository.saveAll(tils);
+        commentRepository.saveAll(comments);
 
         JpaUtility.flushAndClear(em);
 
@@ -101,9 +111,9 @@ class FindAllIntegrationTest {
         final Pageable pageable3 = PageRequest.of(2, 5, Sort.by("createdDate").descending());
 
         // When
-        final Page<Til> result1 = tilRepository.findAll(pageable1);
-        final Page<Til> result2 = tilRepository.findAll(pageable2);
-        final Page<Til> result3 = tilRepository.findAll(pageable3);
+        final Page<Comment> result1 = commentRepository.findJoinFetchProfileByTilUuid(til.getUuid(), pageable1);
+        final Page<Comment> result2 = commentRepository.findJoinFetchProfileByTilUuid(til.getUuid(), pageable2);
+        final Page<Comment> result3 = commentRepository.findJoinFetchProfileByTilUuid(til.getUuid(), pageable3);
 
         // Then
         assertThat(result1.getTotalPages()).isEqualTo(3);

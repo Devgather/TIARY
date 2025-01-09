@@ -41,7 +41,7 @@ class ReadTilTest {
 
         doReturn(Optional.empty())
                 .when(tilRepository)
-                .findByUuidJoinFetchProfile(tilUuid);
+                .findJoinFetchProfileByUuid(tilUuid);
 
         // When, Then
         final TilException result = assertThrows(TilException.class, () -> tilService.readTil(tilUuid));
@@ -59,7 +59,7 @@ class ReadTilTest {
 
         doReturn(Optional.of(til))
                 .when(tilRepository)
-                .findByUuidJoinFetchProfile(tilUuid);
+                .findJoinFetchProfileByUuid(tilUuid);
 
         final Parser markdownParser = Parser.builder().build();
         final HtmlRenderer htmlRenderer = HtmlRenderer.builder().escapeHtml(true).build();

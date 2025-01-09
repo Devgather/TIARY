@@ -32,8 +32,8 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @RepositoryIntegrationTest
-@DisplayName("[TilTagRepository - Integration] findByTilProfileNicknameAndTagNameJoinFetchTil")
-class FindByTilProfileNicknameAndTagNameJoinFetchTilIntegrationTest {
+@DisplayName("[TilTagRepository - Integration] findJoinFetchTilByTilProfileNicknameAndTagName")
+class FindJoinFetchTilByTilProfileNicknameAndTagNameIntegrationTest {
     @Autowired
     private TilTagRepository tilTagRepository;
 
@@ -83,7 +83,7 @@ class FindByTilProfileNicknameAndTagNameJoinFetchTilIntegrationTest {
         final Pageable pageable = PageRequest.of(0, 5, Sort.by("createdDate").descending());
 
         // When
-        final Page<TilTag> result = tilTagRepository.findByTilProfileNicknameAndTagNameJoinFetchTil(profile.getNickname(), tag.getName(), pageable);
+        final Page<TilTag> result = tilTagRepository.findJoinFetchTilByTilProfileNicknameAndTagName(profile.getNickname(), tag.getName(), pageable);
 
         // Then
         assertThat(result).isEmpty();
@@ -110,7 +110,7 @@ class FindByTilProfileNicknameAndTagNameJoinFetchTilIntegrationTest {
         final Pageable pageable = PageRequest.of(0, 5, Sort.by("createdDate").descending());
 
         // When
-        final Page<TilTag> result = tilTagRepository.findByTilProfileNicknameAndTagNameJoinFetchTil(profile.getNickname(), tag.getName(), pageable);
+        final Page<TilTag> result = tilTagRepository.findJoinFetchTilByTilProfileNicknameAndTagName(profile.getNickname(), tag.getName(), pageable);
 
         // Then
         assertThat(result).isEmpty();
@@ -138,7 +138,7 @@ class FindByTilProfileNicknameAndTagNameJoinFetchTilIntegrationTest {
         final Pageable pageable = PageRequest.of(0, 5, Sort.by("createdDate").descending());
 
         // When
-        final Page<TilTag> result = tilTagRepository.findByTilProfileNicknameAndTagNameJoinFetchTil(profile.getNickname(), tag.getName(), pageable);
+        final Page<TilTag> result = tilTagRepository.findJoinFetchTilByTilProfileNicknameAndTagName(profile.getNickname(), tag.getName(), pageable);
 
         // Then
         assertThat(result).isEmpty();
@@ -163,7 +163,7 @@ class FindByTilProfileNicknameAndTagNameJoinFetchTilIntegrationTest {
         final Pageable pageable = PageRequest.of(0, 5, Sort.by("createdDate").descending());
 
         // When
-        final Page<TilTag> result = tilTagRepository.findByTilProfileNicknameAndTagNameJoinFetchTil(profile.getNickname(), tag.getName(), pageable);
+        final Page<TilTag> result = tilTagRepository.findJoinFetchTilByTilProfileNicknameAndTagName(profile.getNickname(), tag.getName(), pageable);
 
         // Then
         assertThat(result.getTotalPages()).isEqualTo(1);
@@ -191,9 +191,9 @@ class FindByTilProfileNicknameAndTagNameJoinFetchTilIntegrationTest {
         final Pageable pageable3 = PageRequest.of(2, 5, Sort.by("createdDate").descending());
 
         // When
-        final Page<TilTag> result1 = tilTagRepository.findByTilProfileNicknameAndTagNameJoinFetchTil(profile.getNickname(), tag.getName(), pageable1);
-        final Page<TilTag> result2 = tilTagRepository.findByTilProfileNicknameAndTagNameJoinFetchTil(profile.getNickname(), tag.getName(), pageable2);
-        final Page<TilTag> result3 = tilTagRepository.findByTilProfileNicknameAndTagNameJoinFetchTil(profile.getNickname(), tag.getName(), pageable3);
+        final Page<TilTag> result1 = tilTagRepository.findJoinFetchTilByTilProfileNicknameAndTagName(profile.getNickname(), tag.getName(), pageable1);
+        final Page<TilTag> result2 = tilTagRepository.findJoinFetchTilByTilProfileNicknameAndTagName(profile.getNickname(), tag.getName(), pageable2);
+        final Page<TilTag> result3 = tilTagRepository.findJoinFetchTilByTilProfileNicknameAndTagName(profile.getNickname(), tag.getName(), pageable3);
 
         // Then
         assertThat(result1.getTotalPages()).isEqualTo(3);

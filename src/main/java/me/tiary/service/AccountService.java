@@ -9,6 +9,7 @@ import me.tiary.exception.AccountException;
 import me.tiary.exception.status.AccountStatus;
 import me.tiary.properties.jwt.AccessTokenProperties;
 import me.tiary.properties.jwt.RefreshTokenProperties;
+import me.tiary.properties.mail.MailProperties;
 import me.tiary.repository.AccountRepository;
 import me.tiary.repository.ProfileRepository;
 import me.tiary.repository.VerificationRepository;
@@ -45,6 +46,8 @@ public class AccountService {
 
     private final JavaMailSender mailSender;
 
+    private final MailProperties mailProperties;
+
     private final JwtProvider accessTokenProvider;
 
     private final JwtProvider refreshTokenProvider;
@@ -66,7 +69,7 @@ public class AccountService {
             throw new AccountException(AccountStatus.UNVERIFIED_EMAIL);
         }
 
-        final Profile profile = profileRepository.findByUuidLeftJoinFetchAccount(requestDto.getProfileUuid())
+        final Profile profile = profileRepository.findLeftJoinFetchAccountByUuid(requestDto.getProfileUuid())
                 .orElseThrow(() -> new AccountException(AccountStatus.NOT_EXISTING_PROFILE_UUID));
 
         if (profile.getAccount() != null) {
@@ -107,6 +110,7 @@ public class AccountService {
         final MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, true);
 
         mimeMessageHelper.setSubject("[TIARY] Verify your email address");
+        mimeMessageHelper.setFrom(mailProperties.getUsername());
         mimeMessageHelper.setTo(email);
         mimeMessageHelper.setText(templateEngine.process("mail/verification", context), true);
 
@@ -132,7 +136,7 @@ public class AccountService {
     }
 
     public AccountLoginResponseDto login(final AccountLoginRequestDto requestDto) {
-        final Account account = accountRepository.findByEmailJoinFetchProfile(requestDto.getEmail())
+        final Account account = accountRepository.findJoinFetchProfileByEmail(requestDto.getEmail())
                 .orElseThrow(() -> new AccountException(AccountStatus.NOT_EXISTING_EMAIL));
 
         if (!passwordEncoder.matches(requestDto.getPassword(), account.getPassword())) {

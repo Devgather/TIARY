@@ -83,7 +83,7 @@ class ReadCommentListTest {
 
         doReturn(commentPage)
                 .when(commentRepository)
-                .findByTilUuid(til.getUuid(), pageable);
+                .findJoinFetchProfileByTilUuid(til.getUuid(), pageable);
 
         // When
         final CommentListReadResponseDto result = commentService.readCommentList(til.getUuid(), pageable);
@@ -109,7 +109,7 @@ class ReadCommentListTest {
 
         doReturn(commentPage)
                 .when(commentRepository)
-                .findByTilUuid(til.getUuid(), pageable);
+                .findJoinFetchProfileByTilUuid(til.getUuid(), pageable);
 
         // When
         final CommentListReadResponseDto result = commentService.readCommentList(til.getUuid(), pageable);

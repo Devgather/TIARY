@@ -1,14 +1,13 @@
-package me.tiary.repository.accountrepository;
+package me.tiary.repository.tilrepository;
 
 import common.annotation.repository.RepositoryIntegrationTest;
-import common.config.factory.FactoryPreset;
-import common.factory.domain.AccountFactory;
 import common.factory.domain.ProfileFactory;
+import common.factory.domain.TilFactory;
 import common.utility.JpaUtility;
-import me.tiary.domain.Account;
 import me.tiary.domain.Profile;
-import me.tiary.repository.AccountRepository;
+import me.tiary.domain.Til;
 import me.tiary.repository.ProfileRepository;
+import me.tiary.repository.TilRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -17,14 +16,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.util.Optional;
+import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 @RepositoryIntegrationTest
-@DisplayName("[AccountRepository - Integration] findByEmailJoinFetchProfile")
-class FindByEmailJoinFetchProfileIntegrationTest {
+@DisplayName("[TilRepository - Integration] findJoinFetchProfileByUuid")
+class FindJoinFetchProfileByUuidIntegrationTest {
     @Autowired
-    private AccountRepository accountRepository;
+    private TilRepository tilRepository;
 
     @Autowired
     private ProfileRepository profileRepository;
@@ -42,32 +42,32 @@ class FindByEmailJoinFetchProfileIntegrationTest {
     }
 
     @Test
-    @DisplayName("[Success] email does not exist")
-    void successIfEmailDoesNotExist() {
+    @DisplayName("[Success] uuid does not exist")
+    void successIfUuidDoesNotExist() {
         // When
-        final Optional<Account> result = accountRepository.findByEmailJoinFetchProfile(FactoryPreset.EMAIL);
+        final Optional<Til> result = tilRepository.findJoinFetchProfileByUuid(UUID.randomUUID().toString());
 
         // Then
         assertThat(result).isEmpty();
     }
 
     @Test
-    @DisplayName("[Success] email does exist")
-    void successIfEmailDoesExist() {
+    @DisplayName("[Success] uuid does exist")
+    void successIfUuidDoesExist() {
         // Given
-        final Account account = AccountFactory.createDefaultAccount(profile);
+        final Til til = TilFactory.createDefaultTil(profile);
 
-        accountRepository.save(account);
+        tilRepository.save(til);
 
         JpaUtility.flushAndClear(em);
 
         // When
-        final Optional<Account> result = accountRepository.findByEmailJoinFetchProfile(FactoryPreset.EMAIL);
+        final Optional<Til> result = tilRepository.findJoinFetchProfileByUuid(til.getUuid());
 
         // Then
         assertThat(result).isPresent();
-        assertThat(result.get().getProfile()).isEqualTo(account.getProfile());
-        assertThat(result.get().getEmail()).isEqualTo(account.getEmail());
-        assertThat(result.get().getPassword()).isEqualTo(account.getPassword());
+        assertThat(result.get().getProfile()).isEqualTo(til.getProfile());
+        assertThat(result.get().getTitle()).isEqualTo(til.getTitle());
+        assertThat(result.get().getContent()).isEqualTo(til.getContent());
     }
 }

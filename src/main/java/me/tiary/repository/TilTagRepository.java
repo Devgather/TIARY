@@ -15,15 +15,15 @@ import java.util.List;
 public interface TilTagRepository extends JpaRepository<TilTag, TilTagId> {
     @Query(value = "select tt from TilTag tt join fetch tt.til where tt.til.profile.nickname = :tilProfileNickname and tt.tag.name = :tagName",
             countQuery = "select count(tt) from TilTag tt where tt.til.profile.nickname = :tilProfileNickname and tt.tag.name = :tagName")
-    Page<TilTag> findByTilProfileNicknameAndTagNameJoinFetchTil(@Param("tilProfileNickname") final String tilProfileNickname, @Param("tagName") final String tagName, final Pageable pageable);
+    Page<TilTag> findJoinFetchTilByTilProfileNicknameAndTagName(@Param("tilProfileNickname") final String tilProfileNickname, @Param("tagName") final String tagName, final Pageable pageable);
 
     List<TilTag> findAllByTilUuid(final String tilUuid);
 
     @Query("select tt from TilTag tt join fetch tt.tag where tt.til.uuid = :tilUuid")
-    List<TilTag> findAllByTilUuidJoinFetchTag(@Param("tilUuid") final String tilUuid);
+    List<TilTag> findAllJoinFetchTagByTilUuid(@Param("tilUuid") final String tilUuid);
 
     @Query("select tt from TilTag tt join fetch tt.tag where tt.til.profile.nickname = :tilProfileNickname")
-    List<TilTag> findAllByTilProfileNicknameJoinFetchTag(@Param("tilProfileNickname") final String tilProfileNickname);
+    List<TilTag> findAllJoinFetchTagByTilProfileNickname(@Param("tilProfileNickname") final String tilProfileNickname);
 
     void deleteAllByTilUuid(final String tilUuid);
 }
