@@ -91,7 +91,8 @@ CREATE TABLE til
         REFERENCES profile (id)
         ON UPDATE CASCADE
         ON DELETE CASCADE,
-    UNIQUE INDEX (uuid)
+    UNIQUE INDEX (uuid),
+    INDEX (created_date)
 ) ENGINE=InnoDB;
 
 CREATE TABLE tag
@@ -122,7 +123,8 @@ CREATE TABLE til_tag
         REFERENCES tag (id)
         ON UPDATE CASCADE
         ON DELETE CASCADE,
-    UNIQUE INDEX (uuid)
+    UNIQUE INDEX (uuid),
+    INDEX (created_date)
 ) ENGINE=InnoDB;
 
 CREATE TABLE comment
@@ -143,5 +145,6 @@ CREATE TABLE comment
         REFERENCES til (id)
         ON UPDATE CASCADE
         ON DELETE CASCADE,
-    UNIQUE INDEX (uuid)
+    UNIQUE INDEX (uuid),
+    INDEX (created_date)
 ) ENGINE=InnoDB;
