@@ -6,6 +6,7 @@ import me.tiary.properties.aws.AwsStorageProperties;
 import me.tiary.properties.jwt.AccessTokenProperties;
 import me.tiary.properties.jwt.RefreshTokenProperties;
 import me.tiary.properties.mail.MailProperties;
+import me.tiary.properties.redis.RedisProperties;
 import me.tiary.properties.security.SecurityCorsProperties;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -20,7 +21,8 @@ import org.springframework.scheduling.annotation.EnableScheduling;
         AwsProperties.class,
         AwsS3Properties.class,
         AwsStorageProperties.class,
-        MailProperties.class
+        MailProperties.class,
+        RedisProperties.class
 })
 @EnableScheduling
 public class TiaryApplication {

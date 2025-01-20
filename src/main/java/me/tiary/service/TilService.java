@@ -17,6 +17,8 @@ import org.commonmark.node.Node;
 import org.commonmark.parser.Parser;
 import org.commonmark.renderer.html.HtmlRenderer;
 import org.modelmapper.ModelMapper;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -53,6 +55,7 @@ public class TilService {
     }
 
     @Transactional
+    @CacheEvict(value = "recentTilList", cacheManager = "redisCacheManager", allEntries = true)
     public TilWritingResponseDto writeTil(final String profileUuid, final TilWritingRequestDto requestDto) {
         final Profile profile = profileRepository.findByUuid(profileUuid)
                 .orElseThrow(() -> new TilException(TilStatus.NOT_EXISTING_PROFILE));
@@ -139,6 +142,7 @@ public class TilService {
                 .build();
     }
 
+    @Cacheable(value = "recentTilList", key = "#pageable", cacheManager = "redisCacheManager")
     public RecentTilListReadResponseDto readRecentTilList(final Pageable pageable) {
         final Page<Til> tilPage = tilRepository.findJoinFetchProfile(pageable);
 
@@ -164,6 +168,7 @@ public class TilService {
     }
 
     @Transactional
+    @CacheEvict(value = "recentTilList", cacheManager = "redisCacheManager", allEntries = true)
     public TilEditResponseDto updateTil(final String profileUuid, final String tilUuid, final TilEditRequestDto requestDto) {
         final Til til = tilRepository.findJoinFetchProfileByUuid(tilUuid)
                 .orElseThrow(() -> new TilException(TilStatus.NOT_EXISTING_TIL));
@@ -178,6 +183,7 @@ public class TilService {
     }
 
     @Transactional
+    @CacheEvict(value = "recentTilList", cacheManager = "redisCacheManager", allEntries = true)
     public TilDeletionResponseDto deleteTil(final String profileUuid, final String tilUuid) {
         final Til til = tilRepository.findJoinFetchProfileByUuid(tilUuid)
                 .orElseThrow(() -> new TilException(TilStatus.NOT_EXISTING_TIL));

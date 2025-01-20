@@ -1,12 +1,13 @@
 spring:
   config:
     import:
-      - classpath:properties/security.yml
-      - classpath:properties/jwt.yml
-      - classpath:properties/oauth.yml
-      - classpath:properties/mail.yml
-      - classpath:properties/scheduler.yml
       - classpath:properties/aws.yml
+      - classpath:properties/jwt.yml
+      - classpath:properties/mail.yml
+      - classpath:properties/oauth.yml
+      - classpath:properties/redis.yml
+      - classpath:properties/scheduler.yml
+      - classpath:properties/security.yml
 
   datasource:
     driver-class-name: org.h2.Driver
