@@ -16,6 +16,7 @@ import common.factory.dto.tag.TagListEditRequestDtoFactory;
 import common.factory.dto.tag.TagListWritingRequestDtoFactory;
 import common.factory.dto.til.TilEditRequestDtoFactory;
 import common.factory.dto.til.TilWritingRequestDtoFactory;
+import me.tiary.config.RedisConfig.EmbeddedRedisServer;
 import me.tiary.domain.Verification;
 import me.tiary.dto.account.AccountCreationRequestDto;
 import me.tiary.dto.account.AccountLoginRequestDto;
@@ -30,6 +31,7 @@ import me.tiary.dto.tag.TagListWritingRequestDto;
 import me.tiary.dto.til.TilEditRequestDto;
 import me.tiary.dto.til.TilWritingRequestDto;
 import me.tiary.properties.jwt.AccessTokenProperties;
+import me.tiary.properties.redis.RedisProperties;
 import me.tiary.utility.common.StringUtility;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -38,6 +40,8 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.NullSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.TestConfiguration;
+import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
@@ -1497,5 +1501,13 @@ class SecurityFilterChainIntegrationTest {
 
         // Then
         resultActions.andExpect(status().isUnauthorized());
+    }
+
+    @TestConfiguration
+    static class TestRedisConfig {
+        @Bean
+        public EmbeddedRedisServer embeddedRedisServer(final RedisProperties redisProperties) {
+            return new EmbeddedRedisServer(redisProperties);
+        }
     }
 }
