@@ -1,0 +1,10 @@
+name: Scheduling
+
+on:
+  schedule:
+    - cron: 0 0 1 * *
+
+jobs:
+  sonarcloud:
+    name: SonarCloud
+    uses: ./.github/workflows/sonarcloud.yml
