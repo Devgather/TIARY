@@ -1,0 +1,40 @@
+name: SonarQube
+
+inputs:
+  sonar-token:
+    description: Authentication token for SonarQube analysis
+    required: true
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Check out GitHub repository
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+
+    - name: Set up JDK 17
+      uses: actions/setup-java@v4
+      with:
+        distribution: corretto
+        java-version: 17
+
+    - name: Cache SonarQube packages
+      uses: actions/cache@v4
+      with:
+        path: ~/.sonar/cache
+        key: ${{ runner.os }}-sonar
+        restore-keys: ${{ runner.os }}-sonar
+
+    - name: Cache Gradle packages
+      uses: actions/cache@v4
+      with:
+        path: ~/.gradle/caches
+        key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle') }}
+        restore-keys: ${{ runner.os }}-gradle
+
+    - name: Build and analyze
+      env:
+        SONAR_TOKEN: ${{ inputs.sonar-token }}
+      shell: bash
+      run: ./gradlew build sonar --info
