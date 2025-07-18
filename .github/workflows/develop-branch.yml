@@ -1,0 +1,23 @@
+name: Develop branch
+
+on:
+  push:
+    branches:
+      - develop
+
+  pull_request:
+    branches:
+      - develop
+
+jobs:
+  sonarqube:
+    name: SonarQube
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out GitHub repository
+        uses: actions/checkout@v4
+
+      - name: Run SonarQube analysis
+        uses: ./.github/actions/sonarqube
+        with:
+          sonar-token: ${{ secrets.SONAR_TOKEN }}
