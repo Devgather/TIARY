@@ -6,4 +6,4 @@ spring:
 
   sql:
     init:
-      schema-locations: classpath*:database/schema.sql
+      schema-locations: classpath*:config/database/schema.sql
