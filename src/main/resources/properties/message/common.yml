@@ -1,0 +1,4 @@
+spring:
+  messages:
+    basename: config.i18n.responses,config.i18n.errors.field,config.i18n.errors.global
+    encoding: UTF-8
