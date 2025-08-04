@@ -6,7 +6,7 @@ import jakarta.validation.ConstraintViolationException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import me.tiary.common.dto.ExceptionResponse;
-import me.tiary.common.util.http.HttpRequestUtils;
+import me.tiary.common.util.web.HttpRequestUtils;
 import org.slf4j.event.Level;
 import org.springframework.context.MessageSource;
 import org.springframework.http.ResponseEntity;

@@ -4,7 +4,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import me.tiary.common.dto.ExceptionResponse;
-import me.tiary.common.util.http.HttpRequestUtils;
+import me.tiary.common.util.web.HttpRequestUtils;
 import nl.altindag.log.LogCaptor;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
