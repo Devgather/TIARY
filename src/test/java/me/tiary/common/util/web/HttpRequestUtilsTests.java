@@ -1,6 +1,7 @@
 package me.tiary.common.util.web;
 
 import jakarta.servlet.http.HttpServletRequest;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -16,14 +17,23 @@ class HttpRequestUtilsTests {
     @Nested
     class GetRequestUriWithQueryStringTest {
 
+        static final String REQUEST_URI = "/test";
+
+        static final String QUERY_STRING = "data=test";
+
+        HttpServletRequest request;
+
+        @BeforeEach
+        void init() {
+            request = mock(HttpServletRequest.class);
+
+            given(request.getRequestURI())
+                    .willReturn(REQUEST_URI);
+        }
+
         @Test
         void shouldReturnRequestUriWithoutQueryString_whenQueryStringIsNull() {
             // Given
-            HttpServletRequest request = mock(HttpServletRequest.class);
-
-            given(request.getRequestURI())
-                    .willReturn("/test");
-
             given(request.getQueryString())
                     .willReturn(null);
 
@@ -31,25 +41,20 @@ class HttpRequestUtilsTests {
             String result = HttpRequestUtils.getRequestUriWithQueryString(request);
 
             // Then
-            assertThat(result).isEqualTo("/test");
+            assertThat(result).isEqualTo(REQUEST_URI);
         }
 
         @Test
         void shouldReturnRequestUriWithQueryString_whenQueryStringIsNotNull() {
             // Given
-            HttpServletRequest request = mock(HttpServletRequest.class);
-
-            given(request.getRequestURI())
-                    .willReturn("/test");
-
             given(request.getQueryString())
-                    .willReturn("data=test");
+                    .willReturn(QUERY_STRING);
 
             // When
             String result = HttpRequestUtils.getRequestUriWithQueryString(request);
 
             // Then
-            assertThat(result).isEqualTo("/test?data=test");
+            assertThat(result).isEqualTo(REQUEST_URI + '?' + QUERY_STRING);
         }
 
     }
