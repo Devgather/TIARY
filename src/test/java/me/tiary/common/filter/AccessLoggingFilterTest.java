@@ -1,63 +1,90 @@
 package me.tiary.common.filter;
 
-import ch.qos.logback.classic.Level;
-import ch.qos.logback.classic.Logger;
-import ch.qos.logback.classic.spi.ILoggingEvent;
-import ch.qos.logback.core.read.ListAppender;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import me.tiary.common.util.web.HttpRequestUtils;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import nl.altindag.log.LogCaptor;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.MockedStatic;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.slf4j.LoggerFactory;
-import org.springframework.mock.web.MockHttpServletRequest;
-import org.springframework.mock.web.MockHttpServletResponse;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class AccessLoggingFilterTest {
 
+    static final String REMOTE_ADDRESS = "127.0.0.1";
+
+    static final String METHOD = "GET";
+
+    static final String REQUEST_URI = "/test?data=test";
+
+    static final String PROTOCOL = "HTTP/1.1";
+
+    static final int STATUS = 200;
+
+    static MockedStatic<HttpRequestUtils> httpRequestUtils;
+
+    static LogCaptor logCaptor;
+
     AccessLoggingFilter filter;
 
-    MockedStatic<HttpRequestUtils> httpRequestUtils;
+    HttpServletRequest request;
 
-    ListAppender<ILoggingEvent> loggingEventAppender;
+    HttpServletResponse response;
 
-    @BeforeEach
-    void setUp() {
-        filter = new AccessLoggingFilter();
+    FilterChain filterChain;
 
+    @BeforeAll
+    static void initAll() {
         httpRequestUtils = mockStatic(HttpRequestUtils.class);
 
-        loggingEventAppender = new ListAppender<>();
-        loggingEventAppender.start();
+        given(HttpRequestUtils.getRequestUriWithQueryString(any(HttpServletRequest.class)))
+                .willReturn(REQUEST_URI);
 
-        Logger logger = (Logger) LoggerFactory.getLogger(filter.getClass());
-        logger.addAppender(loggingEventAppender);
+        logCaptor = LogCaptor.forClass(AccessLoggingFilter.class);
+    }
+
+    @BeforeEach
+    void init() {
+        filter = new AccessLoggingFilter();
+
+        request = mock(HttpServletRequest.class);
+
+        given(request.getRemoteAddr())
+                .willReturn(REMOTE_ADDRESS);
+
+        given(request.getMethod())
+                .willReturn(METHOD);
+
+        given(request.getProtocol())
+                .willReturn(PROTOCOL);
+
+        response = mock(HttpServletResponse.class);
+
+        given(response.getStatus())
+                .willReturn(STATUS);
+
+        filterChain = mock(FilterChain.class);
     }
 
     @AfterEach
     void tearDown() {
+        logCaptor.clearLogs();
+    }
+
+    @AfterAll
+    static void tearDownAll() {
         httpRequestUtils.close();
-        loggingEventAppender.stop();
+        logCaptor.close();
     }
 
     @Test
     void shouldInvokeFilterChain_whenDoFilterInternalIsCalled() throws Exception {
-        // Given
-        HttpServletRequest request = new MockHttpServletRequest();
-        HttpServletResponse response = new MockHttpServletResponse();
-        FilterChain filterChain = mock(FilterChain.class);
-
         // When
         filter.doFilterInternal(request, response, filterChain);
 
@@ -67,38 +94,11 @@ class AccessLoggingFilterTest {
 
     @Test
     void shouldLogAccessInformation_whenDoFilterInternalIsCalled() throws Exception {
-        // Given
-        HttpServletRequest request = mock(HttpServletRequest.class);
-
-        given(request.getRemoteAddr())
-                .willReturn("127.0.0.1");
-
-        given(request.getMethod())
-                .willReturn("GET");
-
-        given(HttpRequestUtils.getRequestUriWithQueryString(request))
-                .willReturn("/test?data=test");
-
-        given(request.getProtocol())
-                .willReturn("HTTP/1.1");
-
-        HttpServletResponse response = mock(HttpServletResponse.class);
-
-        given(response.getStatus())
-                .willReturn(200);
-
-        FilterChain filterChain = mock(FilterChain.class);
-
         // When
         filter.doFilterInternal(request, response, filterChain);
 
         // Then
-        ILoggingEvent loggingEvent = loggingEventAppender.list.get(0);
-
-        assertAll(
-                () -> assertThat(loggingEvent.getLevel()).isEqualTo(Level.INFO),
-                () -> assertThat(loggingEvent.getFormattedMessage()).isEqualTo("127.0.0.1 - \"GET /test?data=test HTTP/1.1\" 200")
-        );
+        assertThat(logCaptor.hasInfoMessage(AccessLoggingFilterHelper.generateAccessLog(REMOTE_ADDRESS, METHOD, REQUEST_URI, PROTOCOL, STATUS))).isTrue();
     }
 
 }
