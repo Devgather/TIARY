@@ -13,6 +13,8 @@ import java.io.IOException;
 @Slf4j
 public class AccessLoggingFilter extends OncePerRequestFilter {
 
+    public static final String LOG_FORMAT = "{} - \"{} {} {}\" {}";
+
     @Override
     protected void doFilterInternal(final HttpServletRequest request,
                                     final HttpServletResponse response,
@@ -25,7 +27,7 @@ public class AccessLoggingFilter extends OncePerRequestFilter {
         final String protocol = request.getProtocol();
         final int status = response.getStatus();
 
-        log.info("{} - \"{} {} {}\" {}", remoteAddress, method, requestUri, protocol, status);
+        log.info(LOG_FORMAT, remoteAddress, method, requestUri, protocol, status);
     }
 
 }
