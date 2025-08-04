@@ -1,4 +1,4 @@
-package me.tiary.common.util.http;
+package me.tiary.common.util.web;
 
 import jakarta.servlet.http.HttpServletRequest;
 import org.junit.jupiter.api.Nested;
