@@ -5,6 +5,7 @@ import lombok.*;
 import me.tiary.common.domain.Timestamp;
 
 @Entity
+@Table(name = "profile")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Builder
@@ -15,14 +16,15 @@ public class Profile extends Timestamp {
     public static final int MAX_NICKNAME_LENGTH = 20;
 
     @Id
+    @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @EqualsAndHashCode.Include
     private Long id;
 
-    @Column(length = MAX_NICKNAME_LENGTH, nullable = false, unique = true)
+    @Column(name = "nickname", length = MAX_NICKNAME_LENGTH, nullable = false, unique = true)
     private String nickname;
 
-    @Column(nullable = false)
+    @Column(name = "picture_url", nullable = false)
     private String pictureUrl;
 
 }
